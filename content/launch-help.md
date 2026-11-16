@@ -5,7 +5,7 @@ slug: launch-help
 order: 3
 description: Fix GTA 6 storage errors, boxed codes that fail to redeem, missing or locked downloads, and Xbox One cloud access. Find the next step for PS5 or Xbox.
 answer: Check [free space on the install drive](/launch-help/#not-enough-space), [which account redeemed the boxed code](/launch-help/#boxed-code-not-working), or [when your copy unlocks](/launch-help/#game-missing-or-locked). Xbox One plays through [cloud streaming](/launch-help/#xbox-one-cloud-gaming).
-updated: 2026-11-15
+updated: 2026-11-16
 ---
 
 ## Not enough space
@@ -54,6 +54,17 @@ Use [PlayStation’s voucher steps](https://www.playstation.com/en-us/support/st
 
 **Check the console store countdown before troubleshooting a lock.** A preload stays locked until your storefront unlocks it. After [release on your platform](/release-date/#when-does-gta-6-come-out), confirm the full download and current console software. On PS5, try [Restore Licenses](https://www.playstation.com/en-us/support/games/restore-licences-playstation/) on the account that owns it. For other errors, use [PlayStation download and launch support](https://www.playstation.com/en-us/support/games/gta-vi-game/) or [Xbox support](https://support.xbox.com/).
 
+### PS5 download stuck or failing
+
+{confirmed} PlayStation lists these steps for a GTA 6 download that stops or fails.
+
+1. Open **Downloads/Uploads**, select the download, choose **Pause**, then **Resume**.
+2. If it still fails, choose **Cancel and Delete**. Find the game in **Game Library** and start the download again.
+3. Check the PlayStation Network status page, your system software version and the free space in **Settings → Storage**.
+4. As a last step, start the console in Safe Mode and choose **Clear Cache and Rebuild Database**.
+
+If the game is installed but will not start on a second console or account, PlayStation says to check that the account owns the game and that **Console Sharing and Offline Play** is enabled.
+
 ## Xbox One cloud gaming
 
 {confirmed} Xbox lists GTA 6 for cloud streaming on Xbox One and Xbox Series X and S from **1 a.m. Eastern on November 19, 2026**. On Xbox One, look for the cloud play option after the announced start. Native installs are available on Xbox Series X and S.
@@ -66,6 +77,7 @@ Already playing? [Find a mission or objective](/missions/).
 
 ## Sources
 
+- [PlayStation GTA 6 download and launch troubleshooting](https://www.playstation.com/en-us/support/games/gta-vi-game/)
 - [Rockstar Support installation requirements](https://support.rockstargames.com/articles/M6h7B5fJZMwG1dnzQkt4Z/grand-theft-auto-vi-installation-requirements)
 - [PlayStation GTA 6 preload and storage requirements](https://www.playstation.com/en-us/games/grand-theft-auto-vi/)
 - [PlayStation console storage and saved data](https://www.playstation.com/en-us/support/hardware/ps5-manage-storage-space/)

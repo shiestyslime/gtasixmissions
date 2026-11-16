@@ -5,7 +5,7 @@ slug: editions-price
 order: 2
 description: Compare GTA 6 Standard and Ultimate at US stores, see exactly what $20 adds, and find the right digital or boxed copy for PS5 and Xbox.
 answer: {confirmed} **Standard is $79.99 and includes the full game.** Ultimate is $99.99 and adds vehicles, weapons, shops and bonus activities. Start with Standard if you're unsure. You can add the Ultimate upgrade later. Boxed Standard contains a download code.
-updated: 2026-11-15
+updated: 2026-11-16
 ---
 
 ## How much does GTA 6 cost?
@@ -15,7 +15,7 @@ updated: 2026-11-15
 | Standard | $79.99 | Full single-player game. Available digitally or as a boxed download code. |
 | Ultimate | $99.99 | The same base game plus the Ultimate upgrade. Available digitally. |
 
-US listing prices checked November 15, 2026 on PlayStation Store and Xbox Store. Check your local storefront for current pricing, taxes and offers.
+US listing prices checked November 16, 2026 on PlayStation Store and Xbox Store. Check your local storefront for current pricing, taxes and offers.
 
 ## Which edition should you buy?
 
@@ -35,7 +35,12 @@ US listing prices checked November 15, 2026 on PlayStation Store and Xbox Store.
 
 ## Pre-order bonuses
 
-Rockstar announced the Vintage Vice City Pack for eligible launch purchases. Official digital listings also describe a one-month GTA+ offer with its own redemption conditions. Use the offer on your local store page to confirm eligibility, end date and renewal terms. [Check exact unlock timing separately](/release-date/#when-does-gta-6-come-out).
+Rockstar announced the Vintage Vice City Pack for eligible launch purchases. Official digital listings also describe a one-month GTA+ offer with its own redemption conditions. Use the offer on your local store page to confirm eligibility, end date and renewal terms.
+
+- {confirmed} **Deadline.** PlayStation includes the pack with digital purchases made before 11:59:59 p.m. local time on November 19, 2026. The US Xbox Store lists the same cutoff date.
+- {confirmed} **GTA+ month.** The US PlayStation Store says it must be claimed by March 31, 2027. The US Xbox Store says it must be redeemed within 180 days of the pre-order.
+- {confirmed} **Upgrade only.** The US PlayStation Store says the Ultimate Edition Upgrade on its own does not qualify for the offer.
+ [Check exact unlock timing separately](/release-date/#when-does-gta-6-come-out).
 
 ## FAQ
 
@@ -55,12 +60,17 @@ Yes. Use the PlayStation Store or Xbox Store on the account that owns Standard. 
 
 The box contains a download code. You redeem the code through the account store to download the game.
 
+### When does the GTA 6 pre-order bonus end?
+
+PlayStation's cutoff is 11:59:59 p.m. local time on November 19, 2026 for digital purchases. The US Xbox Store also lists November 19. Check the offer text on your own store page.
+
 ### Is the GTA 6 Ultimate Edition worth it?
 
 Standard gives you the full base game for $20 less at the checked US prices. Choose Ultimate if you want its extra activities, vehicles, weapons and shops now. You can also upgrade later.
 
 ## Sources
 
+- [PlayStation support: GTA 6 bonus content and Vintage Vice City Pack cutoff](https://www.playstation.com/en-us/support/games/gta-vi-game/)
 - [Rockstar Support editions, boxed copies and upgrade details](https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions)
 - [Take-Two’s pre-order and pricing announcement](https://ir.take2games.com/node/32311/pdf)
 - [US PlayStation Store edition prices and offer terms](https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-GTAVISTANDARD001/)

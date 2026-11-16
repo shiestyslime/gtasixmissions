@@ -6,7 +6,7 @@ order: 1
 description: Check the GTA 6 release date, U.S. PS5 unlock, Xbox Cloud Gaming start, supported platforms and storage requirement.
 answer: {confirmed} GTA 6 launches on **November 19, 2026** for PS5 and Xbox Series X|S. The U.S. PlayStation Store lists **9 p.m. Pacific on November 18**. Xbox Cloud Gaming has a separate start time.
 answer_postlaunch: {confirmed} GTA 6 released on **November 19, 2026** on PS5 and Xbox Series X|S. Xbox One players can stream through Xbox Cloud Gaming in supported markets.
-updated: 2026-11-15
+updated: 2026-11-16
 ---
 
 ## When does GTA 6 come out?
@@ -74,7 +74,7 @@ Rockstar lists midnight local time on November 19 for the native releases. PlayS
 ::: prelaunch
 ### Is GTA 6 delayed again?
 
-Rockstar's official release date is still November 19, 2026 as of November 15.
+Rockstar's official release date is still November 19, 2026 as of November 16. The US PlayStation Store and Xbox Store both still list that date.
 :::
 ::: postlaunch
 ### Is GTA 6 out now?

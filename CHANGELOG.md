@@ -38,3 +38,22 @@ Build and check: `node build.mjs` built 12 pages, `node check.mjs` reported 0 pr
 - Added launch troubleshooting for storage, boxed codes, missing or locked installs, and Xbox One cloud access. Release timing now distinguishes the U.S. PlayStation Store listing, Rockstar's native release schedule, and Xbox Cloud Gaming.
 - Updated editions guidance and linked directly to products. Product links use ordinary URLs until approved affiliate URLs are configured.
 - Moved the headline feed to the footer and outside search indexing and the sitemap.
+
+## 2026-11-16
+
+Pre-launch run. The game is not out until November 19, 2026. No first-hand play notes exist, so no mission walkthrough work was done.
+
+Pages changed: launch-help, editions-price, release-date.
+
+Facts added:
+
+- {confirmed} PS5 download fix steps: pause and resume, cancel and delete then re-download, check network status, system software and free space, then Safe Mode "Clear Cache and Rebuild Database". Check account ownership and Console Sharing and Offline Play if the game will not start (launch-help, new "PS5 download stuck or failing" section). Source: PlayStation GTA VI troubleshooting page. https://www.playstation.com/en-us/support/games/gta-vi-game/
+- {confirmed} Vintage Vice City Pack comes with digital purchases made before 11:59:59 p.m. local time on November 19, 2026 (editions-price). Sources: the same PlayStation support page and the US Xbox Store listing. https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/9p3h4968grsm
+- {confirmed} The bonus GTA+ month must be claimed by March 31, 2027 on PlayStation, and within 180 days of the pre-order on Xbox. The Ultimate Edition Upgrade alone does not qualify on PlayStation (editions-price). Sources: US PlayStation Store and US Xbox Store listings. https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-GTAVISTANDARD001/
+- Rechecked on November 16: US prices are still $79.99 and $99.99, the upgrade is still $20 on Xbox, and both US stores still list November 19, 2026. The US PlayStation Store still lists 05:00 UTC (editions-price, release-date).
+
+New FAQ entry: when the pre-order bonus ends (editions-price).
+
+Not verified, left unchanged: Rockstar's installation requirements and regional release times pages (both timed out), Rockstar Newswire posts since November 10 (page did not render), day-one patch, review embargo date and time, review scores.
+
+Build and check: `node build.mjs` built 14 pages, `node check.mjs` reported 0 problems.
