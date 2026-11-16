@@ -1,0 +1,35 @@
+# Rebuilds and publishes the site every day and on every push.
+# The daily run is what flips pre-launch text to post-launch text and refreshes the news page.
+# Setup: push this folder to a GitHub repo, then Settings > Pages > Source: "GitHub Actions".
+name: Build and deploy
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 */6 * * *" # every 6 hours
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node build.mjs
+      - run: node check.mjs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@v4

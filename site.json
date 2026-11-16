@@ -1,0 +1,118 @@
+{
+  "name": "GTA Six Missions",
+  "tagline": "Unofficial guide to missions, map and money",
+  "description": "Clear, sourced answers to common GTA 6 questions: release date, map locations, missions, money-making and story progression. Unofficial fan guide.",
+  "baseUrl": "https://gtasixmissions.com",
+  "language": "en",
+  "launchDate": "2026-11-19T00:00:00",
+  "contactEmail": "",
+  "adsenseClient": "",
+  "adPlaceholders": false,
+  "affiliates": {
+    "playstation": {
+      "label": "PlayStation Store",
+      "url": "https://store.playstation.com/",
+      "affiliateUrl": ""
+    },
+    "xbox": {
+      "label": "Xbox Store",
+      "url": "https://www.xbox.com/games/store",
+      "affiliateUrl": ""
+    },
+    "amazon": {
+      "label": "Amazon",
+      "url": "https://www.amazon.com/",
+      "affiliateUrl": ""
+    },
+    "storage": {
+      "label": "PS5-compatible SSDs on Amazon",
+      "url": "https://www.amazon.com/s?k=ps5+m.2+ssd",
+      "affiliateUrl": ""
+    }
+  },
+  "keyFacts": [
+    {
+      "label": "Release date",
+      "value": "Nov 19, 2026",
+      "url": "/release-date/"
+    },
+    {
+      "label": "Platforms",
+      "value": "PS5 · Xbox Series X|S",
+      "url": "/release-date/#which-platforms-is-gta-6-on"
+    },
+    {
+      "label": "Price from",
+      "value": "$79.99",
+      "url": "/editions-price/"
+    },
+    {
+      "label": "Download size",
+      "value": "About 212 GB",
+      "url": "/release-date/#preload-and-download-size"
+    }
+  ],
+  "regions": [
+    {
+      "name": "Vice City",
+      "blurb": "Beaches, nightlife and the main city"
+    },
+    {
+      "name": "Leonida Keys",
+      "blurb": "Island chain where Jason starts"
+    },
+    {
+      "name": "Grassrivers",
+      "blurb": "Swamps, airboats and alligators"
+    },
+    {
+      "name": "Port Gellhorn",
+      "blurb": "Faded coastal town and dirt racing"
+    },
+    {
+      "name": "Ambrosia",
+      "blurb": "Sugar refinery and a biker gang"
+    },
+    {
+      "name": "Mount Kalaga National Park",
+      "blurb": "Forest, hunting and off-road trails"
+    }
+  ],
+  "news": {
+    "match": "\\bGTA ?(6|VI)\\b|Grand Theft Auto (6|VI)\\b",
+    "feeds": [
+      {
+        "name": "IGN",
+        "url": "https://feeds.feedburner.com/ign/games-all"
+      },
+      {
+        "name": "Polygon",
+        "url": "https://www.polygon.com/rss/index.xml"
+      },
+      {
+        "name": "PC Gamer",
+        "url": "https://www.pcgamer.com/rss/"
+      },
+      {
+        "name": "Eurogamer",
+        "url": "https://www.eurogamer.net/feed"
+      },
+      {
+        "name": "GameSpot",
+        "url": "https://www.gamespot.com/feeds/news/"
+      },
+      {
+        "name": "VGC",
+        "url": "https://www.videogameschronicle.com/feed/"
+      },
+      {
+        "name": "Push Square",
+        "url": "https://www.pushsquare.com/feeds/latest"
+      },
+      {
+        "name": "Rock Paper Shotgun",
+        "url": "https://www.rockpapershotgun.com/feed"
+      }
+    ]
+  }
+}
