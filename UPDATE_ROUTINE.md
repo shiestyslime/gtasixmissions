@@ -18,7 +18,8 @@ Add newly verified GTA 6 facts to `content/*.md`, so each guide answers its ques
 7. Remove "we will add at launch" lists once the real content is on the page.
 8. Keep the page format: front matter, `answer` line, sections, `## FAQ`, `## Sources`.
 9. Change `updated:` to today's date on every page you edit. Do not change it on pages you did not edit.
-10. Do not edit `site.json` money settings (ads, affiliate URLs), and do not deploy unless the owner set that up.
+10. Do not edit `site.json`, `build.mjs`, `check.mjs`, `assets/` or `.github/`.
+11. Publishing: the owner approved pushing content changes. Push only when `node check.mjs` reports 0 problems. Stage only `content`, `CHANGELOG.md` and `data/news.json`. Push to `origin main` only. Never force-push.
 
 ## Steps
 
@@ -32,4 +33,5 @@ Add newly verified GTA 6 facts to `content/*.md`, so each guide answers its ques
    - `map-locations.md`: shops, safehouses, collectibles.
 4. Add new FAQ entries for questions people now ask (check the headlines in `data/news.json` for topics).
 5. Run `node build.mjs` then `node check.mjs`. Fix every problem it reports.
-6. Write a short change note: which pages changed, which facts were added, and their sources.
+6. Write a short change note in `CHANGELOG.md`: which pages changed, which facts were added, and their sources.
+7. Commit and push as rule 11 says. GitHub then rebuilds and publishes the site.

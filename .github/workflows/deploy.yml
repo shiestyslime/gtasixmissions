@@ -1,4 +1,4 @@
-# Rebuilds and publishes the site every day and on every push.
+# Rebuilds and publishes the site every 6 hours and on every push.
 # The daily run is what flips pre-launch text to post-launch text and refreshes the news page.
 # Setup: push this folder to a GitHub repo, then Settings > Pages > Source: "GitHub Actions".
 name: Build and deploy
