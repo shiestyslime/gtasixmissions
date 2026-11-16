@@ -231,6 +231,7 @@ function layout({ title, description, url, body, jsonld = [], ogType = 'article'
 <meta name="twitter:card" content="summary">
 <meta name="robots" content="${index ? 'index, follow, max-snippet:-1, max-image-preview:large' : 'noindex, follow'}">
 <meta name="theme-color" content="#170b30">
+${url === '/' && site.googleSiteVerification ? `<meta name="google-site-verification" content="${esc(site.googleSiteVerification)}">` : ''}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
