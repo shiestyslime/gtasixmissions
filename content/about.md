@@ -3,8 +3,8 @@ title: About, Sources and Disclosure
 slug: about
 order: 20
 description: Who runs this unofficial GTA 6 guide, how facts are checked and labeled, and how the site earns money.
-answer: This is an unofficial fan guide. Every fact is labeled Confirmed, Reported or Not yet known, and every page lists its sources.
-updated: 2026-11-14
+answer: This is an independent GTA 6 guide. We link official support and identify the platform and date on walkthroughs we test.
+updated: 2026-11-15
 ---
 
 ## What this site is
@@ -13,16 +13,16 @@ An independent, unofficial guide to Grand Theft Auto VI. It is not affiliated wi
 
 ## How we label facts
 
-- {confirmed} Stated by Rockstar Games or Take-Two in an official release, trailer or site.
+- {confirmed} Stated by Rockstar Games, Take-Two or the platform provider in an official source.
 - {reported} From press previews or reliable outlets. Likely true, but not stated by Rockstar directly or not yet checked by us in the game.
 - {unknown} Not announced. We do not guess.
 
-We do not publish leaks as facts. After launch, we test gameplay claims in the game before we remove a label.
+Walkthroughs show the platform and date tested. Preview reports stay labeled until we can verify the gameplay ourselves. We leave leaks out of guides.
 
 ## Corrections
 
-If you find an error, tell us and we will fix it and update the page date.
+Guide corrections appear on the affected page. We update the test date after replaying an affected step and link the source for changes to platform or support details.
 
 ## Advertising and affiliate disclosure
 
-This site may show advertisements. Some links to stores are affiliate links. If you buy through them, we may earn a commission at no extra cost to you. Affiliate links do not change our advice.
+If a store link may earn us a commission, we disclose it next to that link. We choose purchase options by compatibility and whether they solve the problem.

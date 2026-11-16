@@ -1,95 +1,52 @@
 ---
-title: GTA 6 Missions: How They Work and What to Expect
+title: GTA 6 Mission Walkthroughs and Objective Help
 nav: Missions
 slug: missions
 order: 5
-description: How GTA 6 missions work, based on Rockstar's previews. Mission choices, heists and side jobs. Full walkthroughs arrive after launch.
-answer: {reported} GTA 6 missions give you more choice in how you finish an objective and how you escape. {unknown} Rockstar has not published a mission list or a mission count.
+description: Find GTA 6 mission objectives, tested checkpoint fixes and what to do next. Guides are added as they are verified in the released game.
+answer: Walkthroughs will appear here after the game launches and we can test them. Check launch help if you are trying to install, redeem or open GTA 6.
+answer_postlaunch: Use the mission list and objective search to find a published walkthrough. Each guide shows the platform and date it was tested.
 updated: 2026-11-15
 ---
 
 ## Is there a GTA 6 mission list?
 
-{unknown} Not yet. Rockstar has not published a mission list, a mission count or any mission names.
-
 ::: prelaunch
-> Any full "GTA 6 mission list" you find before November 19, 2026 is invented or based on old leaks. We will publish our list only after we have played each mission.
+{unknown} Rockstar has not published a campaign mission list or mission count. There are no verified walkthroughs here yet. Check [release and unlock times](/release-date/) if you are waiting to play.
 :::
 ::: postlaunch
-> The game is out. We add each mission to this page only after it is verified against the released game. Until a mission appears here, it has not been checked yet.
+The index covers missions with published walkthroughs. If a mission is missing, check back as we verify more of the campaign.
 :::
+
+## Find an objective
+
+Search for the mission title or a short phrase from the objective on your screen. Choose the matching step for the immediate action. Check the recovery note if the objective fails to advance. Guides list the tested platform and date, and separate plot details from the steps you need to play.
+
+Follow [story progression](/progression/) for help finding the next mission. Use [launch help](/launch-help/) if you cannot start the game itself.
 
 ## How missions work
 
-These details come from press previews and Rockstar's Extended Look video (August 27, 2026).
+{confirmed} GTA VI is a single-player game following Jason Duval and Lucia Caminos. Rockstar's official gameplay preview shows both characters in action.
 
-- {reported} **More than one way to finish.** Many missions let you decide how to reach the objective and how to get away.
-- {reported} **Choose your role.** In some missions you pick driving or shooting. Your partner does the other job.
-- {reported} **Guided chases.** Car chases follow a planned route, but you can leave it and find your own way.
-- {reported} **Two leads, one story.** Jason and Lucia appear together in many missions.
-- {reported} **Scout before you rob.** You can look over a robbery target first. Examples given are finding a back entrance, learning a safe code and turning off security cameras.
-- {reported} **Small jobs first.** The couple start with small crimes, such as hotwiring cheap cars and picking simple locks. Some cars need tools that you get later.
-
-## Types of missions and jobs
-
-| Type | Status | Notes |
-|---|---|---|
-| Story missions | {confirmed} | Follow Jason and Lucia |
-| Bank heists | {reported} | Named in previews as a way to earn money |
-| Store and business robberies | {reported} | Shown in the Extended Look |
-| Vehicle theft for sale | {reported} | Named in previews |
-| Races | {reported} | Shown in the Extended Look |
-| Side missions for other characters | {unknown} | Likely, not detailed |
+{reported} In a preview for The Guardian, Rockstar showed a robbery with advance scouting and a choice of ways to deal with security. Individual mission triggers, choices and outcomes need to be tested in the released game.
 
 ## How long is the story?
 
-- {reported} Rockstar North's Rob Nelson told The New York Times that his own playthrough took about **80 hours**. It covered the main story and some optional goals that affect the story.
-- That is one person's time. A story-only run is likely shorter, and full completion is likely much longer.
-- {unknown} An official length or mission count from Rockstar.
-
-> Leaked hour counts and mission counts are circulating before launch. We do not list leaked numbers. We will add figures once reviews and the released game confirm them.
-
-## Missions and money
-
-{reported} Missions alone do not pay enough to finish the story. Some chapters need a set amount of cash before they unlock. You must also earn money in the open world. See [money-making](/money-making/) and [progression](/progression/).
-
-## Walkthroughs: what we will add at launch
-
-1. A full mission list in story order
-2. A step-by-step walkthrough for each mission
-3. The best choice in missions that offer one
-4. Rewards and unlocks for each mission
+{reported} Rockstar North's Rob Nelson said his own run took about 80 hours and included optional goals. Rockstar has published no campaign length or total mission count.
 
 ## FAQ
 
 ### How many missions are in GTA 6?
 
-Not yet known. Rockstar has not given a number. For comparison, GTA 5 had 69 story missions.
+Rockstar has published no total. This guide lists only verified missions with walkthroughs.
 
-### How long is the GTA 6 story?
+### What should I search if I'm stuck on a mission?
 
-Rockstar's Rob Nelson said his own playthrough took about 80 hours, including some optional goals. Rockstar has not given an official length.
-
-### Does GTA 6 have heists?
-
-Previews name bank heists as one way to earn money. Details of how heists are planned are not yet known.
-
-### Can you plan a robbery in GTA 6?
-
-Yes, according to Rockstar's interview with The Guardian. You can scout a target first, for example to find a back entrance or a safe code, or to turn off the cameras.
-
-### Can you replay missions in GTA 6?
-
-Not yet known. We will confirm this at launch.
-
-### Can you fail a mission by leaving the route?
-
-Previews say chases are guided but you can take another route. Exact fail rules are not yet known.
+Type the mission name or a short phrase from the objective shown on your screen. Open the matching step and follow its recovery note if the objective still won't advance.
 
 ## Sources
 
-- [TechPowerUp: GTA 6 takes around 80 hours, says developer](https://www.techpowerup.com/352127/gta-6-takes-around-80-hours-to-complete-says-developer)
-- [VICE: GTA 6 new gameplay details revealed](https://www.vice.com/en/article/gta-6-new-gameplay-features-details-revealed/)
-- [VICE: 150 new GTA 6 details from the Extended Look and previews](https://www.vice.com/en/article/gta-6-new-details-netflix-extended-look-previews/)
-- [VICE: 6 new GTA 6 gameplay details from The Guardian's Rockstar interview](https://www.vice.com/en/article/gta-6-gameplay-details-guardian-interview/)
-- [TechRadar: 16 new GTA 6 details from the Extended Look](https://www.techradar.com/gaming/ps5/16-new-gta-6-details-we-learned-from-the-big-extended-look-gameplay-video-captured-in-game-on-a-ps5)
+- [Rockstar's official GTA VI site](https://www.rockstargames.com/VI)
+- [Rockstar's Extended Look](https://www.rockstargames.com/newswire/article/4k138k8okkk483/grand-theft-auto-vi-an-extended-look-now-playing)
+- [The Guardian's Rockstar North preview](https://www.theguardian.com/games/ng-interactive/2026/nov/15/grand-theft-auto-vi-inside-rockstar-games)
+- [TechPowerUp reporting on Rob Nelson's playthrough](https://www.techpowerup.com/352127/gta-6-takes-around-80-hours-to-complete-says-developer)

@@ -1,32 +1,33 @@
 {
   "name": "GTA Six Missions",
-  "tagline": "Unofficial guide to missions, map and money",
-  "description": "Clear, sourced answers to common GTA 6 questions: release date, map locations, missions, money-making and story progression. Unofficial fan guide.",
+  "tagline": "GTA 6 Missions, Walkthroughs and Launch Help",
+  "description": "Find GTA 6 missions by name or objective and get sourced fixes for launch, download, box code, storage, and Xbox One cloud problems.",
   "baseUrl": "https://gtasixmissions.com",
   "language": "en",
-  "launchDate": "2026-11-19T00:00:00",
+  "launchDate": "2026-11-19T11:00:00Z",
   "contactEmail": "",
   "adsenseClient": "",
+  "adsenseSlot": "",
   "adPlaceholders": false,
   "affiliates": {
-    "playstation": {
-      "label": "PlayStation Store",
-      "url": "https://store.playstation.com/",
+    "ps5-boxed": {
+      "label": "GTA VI boxed Standard for PS5 at Best Buy",
+      "url": "https://www.bestbuy.com/product/grand-theft-auto-vi-code-in-box-ships-11-12-26-playable-11-19-26-playstation-5/6684968",
       "affiliateUrl": ""
     },
-    "xbox": {
-      "label": "Xbox Store",
-      "url": "https://www.xbox.com/games/store",
+    "xbox-boxed": {
+      "label": "GTA VI boxed Standard for Xbox Series X|S at Best Buy",
+      "url": "https://www.bestbuy.com/product/grand-theft-auto-vi-code-in-box-playable-11-19-26-xbox-series-x-xbox-series-s/JXHY5RKPCY/sku/6684969",
       "affiliateUrl": ""
     },
-    "amazon": {
-      "label": "Amazon",
-      "url": "https://www.amazon.com/",
+    "storage-ps5": {
+      "label": "SanDisk WD_BLACK SN850P with heatsink for PS5",
+      "url": "https://www.sandisk.com/products/ssd/internal-ssd/wd-black-sn850p-nvme-ssd-for-ps5?sku=WDBBYV0010BNC-WRSN",
       "affiliateUrl": ""
     },
-    "storage": {
-      "label": "PS5-compatible SSDs on Amazon",
-      "url": "https://www.amazon.com/s?k=ps5+m.2+ssd",
+    "storage-xbox": {
+      "label": "SanDisk WD_BLACK C50 storage expansion card for Xbox Series X|S",
+      "url": "https://www.sandisk.com/products/ssd/external-ssd/wd-black-c50-expansion-card-for-xbox-ssd?sku=WDBMPH0010BNC-WCSN",
       "affiliateUrl": ""
     }
   },
@@ -42,14 +43,14 @@
       "url": "/release-date/#which-platforms-is-gta-6-on"
     },
     {
-      "label": "Price from",
+      "label": "US price from",
       "value": "$79.99",
       "url": "/editions-price/"
     },
     {
-      "label": "Download size",
-      "value": "About 212 GB",
-      "url": "/release-date/#preload-and-download-size"
+      "label": "Free space needed",
+      "value": "Up to 212 GB",
+      "url": "/launch-help/#not-enough-space"
     }
   ],
   "regions": [

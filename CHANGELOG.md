@@ -31,3 +31,10 @@ Build and check: `node build.mjs` built 12 pages, `node check.mjs` reported 0 pr
 - `missions.md`, `beginners-guide.md`: added story length (Rob Nelson's 80-hour playthrough). Source: TechPowerUp, citing The New York Times.
 - `release-date.md`: added PS5 feature line and a PS5 Pro FAQ entry. Sources: VGC, Forbes.
 - Left out: leaked hour and mission counts, leaked review scores.
+
+## 2026-11-15 (mission search and launch help)
+
+- Put mission and objective search on the homepage and mission hub. The hub lists published, verified walkthroughs and works as a browse index without JavaScript.
+- Added launch troubleshooting for storage, boxed codes, missing or locked installs, and Xbox One cloud access. Release timing now distinguishes the U.S. PlayStation Store listing, Rockstar's native release schedule, and Xbox Cloud Gaming.
+- Updated editions guidance and linked directly to products. Product links use ordinary URLs until approved affiliate URLs are configured.
+- Moved the headline feed to the footer and outside search indexing and the sitemap.

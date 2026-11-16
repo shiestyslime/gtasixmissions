@@ -1,10 +1,10 @@
 ---
-title: GTA 6 Price, Editions and Pre-Order Bonuses
+title: GTA 6 Standard vs Ultimate Edition, Price and Where to Buy
 nav: Price and editions
 slug: editions-price
 order: 2
-description: GTA 6 costs $79.99 for the Standard Edition and $99.99 for the Ultimate Edition. What each edition includes and which one to buy.
-answer: {reported} GTA 6 costs **$79.99** (Standard Edition) or **$99.99** (Ultimate Edition) in the US. Pre-orders include the Vintage Vice City Pack.
+description: Compare GTA 6 Standard and Ultimate at US stores, see exactly what $20 adds, and find the right digital or boxed copy for PS5 and Xbox.
+answer: {confirmed} **Standard is $79.99 and includes the full game.** Ultimate is $99.99 and adds vehicles, weapons, shops and bonus activities. Start with Standard if you're unsure. You can add the Ultimate upgrade later. Boxed Standard contains a download code.
 updated: 2026-11-15
 ---
 
@@ -12,56 +12,56 @@ updated: 2026-11-15
 
 | Edition | US price | What you get |
 |---|---|---|
-| Standard | $79.99 | The full game |
-| Ultimate | $99.99 | The full game, plus extra vehicles, weapons and clothing, and extra story content for Jason and Lucia |
+| Standard | $79.99 | Full single-player game. Available digitally or as a boxed download code. |
+| Ultimate | $99.99 | The same base game plus the Ultimate upgrade. Available digitally. |
 
-{reported} Rockstar announced these prices when pre-orders opened on June 25, 2026. Prices in other countries differ. Always check the store listing before you pay.
-
-## Pre-order bonuses
-
-- {reported} **Vintage Vice City Pack** with every pre-order, on both editions.
-- {reported} **One free month of GTA+** with digital pre-orders on the PlayStation Store or Microsoft Store.
-- Pre-ordering does **not** give early access. Everyone starts on November 19, 2026.
-
-## Where to buy GTA 6
-
-- [PlayStation Store](aff:playstation) for the digital PS5 version
-- [Xbox Store](aff:xbox) for the digital Xbox Series X|S version
-- [Amazon](aff:amazon) and other retailers for physical copies
-
-{reported} The boxed copy contains a download code and no disc. It went on sale on November 12, 2026, one week before launch, so buyers can preload. You need about 212 GB of free space and an internet connection either way.
+US listing prices checked November 15, 2026 on PlayStation Store and Xbox Store. Check your local storefront for current pricing, taxes and offers.
 
 ## Which edition should you buy?
 
-Buy the **Standard Edition** if you only want the story. It is the complete game.
+**Start with Standard** if you want the story or haven’t decided whether you’ll use the extras. Standard can be upgraded on the same platform after purchase, including after redeeming a boxed copy.
 
-Consider the **Ultimate Edition** only if you want the extra items from the first hour. Cosmetic items do not change the story. We will compare the Ultimate items against in-game prices after launch, when we can test them.
+**Buy Ultimate** if the extras matter to you now. Rockstar lists bonuses such as the Grotti Cheetah, weapon variants, exclusive shops, a compound raid and a classic car collection assignment. Some extras unlock as the story progresses. The Ultimate edition gives access to those extras on the same release schedule as Standard.
+
+**Already own Standard?** Use the store on the account that owns the game. The [Xbox Ultimate upgrade](https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/9pn4llbr8rch) was listed at $20 in the US when checked. PlayStation has a separate [Ultimate upgrade listing](https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-ULTEDTIONUPGRADE/) with its own price and availability. The add-on requires a copy of GTA 6.
+
+## Where to buy GTA 6
+
+- **PS5 digital** — [PlayStation Store Standard](https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-GTAVISTANDARD001/) or [PlayStation Store Ultimate](https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-GTAVIULTIMATE001/).
+- **Xbox Series X and S digital** — [Xbox Store Standard](https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/9p3h4968grsm) or [Xbox Store Ultimate](https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/9NNZSNHLR63L).
+- **US boxed Standard** — [PS5 code-in-box at Best Buy](aff:ps5-boxed) or [Xbox Series X and S code-in-box at Best Buy](aff:xbox-boxed). Check local stock and pickup on the retailer's page.
+
+{confirmed} **Boxed Standard contains a single-use download code.** It still requires a download and the right account region. Buy a copy that matches your platform and account region, especially if importing or giving it as a gift. If you already have a code, follow the [redemption and download checks](/launch-help/#boxed-code-not-working).
+
+## Pre-order bonuses
+
+Rockstar announced the Vintage Vice City Pack for eligible launch purchases. Official digital listings also describe a one-month GTA+ offer with its own redemption conditions. Use the offer on your local store page to confirm eligibility, end date and renewal terms. [Check exact unlock timing separately](/release-date/#when-does-gta-6-come-out).
 
 ## FAQ
 
 ### How much is GTA 6?
 
-The Standard Edition is $79.99 and the Ultimate Edition is $99.99 in the US.
+The checked US digital price is $79.99 for Standard and $99.99 for Ultimate before applicable taxes.
 
 ### Does pre-ordering GTA 6 give early access?
 
-No. No edition includes early access. The game unlocks for everyone on November 19, 2026.
+You can preload eligible purchases, then play once the game unlocks in your region. Both editions follow the same release schedule.
 
 ### Can I upgrade from Standard to Ultimate later?
 
-Reports say an upgrade option appears in the PlayStation Store for Standard owners. Check your store for the current upgrade price.
+Yes. Use the PlayStation Store or Xbox Store on the account that owns Standard. Redeem the game code first if you purchased a boxed copy.
 
 ### Does the physical copy of GTA 6 come with a disc?
 
-No, according to reports. The box holds a download code. There is no disc in it.
+The box contains a download code. You redeem the code through the account store to download the game.
 
 ### Is the GTA 6 Ultimate Edition worth it?
 
-Not if you only want the story. The Standard Edition is the full game. The Ultimate Edition adds items and some extra content for $20 more.
+Standard gives you the full base game for $20 less at the checked US prices. Choose Ultimate if you want its extra activities, vehicles, weapons and shops now. You can also upgrade later.
 
 ## Sources
 
-- [Rockstar Games: Grand Theft Auto VI official site](https://www.rockstargames.com/VI)
-- [Push Square: GTA 6 physical edition is a code in the box](https://www.pushsquare.com/news/2026/06/gta-6-physical-edition-doesnt-come-with-discs-its-a-code-in-the-box)
-- [Techloy: GTA 6 preorder prices and editions](https://www.techloy.com/gta-6-preorder-prices-editions/)
-- [Tom's Guide: GTA 6 pre-orders](https://www.tomsguide.com/gaming/playstation/gta-6-pre-orders-playstation-store-update-could-hint-at-new-details-soon)
+- [Rockstar Support editions, boxed copies and upgrade details](https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions)
+- [Take-Two’s pre-order and pricing announcement](https://ir.take2games.com/node/32311/pdf)
+- [US PlayStation Store edition prices and offer terms](https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-GTAVISTANDARD001/)
+- [US Xbox Store edition prices and offer terms](https://www.xbox.com/en-US/games/store/grand-theft-auto-vi/9p3h4968grsm)

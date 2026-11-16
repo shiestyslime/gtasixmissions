@@ -2,14 +2,16 @@
 title: Privacy Policy
 slug: privacy
 order: 21
-description: What data this site collects and how advertising cookies are used.
-answer: This site does not ask for accounts or personal details. Advertising partners may use cookies if ads are enabled.
-updated: 2026-11-14
+description: How this guide handles local searches, storage input, site logs and external store links.
+answer: Searches and storage calculations stay on your device. This guide does not ask you to create an account or submit a game code.
+updated: 2026-11-15
 ---
 
 ## What we collect
 
 We do not ask you to create an account or give personal details. The hosting provider may keep standard server logs, such as IP address and browser type, for security.
+
+Search downloads the public guide index and matches your query in the browser. The storage checker calculates the result in your browser. Neither tool sends the text or numbers you enter to the site.
 
 ## Advertising
 
@@ -21,7 +23,7 @@ This site loads one font from Google Fonts. Your browser contacts Google's serve
 
 ## Affiliate links
 
-Store links may be affiliate links. The store may set its own cookies when you follow one.
+We label links that may earn a commission. External stores have their own privacy and cookie policies.
 
 ## Changes
 

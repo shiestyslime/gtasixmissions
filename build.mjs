@@ -9,13 +9,15 @@ const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(ROOT, 'dist');
 const site = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.json'), 'utf8'));
 const BASE = site.baseUrl.replace(/\/$/, '');
-const NOW = process.env.BUILD_DATE ? new Date(process.env.BUILD_DATE + 'T12:00:00') : new Date();
+const NOW = process.env.BUILD_DATE ? new Date(process.env.BUILD_DATE + 'T12:00:00Z') : new Date();
+// This switches editorial copy after the rolling launch, not a user's store countdown.
 const LAUNCHED = NOW >= new Date(site.launchDate);
+const adReady = Boolean(site.adsenseClient && site.adsenseSlot);
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const unent = (s) => s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0?39;|&apos;|&#8217;|&#x2019;/g, "'").replace(/&#8216;/g, "'").replace(/&#822[01];/g, '"').replace(/&#8211;/g, '-').replace(/&amp;/g, '&');
-const stripTags = (h) => unent(h.replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
+const stripTags = (h) => unent(h.replace(/<\/(?:p|h[23]|li|tr)>/g, ' ').replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
 const TAGS = { confirmed: 'Confirmed', reported: 'Reported', unknown: 'Not yet known' };
 
 // ---------- tiny markdown ----------
@@ -24,7 +26,7 @@ function link(text, url) {
     const a = site.affiliates[url.slice(4)];
     if (!a) throw new Error(`Unknown affiliate key: ${url}`);
     return a.affiliateUrl
-      ? `<a href="${esc(a.affiliateUrl)}" rel="sponsored nofollow noopener">${text}</a>`
+      ? `<a href="${esc(a.affiliateUrl)}" rel="sponsored nofollow noopener">${text}</a> <span class="affiliate-note">We may earn a commission.</span>`
       : `<a href="${esc(a.url)}" rel="noopener">${text}</a>`;
   }
   return /^https?:/.test(url) ? `<a href="${esc(url)}" rel="noopener">${text}</a>` : `<a href="${esc(url)}">${text}</a>`;
@@ -33,7 +35,7 @@ function inline(s) {
   return esc(s)
     .replace(/\{(confirmed|reported|unknown)\}/g, (_, t) => `<span class="tag tag-${t}">${TAGS[t]}</span>`)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, t, u) => link(t, u));
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, t, u) => link(t, unent(u)));
 }
 function md(src) {
   const lines = src.split('\n');
@@ -73,7 +75,7 @@ function md(src) {
 const phase = (src) => src.replace(/^::: (prelaunch|postlaunch)\n([\s\S]*?)\n:::$/gm, (_, k, body) => ((k === 'postlaunch') === LAUNCHED ? body : ''));
 
 // ---------- load content ----------
-function loadPage(file) {
+function loadPage(file, isMission = false) {
   const raw = fs.readFileSync(file, 'utf8');
   const m = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   if (!m) throw new Error(`Missing front matter: ${file}`);
@@ -82,7 +84,13 @@ function loadPage(file) {
     const k = line.indexOf(':');
     if (k > 0) meta[line.slice(0, k).trim()] = line.slice(k + 1).trim();
   }
-  for (const req of ['title', 'slug', 'description', 'answer', 'updated']) if (!meta[req]) throw new Error(`${file}: missing "${req}"`);
+  if (isMission && meta.status !== 'published') return null;
+  const required = ['title', 'slug', 'description', 'answer', 'updated'];
+  if (isMission) required.push('testedPlatform', 'testedDate');
+  for (const key of required) if (!meta[key]) throw new Error(`${file}: missing "${key}"`);
+  const routeSlug = isMission ? /^missions\/[a-z0-9]+(?:-[a-z0-9]+)*$/ : /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  if (!routeSlug.test(meta.slug)) throw new Error(`${file}: invalid page slug`);
+  if (isMission && !/^\d{4}-\d{2}-\d{2}$/.test(meta.testedDate)) throw new Error(`${file}: invalid test date`);
   if (LAUNCHED && meta.answer_postlaunch) meta.answer = meta.answer_postlaunch;
   let body = phase(m[2]);
   const cut = (heading) => {
@@ -96,14 +104,21 @@ function loadPage(file) {
   const faq = cut('FAQ').split(/^### /m).slice(1).map((chunk) => {
     const [q, ...rest] = chunk.split('\n');
     const html = md(rest.join('\n'));
-    return { q: q.trim(), html, text: stripTags(html) };
+    return { q: q.trim(), id: `faq-${slugify(q)}`, html, text: stripTags(html) };
   });
   const html = md(body);
   const toc = [...html.matchAll(/<h2 id="([^"]+)">(.*?)<\/h2>/g)].map((x) => ({ id: x[1], text: stripTags(x[2]) }));
-  return { ...meta, order: Number(meta.order || 99), html, toc, faq, sourcesHtml: sources ? md(sources) : '', plain: stripTags(html), url: `/${meta.slug}/` };
+  return { ...meta, isMission, order: Number(meta.order || 99), html, toc, faq, sourcesHtml: sources ? md(sources) : '', plain: stripTags(html).replace('[storage-check]', '').trim(), url: `/${meta.slug}/` };
 }
-const pages = fs.readdirSync(path.join(ROOT, 'content')).filter((f) => f.endsWith('.md'))
-  .map((f) => loadPage(path.join(ROOT, 'content', f))).sort((a, b) => a.order - b.order);
+function readPages(dir, isMission = false) {
+  const folder = path.join(ROOT, 'content', dir);
+  if (!fs.existsSync(folder)) return [];
+  return fs.readdirSync(folder).filter((file) => file.endsWith('.md'))
+    .map((file) => loadPage(path.join(folder, file), isMission)).filter(Boolean);
+}
+const missions = readPages('missions', true).sort((a, b) => a.order - b.order);
+const pages = [...readPages(''), ...missions].sort((a, b) => a.order - b.order);
+if (new Set(pages.map((page) => page.slug)).size !== pages.length) throw new Error('Duplicate page slug');
 const guides = pages.filter((p) => p.nav);
 
 // ---------- news (headlines from publisher RSS feeds, cached in data/news.json) ----------
@@ -136,11 +151,16 @@ async function loadNews() {
   return items;
 }
 const news = await loadNews();
-const nav = [...guides.map((p) => ({ label: p.nav, url: p.url })), ...(news.length ? [{ label: 'News', url: '/news/' }] : [])];
+const nav = ['missions', 'launch-help', 'editions-price', 'progression', 'release-date'].map((slug) => {
+  const page = pages.find((p) => p.slug === slug);
+  return { label: page.nav, url: page.url };
+});
+const footerNav = [...guides.map((p) => ({ label: p.nav, url: p.url })), ...(news.length ? [{ label: 'News', url: '/news/' }] : [])];
 
 // ---------- art and icons (all original, no game assets) ----------
 const ICONS = {
   'release-date': '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  'launch-help': '<circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 1 1 4.4 2.65c-1 .6-1.4 1.1-1.4 2.35M12 17h.01"/>',
   'editions-price': '<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/>',
   'map-locations': '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
   characters: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-4 3-6 6.5-6s6 2 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.2 1.6 4.6 4.5"/>',
@@ -190,10 +210,10 @@ function scene() {
 // ---------- templates ----------
 const ld = (obj) => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, '\\u003c')}</script>`;
 function adSlot(name) {
-  if (site.adsenseClient) return `<div class="ad"><ins class="adsbygoogle" style="display:block" data-ad-client="${esc(site.adsenseClient)}" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>`;
+  if (adReady) return `<div class="ad" aria-label="Advertisement"><ins class="adsbygoogle" style="display:block" data-ad-client="${esc(site.adsenseClient)}" data-ad-slot="${esc(site.adsenseSlot)}" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(window.adsbygoogle=window.adsbygoogle||[]).push({});</script></div>`;
   return site.adPlaceholders ? `<div class="ad ad-placeholder" aria-hidden="true">Ad slot: ${esc(name)}</div>` : '';
 }
-function layout({ title, description, url, body, jsonld = [], ogType = 'article', scripts = '' }) {
+function layout({ title, description, url, body, jsonld = [], ogType = 'article', scripts = '', index = true, ads = false }) {
   const canonical = BASE + url;
   return `<!doctype html>
 <html lang="${site.language}">
@@ -209,14 +229,14 @@ function layout({ title, description, url, body, jsonld = [], ogType = 'article'
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${canonical}">
 <meta name="twitter:card" content="summary">
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="robots" content="${index ? 'index, follow, max-snippet:-1, max-image-preview:large' : 'noindex, follow'}">
 <meta name="theme-color" content="#170b30">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
 <link rel="stylesheet" href="/style.css">
-${site.adsenseClient ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${esc(site.adsenseClient)}" crossorigin="anonymous"></script>` : ''}
+${ads && adReady ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${esc(site.adsenseClient)}" crossorigin="anonymous"></script>` : ''}
 ${jsonld.map(ld).join('\n')}
 </head>
 <body>
@@ -234,7 +254,7 @@ ${body}
   <div class="wrap foot">
     <div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>${esc(site.name)}</a>
     <p>An unofficial fan site. Not affiliated with, endorsed by, or sponsored by Rockstar Games or Take-Two Interactive. Grand Theft Auto and related names are trademarks of their owners.</p></div>
-    <ul>${nav.map((n) => `<li><a href="${n.url}">${esc(n.label)}</a></li>`).join('')}</ul>
+    <ul>${footerNav.map((n) => `<li><a href="${n.url}">${esc(n.label)}</a></li>`).join('')}</ul>
     <ul><li><a href="/about/">About and sources</a></li><li><a href="/about/#advertising-and-affiliate-disclosure">Ad and affiliate disclosure</a></li><li><a href="/privacy/">Privacy</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul>
   </div>
 </footer>
@@ -247,24 +267,61 @@ const fmtDate = (d) => new Date(d.length === 10 ? d + 'T12:00:00Z' : d).toLocale
 const card = (p) => `<a class="card" href="${p.url}"><span class="card-icon">${icon(p.slug)}</span><h3>${esc(p.nav || p.title)}</h3><p>${esc(p.description)}</p><span class="card-go" aria-hidden="true">Read guide →</span></a>`;
 const newsList = (items) => `<ul class="news">${items.map((n) => `<li><a href="${esc(n.link)}" rel="nofollow noopener">${esc(n.title)}</a><span>${esc(n.source)} · <time datetime="${n.date}">${fmtDate(n.date)}</time></span></li>`).join('')}</ul>`;
 const pageHero = (crumb, h1, meta) => `<div class="page-hero"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span aria-hidden="true">/</span> ${esc(crumb)}</nav><h1>${esc(h1)}</h1>${meta}</div></div>`;
+const searchUi = `<form class="search" role="search" data-site-search hidden>
+<label for="q">Find a mission or objective</label>
+<input id="q" type="search" placeholder="Mission, objective, or error" autocomplete="off" aria-controls="results" aria-describedby="search-status">
+<p class="search-status" id="search-status" data-search-status role="status"></p>
+<ul class="results" id="results" data-search-results hidden></ul>
+</form>`;
+const searchScript = '<script defer src="/search.js"></script>';
+const launchJumps = [
+  { label: 'Box code problem', url: '/launch-help/#boxed-code-not-working' },
+  { label: 'Game missing or locked', url: '/launch-help/#game-missing-or-locked' },
+  { label: 'Not enough space', url: '/launch-help/#not-enough-space' },
+  { label: 'Play on Xbox One', url: '/launch-help/#xbox-one-cloud-gaming' },
+];
+const quickJumps = (links, label) => `<nav class="quick-jumps" aria-label="${label}"><ul>${links.map((item) => `<li><a href="${item.url}">${item.label}</a></li>`).join('')}</ul></nav>`;
+const storageCheck = `<form class="storage-check" data-storage-check hidden>
+<fieldset><legend>Check how much space to free</legend>
+<p>Use the free space on your install drive and the requirement shown on your console. The default uses Rockstar’s up-to-212 GB planning figure.</p>
+<div class="storage-fields">
+<label>Free space (GB)<input name="available" type="number" min="0" max="100000" step="any" inputmode="decimal" required></label>
+<label>Required space (GB)<input name="required" type="number" min="1" max="100000" step="any" value="212" inputmode="decimal" required></label>
+</div>
+<button class="btn" type="submit">Check space</button>
+<output name="shortfall" data-storage-result role="status"></output>
+</fieldset></form>`;
+
+function missionIndex() {
+  const published = missions.length === 1 ? '1 verified walkthrough' : `${missions.length} verified walkthroughs`;
+  return `<section class="mission-list"><h2 id="walkthroughs">${published}</h2>
+${missions.length ? `<ul>${missions.map((mission) => `<li><a href="${mission.url}">${esc(mission.h1 || mission.title)}</a> <span>Tested on ${esc(mission.testedPlatform)}</span></li>`).join('')}</ul>` : '<p>Verified guides will appear here after retail play and review.</p>'}
+</section>`;
+}
 
 function renderPage(p) {
-  const related = guides.filter((x) => x.slug !== p.slug).slice(0, 3);
-  const faqHtml = p.faq.length ? `<section class="faq"><h2 id="faq">Frequently asked questions</h2>${p.faq.map((f) => `<details><summary>${esc(f.q)}</summary>${f.html}</details>`).join('')}</section>` : '';
-  // The first ad goes after the first section so the answer always comes first.
-  const second = p.html.indexOf('<h2', p.html.indexOf('<h2') + 1);
-  const content = second > 0 ? p.html.slice(0, second) + adSlot('in-article') + p.html.slice(second) : p.html;
+  const related = nav.map(({ url }) => guides.find((guide) => guide.url === url)).filter((item) => item.slug !== p.slug).slice(0, 3);
+  const faqHtml = p.faq.length ? `<section class="faq"><h2 id="faq">Frequently asked questions</h2>${p.faq.map((f) => `<details id="${f.id}"><summary>${esc(f.q)}</summary>${f.html}</details>`).join('')}</section>` : '';
+  // Keep the answer and first two sections ahead of any optional ad.
+  const adPosition = [...p.html.matchAll(/<h2 /g)][2]?.index;
+  const ads = p.isMission && p.ads === 'yes' && adPosition !== undefined;
+  const content = ads ? p.html.slice(0, adPosition) + adSlot('in-article') + p.html.slice(adPosition) : p.html;
+  const launchHelp = p.slug === 'launch-help';
+  const missionHub = p.slug === 'missions';
+  const phaseLabel = p.isMission ? `Tested on ${esc(p.testedPlatform)}` : LAUNCHED ? 'Launch guide' : 'Pre-launch info';
   const toc = p.toc.length > 2 ? `<nav class="toc" aria-label="On this page"><strong>On this page</strong><ul>${p.toc.map((t) => `<li><a href="#${t.id}">${esc(t.text)}</a></li>`).join('')}${p.faq.length ? '<li><a href="#faq">FAQ</a></li>' : ''}</ul></nav>` : '';
-  const body = `${pageHero(p.nav || p.title, p.h1 || p.title, `<p class="meta"><span class="pill">${LAUNCHED ? 'Game is out' : 'Pre-launch info'}</span> Updated <time datetime="${p.updated}">${fmtDate(p.updated)}</time> · <a href="/about/#how-we-label-facts">How we label facts</a></p>`)}
+  const freshness = p.isMission ? `Tested <time datetime="${p.testedDate}">${fmtDate(p.testedDate)}</time>${p.testedBuild ? ` · Build ${esc(p.testedBuild)}` : ''}` : `Updated <time datetime="${p.updated}">${fmtDate(p.updated)}</time>`;
+  const body = `${pageHero(p.nav || p.title, p.h1 || p.title, `<p class="meta"><span class="pill">${phaseLabel}</span> ${freshness} · <a href="/about/#how-we-label-facts">How we label facts</a></p>`)}
 <div class="wrap article-grid">
 <article>
 <div class="answer"><span class="answer-label">Quick answer</span><p>${inline(p.answer)}</p></div>
-${content}
-${adSlot('before-faq')}
+${launchHelp ? quickJumps(launchJumps, 'Jump to a launch problem') : ''}
+${missionHub ? `${searchUi}${missionIndex()}` : ''}
+${launchHelp ? content.replace('<p>[storage-check]</p>', storageCheck) : content}
 ${faqHtml}
 ${p.sourcesHtml ? `<section class="sources"><h2 id="sources">Sources</h2>${p.sourcesHtml}</section>` : ''}
 </article>
-<aside class="side">${toc}<div class="legend"><strong>Fact labels</strong><p><span class="tag tag-confirmed">Confirmed</span> Official Rockstar source</p><p><span class="tag tag-reported">Reported</span> Press previews</p><p><span class="tag tag-unknown">Not yet known</span> Not announced</p></div></aside>
+<aside class="side">${toc}<div class="legend"><strong>Fact labels</strong><p><span class="tag tag-confirmed">Confirmed</span> Official publisher or platform source</p><p><span class="tag tag-reported">Reported</span> Press previews</p><p><span class="tag tag-unknown">Not yet known</span> Not announced</p></div></aside>
 </div>
 <section class="wrap related"><h2>Keep reading</h2><div class="cards">${related.map(card).join('')}</div></section>`;
   const jsonld = [
@@ -273,59 +330,71 @@ ${p.sourcesHtml ? `<section class="sources"><h2 id="sources">Sources</h2>${p.sou
   ];
   if (p.faq.length) jsonld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: p.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.text } })) });
   const full = `${p.title} | ${site.name}`;
-  return layout({ title: full.length <= 65 ? full : p.title, description: p.description, url: p.url, body, jsonld });
+  const scripts = `${missionHub || p.faq.length ? searchScript : ''}${launchHelp ? '<script defer src="/storage.js"></script>' : ''}`;
+  return layout({ title: full.length <= 65 ? full : p.title, description: p.description, url: p.url, body, jsonld, scripts, ads });
 }
 
 function renderHome() {
-  const topFaq = pages.flatMap((p) => p.faq.slice(0, 1).map((f) => ({ ...f, url: p.url }))).slice(0, 8);
+  const featured = nav.map(({ url }) => guides.find((guide) => guide.url === url));
+  const topFaq = featured.flatMap((p) => p.faq.slice(0, 1).map((f) => ({ ...f, url: p.url + '#' + f.id })));
   const body = `<section class="hero">
 ${scene()}
 <div class="wrap hero-inner">
 <p class="eyebrow">Unofficial GTA 6 guide</p>
-<h1>Straight answers for <span>Grand Theft Auto VI</span></h1>
-<p class="lede">Missions, map, money and progression. Every fact is labeled and sourced. No leaks sold as facts.</p>
-<div class="countdown" id="countdown" data-launch="${site.launchDate}">
-  <p class="cd-label" id="cd-label">${LAUNCHED ? 'Out now on PS5 and Xbox Series X|S' : 'Launches November 19, 2026 · PS5 and Xbox Series X|S'}</p>
-  <div class="cd-tiles" id="cd-tiles"${LAUNCHED ? ' hidden' : ''}>${['Days', 'Hours', 'Min', 'Sec'].map((u) => `<div><b data-u="${u}">--</b><span>${u}</span></div>`).join('')}</div>
-</div>
-<div class="hero-cta"><a class="btn" href="/beginners-guide/">Start here</a><a class="btn btn-ghost" href="/money-making/">How money works</a></div>
+<h1>GTA 6 <span>missions and walkthroughs</span></h1>
+<p class="lede">Find your next objective or fix a problem getting into the game.</p>
+${searchUi}
+<div class="hero-cta"><a class="btn" href="/missions/">Browse missions</a><a class="btn btn-ghost" href="/launch-help/">Fix a launch problem</a></div>
 </div>
 </section>
 <section class="facts"><div class="wrap facts-row">${site.keyFacts.map((f) => `<a href="${f.url}"><span>${esc(f.label)}</span><b>${esc(f.value)}</b></a>`).join('')}</div></section>
 <div class="wrap">
-<section class="search"><label for="q">Find an answer</label><input id="q" type="search" placeholder="Try: fence, wanted stars, file size, PC" autocomplete="off"><ul id="results" class="results" hidden></ul></section>
-<section><h2>Guides</h2><div class="cards">${guides.map(card).join('')}</div></section>
+<section><h2>Get ready to play</h2>${quickJumps(launchJumps, 'Launch problems')}</section>
+<section><h2>Guides</h2><div class="cards">${[...featured, ...guides.filter((guide) => !featured.includes(guide))].map(card).join('')}</div></section>
 <section><h2>Explore Leonida</h2><div class="regions">${site.regions.map((r, i) => `<a class="region r${i + 1}" href="/map-locations/#${slugify(r.name)}"><b>${esc(r.name)}</b><span>${esc(r.blurb)}</span></a>`).join('')}</div></section>
-${adSlot('home')}
-${news.length ? `<section><div class="sec-head"><h2>Latest GTA 6 headlines</h2><a href="/news/">All news →</a></div>${newsList(news.slice(0, 5))}</section>` : ''}
 <section class="faq"><h2>Top questions</h2>${topFaq.map((f) => `<details><summary>${esc(f.q)}</summary>${f.html}<p><a href="${f.url}">Read the full guide →</a></p></details>`).join('')}</section>
 </div>`;
-  const scripts = `<script>
-(function(){var el=document.getElementById('countdown'),tiles=document.getElementById('cd-tiles'),label=document.getElementById('cd-label');
-function tick(){var ms=new Date(el.dataset.launch)-new Date();
-if(ms<=0){tiles.hidden=true;label.textContent='Out now on PS5 and Xbox Series X|S';return;}
-var v={Days:Math.floor(ms/864e5),Hours:Math.floor(ms/36e5)%24,Min:Math.floor(ms/6e4)%60,Sec:Math.floor(ms/1e3)%60};
-tiles.querySelectorAll('b').forEach(function(b){b.textContent=String(v[b.dataset.u]).padStart(2,'0');});setTimeout(tick,1000);}tick();
-var q=document.getElementById('q'),out=document.getElementById('results'),idx=null;
-function show(){var t=q.value.trim().toLowerCase();if(t.length<2||!idx){out.hidden=true;return;}
-var words=t.split(/\\s+/),hits=idx.filter(function(e){var s=(e.q+' '+e.a).toLowerCase();return words.every(function(w){return s.indexOf(w)>-1;});}).slice(0,6);
-out.innerHTML='';hits.forEach(function(e){var li=document.createElement('li'),a=document.createElement('a'),p=document.createElement('p');a.href=e.url;a.textContent=e.q;p.textContent=e.a;li.appendChild(a);li.appendChild(p);out.appendChild(li);});
-if(!hits.length){var li=document.createElement('li');li.textContent='No answer yet. Try another word.';out.appendChild(li);}out.hidden=false;}
-q.addEventListener('focus',function(){if(!idx)fetch('/search.json').then(function(r){return r.json();}).then(function(d){idx=d;show();});});
-q.addEventListener('input',show);})();
-</script>`;
   const jsonld = [
     { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: BASE + '/', description: site.description, publisher: org },
     { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: topFaq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.text } })) },
   ];
-  return layout({ title: `${site.name}: ${site.tagline}`, description: site.description, url: '/', body, jsonld, ogType: 'website', scripts });
+  return layout({ title: `${site.name}: ${site.tagline}`, description: site.description, url: '/', body, jsonld, ogType: 'website', scripts: searchScript });
 }
 
 function renderNews() {
   const body = `${pageHero('News', 'Latest GTA 6 News Headlines', `<p class="meta"><span class="pill">Auto-updated</span> Refreshed <time datetime="${NOW.toISOString()}">${fmtDate(NOW.toISOString())}</time></p>`)}
 <div class="wrap narrow"><p>Headlines about GTA 6 from established gaming outlets. Each link opens the original article on the publisher's site. This list refreshes each time the site rebuilds.</p>
-${newsList(news)}${adSlot('news')}</div>`;
-  return layout({ title: `Latest GTA 6 News Headlines | ${site.name}`, description: 'The latest GTA 6 news headlines from established gaming outlets, refreshed daily, with links to the original articles.', url: '/news/', body, ogType: 'website' });
+${newsList(news.filter(({ title }) => !/\b(leak\w*|rumou?r\w*|spoiler\w*)\b/i.test(title)))}</div>`;
+  return layout({ title: `Latest GTA 6 News Headlines | ${site.name}`, description: 'The latest GTA 6 news headlines from established gaming outlets, refreshed daily, with links to the original articles.', url: '/news/', body, ogType: 'website', index: false });
+}
+
+const searchAliases = {
+  '/missions/': ['story mission list', 'all walkthroughs', 'mission order', 'where am i in the story'],
+  '/progression/': ['what to do next', 'next available mission', 'mission not starting', 'story unlock'],
+  '/money-making/': ['how to get money', 'earn cash', 'make money', 'how to sell stolen goods'],
+  '/editions-price/': ['buy gta 6', 'standard vs ultimate', 'which edition should i buy', 'price', 'physical disc or code'],
+  '/release-date/': ['when can i play', 'what time does it unlock', 'launch time', 'united states pacific release time', 'release time ps5'],
+  '/launch-help/#not-enough-space': ['not enough storage', 'storage full', 'free space', 'file size', 'download size', 'how many gb', 'need an ssd', 'storage calculator'],
+  '/launch-help/#boxed-code-not-working': ['voucher not working', 'can’t redeem code'],
+  '/launch-help/#code-missing-or-unreadable': ['missing code', 'code not in box', 'no code', 'damaged voucher'],
+  '/launch-help/#wrong-region': ['code region mismatch', 'wrong country', 'code for a different region'],
+  '/launch-help/#code-already-redeemed': ['code already redeemed', 'code already used', 'code has been used'],
+  '/launch-help/#game-missing-or-locked': ['game missing or locked', 'cannot launch'],
+  '/launch-help/#missing-after-redemption': ['game not in library', 'already owned', 'download not showing'],
+  '/launch-help/#installed-but-locked': ['game locked', 'padlock', 'lock icon', 'restore licenses'],
+  '/launch-help/#xbox-one-cloud-gaming': ['can i play on xbox one', 'xbox one', 'cloud gaming', 'game pass', 'cloud playtime'],
+};
+
+function sectionResults(page) {
+  const parts = page.html.split(/<h[23] id="([^"]+)">(.*?)<\/h[23]>/);
+  const results = [];
+  for (let i = 1; i < parts.length; i += 3) {
+    const [id, heading, body] = parts.slice(i, i + 3);
+    const url = `${page.url}#${id}`;
+    const summary = stripTags((body.match(/<(?:p|ol|ul)>[\s\S]*?<\/(?:p|ol|ul)>/) || [body])[0]);
+    if (summary) results.push({ q: stripTags(heading), a: summary.slice(0, 220), url, kind: page.isMission ? 'objective' : 'support', aliases: searchAliases[url] || [] });
+  }
+  return results;
 }
 
 // ---------- write ----------
@@ -336,20 +405,20 @@ const write = (rel, data) => { const f = path.join(OUT, rel); fs.mkdirSync(path.
 write('index.html', renderHome());
 for (const p of pages) write(`${p.slug}/index.html`, renderPage(p));
 if (news.length) write('news/index.html', renderNews());
-write('404.html', layout({ title: `Page not found | ${site.name}`, description: 'This page does not exist. Use the links below to find a GTA 6 guide.', url: '/404.html', body: `${pageHero('Not found', 'Page not found', '')}<div class="wrap"><p>Try one of these guides.</p><div class="cards">${guides.map(card).join('')}</div></div>` }).replace('index, follow', 'noindex'));
+write('404.html', layout({ title: `Page not found | ${site.name}`, description: 'This page does not exist. Use the links below to find a GTA 6 guide.', url: '/404.html', body: `${pageHero('Not found', 'Page not found', '')}<div class="wrap"><p>Try one of these guides.</p><div class="cards">${guides.map(card).join('')}</div></div>`, index: false }));
 for (const f of fs.readdirSync(path.join(ROOT, 'assets'))) fs.copyFileSync(path.join(ROOT, 'assets', f), path.join(OUT, f));
+const searchable = [...guides, ...missions.filter((page) => !page.nav)];
 write('search.json', JSON.stringify([
-  ...guides.map((p) => ({ q: p.title, a: stripTags(inline(p.answer)), url: p.url })),
-  ...pages.flatMap((p) => p.faq.map((f) => ({ q: f.q, a: f.text.slice(0, 220), url: p.url + '#faq' }))),
+  ...searchable.map((p) => ({ q: p.h1 || p.title, a: stripTags(inline(p.answer)), url: p.url, aliases: [...(searchAliases[p.url] || []), ...(p.aliases ? p.aliases.split('|').map((alias) => alias.trim()).filter(Boolean) : [])] })),
+  ...searchable.filter((p) => p.isMission || p.slug === 'launch-help').flatMap(sectionResults),
+  ...searchable.flatMap((p) => p.faq.map((f) => ({ q: f.q, a: f.text.slice(0, 220), url: `${p.url}#${f.id}` }))),
 ]));
 
 const latest = pages.map((p) => p.updated).sort().pop();
-const today = NOW.toISOString().slice(0, 10);
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url><loc>${BASE}/</loc><lastmod>${latest}</lastmod></url>
 ${pages.map((p) => `<url><loc>${BASE}${p.url}</loc><lastmod>${p.updated}</lastmod></url>`).join('\n')}
-${news.length ? `<url><loc>${BASE}/news/</loc><lastmod>${today}</lastmod></url>` : ''}
 </urlset>
 `);
 // Search and AI crawlers are explicitly welcome.
@@ -358,19 +427,19 @@ write('robots.txt', `User-agent: *\nAllow: /\n\n${bots.map((b) => `User-agent: $
 const plainAnswer = (p) => stripTags(inline(p.answer)).replace(/^(Confirmed|Reported|Not yet known) /, '');
 write('llms.txt', `# ${site.name}
 
-> ${site.description} Facts are labeled Confirmed (official Rockstar source), Reported (press previews or reliable outlets) or Not yet known. Game status: ${LAUNCHED ? 'released' : 'not yet released'}. Last updated ${latest}.
+> ${site.description} Facts are labeled Confirmed (official publisher or platform source), Reported (press previews or reliable outlets) or Not yet known. Last updated ${latest}.
 
 ## Guides
 
-${guides.map((p) => `- [${p.title}](${BASE}${p.url}): ${plainAnswer(p)}`).join('\n')}
+${searchable.map((p) => `- [${p.title}](${BASE}${p.url}): ${plainAnswer(p)}`).join('\n')}
 
 ## Optional
 
 - [Full text of all guides](${BASE}/llms-full.txt)
 - [About, sources and disclosure](${BASE}/about/)
 `);
-write('llms-full.txt', guides.map((p) => `# ${p.title}\nURL: ${BASE}${p.url}\nLast updated: ${p.updated}\n\nQuick answer: ${stripTags(inline(p.answer))}\n\n${p.plain}\n\n${p.faq.map((f) => `Q: ${f.q}\nA: ${f.text}`).join('\n\n')}`).join('\n\n---\n\n') + '\n');
-if (site.adsenseClient) write('ads.txt', `google.com, ${site.adsenseClient.replace('ca-', '')}, DIRECT, f08c47fec0942fa0\n`);
+write('llms-full.txt', searchable.map((p) => `# ${p.title}\nURL: ${BASE}${p.url}\nLast updated: ${p.updated}\n\nQuick answer: ${stripTags(inline(p.answer))}\n\n${p.plain}\n\n${p.faq.map((f) => `Q: ${f.q}\nA: ${f.text}`).join('\n\n')}`).join('\n\n---\n\n') + '\n');
+if (adReady) write('ads.txt', `google.com, ${site.adsenseClient.replace('ca-', '')}, DIRECT, f08c47fec0942fa0\n`);
 
 console.log(`Built ${pages.length + 1 + (news.length ? 1 : 0)} pages to dist/ (${LAUNCHED ? 'post-launch' : 'pre-launch'} mode, ${news.length} headlines)`);
 if (BASE.includes('example.com')) console.warn('NOTE: baseUrl in site.json is still https://example.com. Set your real domain before deploying.');

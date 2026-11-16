@@ -1,90 +1,80 @@
 ---
-title: GTA 6 Release Date, Launch Time, Platforms and File Size
+title: GTA 6 Release Date, PS5 and Xbox Unlock Times, and Storage
 nav: Release date
 slug: release-date
 order: 1
-description: GTA 6 launches November 19, 2026 on PS5 and Xbox Series X|S. Launch time, preload, file size, frame rate and PC status, with sources.
-answer: {confirmed} GTA 6 releases on **Thursday, November 19, 2026** for **PlayStation 5 and Xbox Series X|S**. There is no PC version at launch.
-answer_postlaunch: {confirmed} GTA 6 released on **Thursday, November 19, 2026** for **PlayStation 5 and Xbox Series X|S**. It is out now. There is no PC version yet.
+description: Check the GTA 6 release date, U.S. PS5 unlock, Xbox Cloud Gaming start, supported platforms and storage requirement.
+answer: {confirmed} GTA 6 launches on **November 19, 2026** for PS5 and Xbox Series X|S. The U.S. PlayStation Store lists **9 p.m. Pacific on November 18**. Xbox Cloud Gaming has a separate start time.
+answer_postlaunch: {confirmed} GTA 6 released on **November 19, 2026** on PS5 and Xbox Series X|S. Xbox One players can stream through Xbox Cloud Gaming in supported markets.
 updated: 2026-11-15
 ---
 
 ## When does GTA 6 come out?
 
 ::: prelaunch
-{confirmed} Grand Theft Auto VI releases on November 19, 2026. Rockstar Games set this date on November 6, 2025.
-
-{reported} The game unlocks at midnight in your local time zone in most countries. Check your console's store page for the exact unlock time in your region.
-
-{reported} The United States may be an exception. Reports say US stores use one unlock time set to midnight Eastern. If that holds, players further west can start on the evening of Wednesday, November 18, at about 9 PM Pacific. Rockstar has not published a time for each time zone, so trust the countdown on your console.
+{confirmed} Rockstar lists November 19, 2026 as the release date. Its support page gives midnight local time as the schedule for native PS5 and Xbox Series X|S play.
 :::
 ::: postlaunch
-{confirmed} Grand Theft Auto VI released on November 19, 2026. It is available now on PlayStation 5 and Xbox Series X|S.
+{confirmed} GTA 6 released on November 19, 2026 on PS5 and Xbox Series X|S. These were the announced launch times for each way to play.
 :::
+
+- **PS5.** PlayStation describes a rolling midnight release by country. The [U.S. PlayStation Store](https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-GTAVISTANDARD001/) lists 05:00 UTC on November 19. That is midnight Eastern or **9 p.m. Pacific on November 18**. Check the countdown in your own console store for your account's unlock.
+- **Xbox Series X|S downloads.** Rockstar lists midnight local time on November 19. Check your Microsoft Store or console countdown for the exact time. The U.S. PlayStation Store time applies to its PS5 listing.
+- **Xbox Cloud Gaming.** Xbox lists a separate start at **1 a.m. Eastern on November 19** (10 p.m. Pacific on November 18) in supported markets. This includes Xbox One and Xbox Series X|S. See [Xbox Cloud Gaming setup](/launch-help/#xbox-one-cloud-gaming).
 
 ## How the date changed
 
-| Announced | Planned release | What happened |
-|---|---|---|
-| December 2023 (Trailer 1) | 2025 | First window, no exact day |
-| May 2025 | May 26, 2026 | First delay |
-| November 2025 | November 19, 2026 | Second delay, current date |
+| Announced | Planned release |
+|---|---|
+| December 2023 (Trailer 1) | 2025 |
+| May 2025 | May 26, 2026 |
+| November 2025 | November 19, 2026 |
 
 ## Which platforms is GTA 6 on?
 
-- {confirmed} PlayStation 5 (the PS5 Pro runs the PS5 version)
-- {confirmed} Xbox Series X and Xbox Series S
-- {unknown} PC. Rockstar has not announced a PC version or a PC date.
-- GTA 6 is not coming to PS4 or Xbox One.
+- {confirmed} **Native download:** PlayStation 5, PlayStation 5 Pro, Xbox Series X and Xbox Series S.
+- {confirmed} **Cloud streaming:** Xbox One and Xbox Series X|S in supported markets. Buy the game separately and check your account's cloud play options.
+- {unknown} **PC:** Rockstar has announced no PC release date.
 
-> Rockstar's last two big games reached PC 12 to 19 months after their console release. That is history, not a promise. Treat any specific PC date you read as a guess.
+PS4 has no announced version. On Xbox One, use the cloud option where available.
 
 ## Preload and download size
 
-- {confirmed} Digital preload opened on November 10, 2026. Rockstar announced it on its Newswire.
-- {reported} The PS5 store page asks for about **212 GB** of free space. Reports of the actual download range from about 210 GB to 223 GB.
-- {unknown} The size of the day-one patch.
+{confirmed} Rockstar's installation guidance calls for **up to 212 GB of available space**, depending on your device. The download and installed size can differ from the free space your system requires. Check the requirement on the game page in your console store.
 
-Free the space before launch day. A 212 GB download takes about 5 hours on a 100 Mbps connection and about 10 hours on a 50 Mbps connection.
+Digital preloads began November 10. PS5 preloads started at midnight local time. Xbox Series X|S preloads opened at 00:00 UTC on November 10. A boxed copy uses a download code that can be redeemed when received.
 
-{reported} Boxed copies went on sale on November 12, 2026. The box holds a download code, not a disc, so boxed copies need the same download.
-
-If your console is full, an extra drive is the simplest fix. On PS5 the game must be installed on the internal SSD or an M.2 SSD: see [PS5-compatible SSDs on Amazon](aff:storage).
+Start with [free ways to clear room on your console](/launch-help/#not-enough-space). If your boxed download code fails, [check the error and who can help](/launch-help/#boxed-code-not-working).
 
 ## Frame rate and PS5 Pro
 
-- {confirmed} GTA 6 targets **30 frames per second** on PS5, PS5 Pro and Xbox Series X|S. Rockstar stated this in its preload post on November 10, 2026.
-- {reported} There is no 60 fps mode and no 40 fps mode at launch.
-- {reported} The PS5 Pro version adds a sharper image through PSSR upscaling, and ray-traced shadows that the base PS5 does not have.
-- {reported} PS5 features include DualSense haptic feedback, Tempest 3D Audio and fast loading.
-- {unknown} Exact resolution on each console.
+- {confirmed} Rockstar targets **30 frames per second** on PS5, PS5 Pro and Xbox Series X|S.
+- {confirmed} PS5 Pro adds PSSR upscaling and ray-traced shadows. The PS5 version supports DualSense haptics, adaptive triggers and Tempest 3D Audio.
 
 ::: prelaunch
 ## What to do before launch day
 
-1. Check that you have at least 212 GB free.
-2. Start the preload now, not on launch night.
-3. Update your console's system software.
-4. Turn on automatic updates so the day-one patch downloads by itself.
+1. Check your own store or console countdown and the game's storage requirement.
+2. Preload from your game library after buying digitally or redeeming a boxed code.
+3. Update your console's system software. If the game is missing or locked, [check the owning account and release time](/launch-help/#game-missing-or-locked).
 :::
 ::: postlaunch
 ## Before you download
 
-1. Check that you have at least 212 GB free.
-2. Update your console's system software.
-3. Turn on automatic updates so patches download by themselves.
+1. Check the game page for the required free space on your console.
+2. If you get a download or license error, [choose the symptom in launch help](/launch-help/).
 :::
 
 ## FAQ
 
 ### What time does GTA 6 unlock?
 
-Reports say midnight local time on November 19, 2026 in most countries. In the US, reports say the unlock is set to midnight Eastern, so western time zones may start on the evening of November 18. Your console's store page shows the exact time for your region.
+Rockstar lists midnight local time on November 19 for the native releases. PlayStation describes its launch by country, and the U.S. PlayStation Store lists 05:00 UTC on November 19. That is midnight Eastern or 9 p.m. Pacific on November 18. Xbox Cloud Gaming lists 1 a.m. Eastern on November 19.
 
 ::: prelaunch
 ### Is GTA 6 delayed again?
 
-No. As of November 15, 2026, the date is still November 19, 2026. Preloads are live and physical copies have reached stores, so another delay is very unlikely.
+Rockstar's official release date is still November 19, 2026 as of November 15.
 :::
 ::: postlaunch
 ### Is GTA 6 out now?
@@ -94,39 +84,37 @@ Yes. GTA 6 released on November 19, 2026 on PlayStation 5 and Xbox Series X|S.
 
 ### Does GTA 6 run at 60 fps?
 
-No. Rockstar says the game targets 30 frames per second on PS5, PS5 Pro and Xbox Series X|S. Reports say there is no 60 fps mode at launch.
+Rockstar's published target is 30 fps on PS5, PS5 Pro and Xbox Series X|S.
 
 ### Does the boxed copy of GTA 6 have a disc?
 
-No, according to reports. The box holds a download code. You still need to download the full game.
+The boxed Standard Edition contains a download code. You need an internet connection and free console space for the download.
 
 ### Is GTA 6 coming to PC?
 
-Rockstar has not announced a PC version. Earlier Rockstar games came to PC more than a year after consoles, but no date is known for GTA 6.
+Rockstar has announced no PC release date.
 
 ### Will GTA 6 be on PS4 or Xbox One?
 
-No. GTA 6 is only announced for PlayStation 5 and Xbox Series X|S.
+PS4 has no announced version. Xbox One can stream GTA 6 through Xbox Cloud Gaming in supported markets. The game must be purchased separately.
 
 ### What does PS5 Pro add in GTA 6?
 
-Sharper image quality through PSSR upscaling, and ray-traced shadows. The frame rate target is the same 30 fps.
+PSSR upscaling and ray-traced shadows. Rockstar's frame rate target is 30 fps.
 
 ### How big is the GTA 6 download?
 
-Plan for about 212 GB of free space on PS5. The download itself is reported at about 210 GB or more, before the day-one patch.
+Rockstar's guidance is up to 212 GB of available space depending on the device. Your game page shows the storage needed on your console.
 
 ## Sources
 
-- [Rockstar Games: Grand Theft Auto VI official site](https://www.rockstargames.com/VI)
-- [Notebookcheck: GTA 6 officially delayed to November 2026](https://www.notebookcheck.net/GTA-6-now-officially-delayed-to-November-2026.1157152.0.html)
-- [Rockstar Newswire: Pre-Load Grand Theft Auto VI Now](https://www.rockstargames.com/newswire/article/89834o94713o21/pre-load-grand-theft-auto-vi-now)
-- [Push Square: GTA 6 PS5 Pro features revealed, 30fps target on both consoles](https://www.pushsquare.com/news/2026/11/gta-6-ps5-pro-features-revealed-30fps-target-on-both-consoles)
-- [Push Square: GTA 6 physical edition is a code in the box](https://www.pushsquare.com/news/2026/06/gta-6-physical-edition-doesnt-come-with-discs-its-a-code-in-the-box)
-- [Forbes: GTA 6 unlocks at midnight on November 19, but some Americans can start the night before](https://www.forbes.com/sites/brianmazique/2026/11/12/gta-6-unlocks-at-midnight-on-november-19-but-millions-of-americans-can-start-playing-the-night-before/)
-- [TechTimes: GTA 6 release time, West Coast players may start 9 PM Wednesday](https://www.techtimes.com/articles/330648/20261113/gta-6-release-time-west-coast-players-may-start-9-pm-wednesday-not-midnight-thursday.htm)
-- [VGC: Rockstar confirms GTA 6 targets 30 FPS](https://www.videogameschronicle.com/news/rockstar-confirms-gta-6-targets-30-fps-with-ps5-pro-exclusive-ray-tracing/)
-- [Forbes: Rockstar on GTA 6 PS5 Pro features](https://www.forbes.com/sites/paultassi/2026/11/10/rockstar-lauds-gta-6-ps5-pro-features-issues-xbox-warning/)
-- [Engadget: GTA 6 is now available for preload](https://www.engadget.com/2311841/gta-6-now-available-for-preload/)
-- [Forbes: GTA 6 pre-load date, time and file size](https://www.forbes.com/sites/paultassi/2026/11/03/gta-6-pre-load-date-and-time-revealed-huge-file-size-confirmed/)
-- [VideoCardz: GTA 6 preload package size](https://videocardz.com/newz/gta-6-preload-reveals-223gb-package-and-mandatory-ps5-firmware-14-22-update)
+- [Rockstar's GTA VI release site](https://www.rockstargames.com/VI)
+- [Rockstar's regional preload and release schedule](https://support.rockstargames.com/articles/29jV3Cv2cCgvwM1XgtMO5o/grand-theft-auto-vi-regional-pre-load-and-release-times-on-playstation-5-and-xbox-series-x-or-s)
+- [PlayStation's country-by-country launch and PS5 features](https://blog.playstation.com/2026/11/10/pre-load-grand-theft-auto-vi-on-ps5-starting-today/)
+- [U.S. PlayStation Store release listing](https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-GTAVISTANDARD001/)
+- [Xbox Cloud Gaming launch announcement](https://news.xbox.com/en-us/2026/11/10/grand-theft-auto-6-comes-to-xbox-cloud-gaming-november-19/)
+- [Rockstar's GTA VI installation requirements](https://support.rockstargames.com/articles/M6h7B5fJZMwG1dnzQkt4Z/grand-theft-auto-vi-installation-requirements)
+- [Rockstar's preload, frame rate and console features announcement](https://www.rockstargames.com/newswire/article/89834o94713o21/pre-load-grand-theft-auto-vi-now)
+- [Rockstar's boxed code and editions guide](https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions)
+- [Rockstar's May 2026 release announcement](https://www.rockstargames.com/newswire/article/258aa538o412ok/grand-theft-auto-vi-is-now-coming-may-26-2026)
+- [Rockstar's November 2026 release announcement](https://www.rockstargames.com/newswire/article/ak3ak31a49a221/grand-theft-auto-vi-is-now-set-to-launch-november-19-2026)
