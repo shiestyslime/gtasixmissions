@@ -12,7 +12,25 @@ const BASE = site.baseUrl.replace(/\/$/, '');
 const NOW = process.env.BUILD_DATE ? new Date(process.env.BUILD_DATE + 'T12:00:00Z') : new Date();
 // This switches editorial copy after the rolling launch, not a user's store countdown.
 const LAUNCHED = NOW >= new Date(site.launchDate);
-const adReady = Boolean(site.adsenseClient && site.adsenseSlot);
+// Ads need IDs AND two explicit confirmations. Entering IDs alone never turns ads on.
+const adReady = Boolean(site.adsenseClient && site.adsenseSlot && site.adsEnabled === true && site.adsConsentConfirmed === true);
+const isRealDate = (d) => /^\d{4}-\d{2}-\d{2}$/.test(d || '') && !Number.isNaN(Date.parse(`${d}T00:00:00Z`)) && new Date(`${d}T00:00:00Z`).toISOString().slice(0, 10) === d;
+const BUILD_DAY = new Date(NOW.getTime() + 14 * 36e5).toISOString().slice(0, 10); // latest calendar day anywhere at build time
+const LAUNCH_DAY = new Date(new Date(site.launchDate).getTime() - 24 * 36e5).toISOString().slice(0, 10); // earliest local day the game is out
+const domainOf = (host) => host.toLowerCase().replace(/:\d+$/, '').split('.').slice(-2).join('.');
+const PLACEHOLDER_DOMAINS = new Set(['example.com', 'example.org', 'example.net', 'localhost']);
+const OFFICIAL_DOMAINS = new Set(['rockstargames.com', 'playstation.com', 'xbox.com']);
+const REVIEW_LABELS = { owner: 'Source check reviewed by the site owner.', 'approved-tester': 'Source check reviewed by an approved tester.', automated: 'Source check was automated. No person has reviewed it yet.' };
+// Community guides stay off until an editor confirms the retail release with an official source in site.json.
+function communityGate(file) {
+  const gate = site.communityGuides || {};
+  if (gate.enabled !== true) throw new Error(`${file}: community guides are switched off (site.json communityGuides.enabled)`);
+  if (!LAUNCHED) throw new Error(`${file}: community guides cannot be built before launchDate`);
+  if (!isRealDate(gate.releaseConfirmedOn) || gate.releaseConfirmedOn > BUILD_DAY || gate.releaseConfirmedOn < LAUNCH_DAY) throw new Error(`${file}: site.json communityGuides.releaseConfirmedOn must be a real date from launch day to today`);
+  let host = '';
+  try { const u = new URL(gate.releaseSource); if (u.protocol === 'https:') host = u.hostname; } catch { /* handled below */ }
+  if (!OFFICIAL_DOMAINS.has(domainOf(host))) throw new Error(`${file}: site.json communityGuides.releaseSource must be an https link to Rockstar, PlayStation or Xbox`);
+}
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -100,9 +118,15 @@ function loadPage(file, isMission = false) {
   for (const key of required) if (!meta[key]) throw new Error(`${file}: missing "${key}"`);
   const routeSlug = isMission ? /^missions\/[a-z0-9]+(?:-[a-z0-9]+)*$/ : /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
   if (!routeSlug.test(meta.slug)) throw new Error(`${file}: invalid page slug`);
-  if (tested && !/^\d{4}-\d{2}-\d{2}$/.test(meta.testedDate)) throw new Error(`${file}: invalid test date`);
-  if (community && !/^\d{4}-\d{2}-\d{2}$/.test(meta.checkedDate)) throw new Error(`${file}: invalid checkedDate`);
-  if (community && (meta.testedPlatform || meta.testedDate || meta.testedBuild)) throw new Error(`${file}: a community guide cannot carry tested fields`);
+  if (!isRealDate(meta.updated)) throw new Error(`${file}: "updated" is not a real calendar date`);
+  if (tested && (!isRealDate(meta.testedDate) || meta.testedDate > BUILD_DAY || meta.testedDate < LAUNCH_DAY)) throw new Error(`${file}: testedDate must be a real date from launch day to today`);
+  if (community) {
+    communityGate(file);
+    if (meta.testedPlatform || meta.testedDate || meta.testedBuild) throw new Error(`${file}: a community guide cannot carry tested fields`);
+    if (!isRealDate(meta.checkedDate) || meta.checkedDate > BUILD_DAY || meta.checkedDate < LAUNCH_DAY) throw new Error(`${file}: checkedDate must be a real date from launch day to today`);
+    if (meta.sourceBasis !== 'retail-gameplay') throw new Error(`${file}: needs "sourceBasis: retail-gameplay" (every source shows or states play of the released game)`);
+    if (!REVIEW_LABELS[meta.sourceReview]) throw new Error(`${file}: needs "sourceReview: owner", "approved-tester" or "automated"`);
+  }
   if (LAUNCHED && meta.answer_postlaunch) meta.answer = meta.answer_postlaunch;
   let body = phase(m[2]);
   const cut = (heading) => {
@@ -113,9 +137,13 @@ function loadPage(file, isMission = false) {
     return part;
   };
   const sources = cut('Sources');
+  const sourceLinks = [...sources.matchAll(/\]\((https?:\/\/[^)\s]+)\)/g)].map((x) => x[1]);
   if (community) {
-    const hosts = new Set([...sources.matchAll(/\]\(https?:\/\/([^/)]+)/g)].map((x) => x[1].replace(/^www\./, '')));
-    if (hosts.size < 2) throw new Error(`${file}: a community guide needs links to at least two different source sites under "## Sources"`);
+    const domains = new Set(sourceLinks.map((link) => domainOf(new URL(link).hostname)));
+    if ([...domains].some((domain) => PLACEHOLDER_DOMAINS.has(domain) || /\.(test|example|invalid|localhost)$/.test(domain))) throw new Error(`${file}: placeholder source links are not allowed`);
+    if (domains.size < 2) throw new Error(`${file}: a community guide needs links to at least two different source sites under "## Sources"`);
+    const independent = Number(meta.independentSources);
+    if (!Number.isInteger(independent) || independent < 2 || independent > domains.size) throw new Error(`${file}: "independentSources" must be a whole number from 2 to the number of linked source sites. Count only sources with their own first-hand play, not reports that repeat each other`);
   }
   const faq = cut('FAQ').split(/^### /m).slice(1).map((chunk) => {
     const [q, ...rest] = chunk.split('\n');
@@ -124,7 +152,7 @@ function loadPage(file, isMission = false) {
   });
   const html = md(body);
   const toc = [...html.matchAll(/<h2 id="([^"]+)">(.*?)<\/h2>/g)].map((x) => ({ id: x[1], text: stripTags(x[2]) }));
-  return { ...meta, isMission, tested, community, order: Number(meta.order || 99), html, toc, faq, sourcesHtml: sources ? md(sources) : '', plain: stripTags(html).replace('[storage-check]', '').trim(), url: `/${meta.slug}/` };
+  return { ...meta, isMission, tested, community, sourceLinks, order: Number(meta.order || 99), html, toc, faq, sourcesHtml: sources ? md(sources) : '', plain: stripTags(html).replace('[storage-check]', '').trim(), url: `/${meta.slug}/` };
 }
 function readPages(dir, isMission = false) {
   const folder = path.join(ROOT, 'content', dir);
@@ -253,6 +281,7 @@ function layout({ title, description, url, body, jsonld = [], ogType = 'article'
 <meta name="theme-color" content="#170b30">
 ${url === '/' && site.googleSiteVerification ? `<meta name="google-site-verification" content="${esc(site.googleSiteVerification)}">` : ''}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" title="${esc(site.name)} guide updates" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
@@ -276,7 +305,7 @@ ${body}
     <div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>${esc(site.name)}</a>
     <p>An unofficial fan site. Not affiliated with, endorsed by, or sponsored by Rockstar Games or Take-Two Interactive. Grand Theft Auto and related names are trademarks of their owners.</p></div>
     <ul>${footerNav.map((n) => `<li><a href="${n.url}">${esc(n.label)}</a></li>`).join('')}</ul>
-    <ul><li><a href="/about/">About and sources</a></li><li><a href="/about/#advertising-and-affiliate-disclosure">Ad and affiliate disclosure</a></li><li><a href="/privacy/">Privacy</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul>
+    <ul><li><a href="/about/">About and sources</a></li><li><a href="/about/#advertising-and-affiliate-disclosure">Ad and affiliate disclosure</a></li><li><a href="/privacy/">Privacy</a></li><li><a href="/feed.xml">Updates feed</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul>
   </div>
 </footer>
 ${scripts}
@@ -313,6 +342,7 @@ const storageCheck = `<form class="storage-check" data-storage-check hidden>
 <output name="shortfall" data-storage-result role="status"></output>
 </fieldset></form>`;
 
+const statusLabel = (p) => p.tested ? `Tested on ${p.testedPlatform}, ${fmtDate(p.testedDate)}` : p.community ? `Community-sourced, not tested by this site. Sources checked ${fmtDate(p.checkedDate)}` : '';
 function missionIndex() {
   const tested = missions.filter((mission) => mission.tested);
   const community = missions.filter((mission) => mission.community);
@@ -323,6 +353,12 @@ ${community.length ? `<h2 id="community-guides">Community-sourced guides</h2><p>
 </section>`;
 }
 
+// Corrections go to a public form. The warning is part of the link text block so nobody posts a code or personal detail.
+function reportLink(p) {
+  if (!site.correctionsUrl) return '';
+  const href = `${site.correctionsUrl}?title=${encodeURIComponent(`Correction: ${p.url}`)}`;
+  return `<p class="report"><a href="${esc(href)}" rel="nofollow noopener">Report a problem with this guide</a>. This opens a public form on GitHub and needs a free GitHub account. Anyone can read what you post, so leave out game codes, account names and personal details.</p>`;
+}
 function renderPage(p) {
   const related = nav.map(({ url }) => guides.find((guide) => guide.url === url)).filter((item) => item.slug !== p.slug).slice(0, 3);
   const faqHtml = p.faq.length ? `<section class="faq"><h2 id="faq">Frequently asked questions</h2>${p.faq.map((f) => `<details id="${f.id}"><summary>${esc(f.q)}</summary>${f.html}</details>`).join('')}</section>` : '';
@@ -330,7 +366,7 @@ function renderPage(p) {
   const adPosition = [...p.html.matchAll(/<h2 /g)][2]?.index;
   const ads = p.isMission && p.ads === 'yes' && adPosition !== undefined;
   const hasVideo = p.html.includes('data-video=');
-  const communityNote = p.community ? '<aside class="note community-note"><strong>Not tested by us yet.</strong> These steps come from public player reports and videos, linked under Sources. We replace them with our own tested steps after we play this mission.</aside>' : '';
+  const communityNote = p.community ? `<aside class="note community-note"><strong>Not tested by us yet.</strong> These steps come from public player reports and videos, linked under Sources. We replace them with our own tested steps after we play this mission. ${REVIEW_LABELS[p.sourceReview]}</aside>` : '';
   const content = ads ? p.html.slice(0, adPosition) + adSlot('in-article') + p.html.slice(adPosition) : p.html;
   const launchHelp = p.slug === 'launch-help';
   const missionHub = p.slug === 'missions';
@@ -347,6 +383,7 @@ ${missionHub ? `${searchUi}${missionIndex()}` : ''}
 ${launchHelp ? content.replace('<p>[storage-check]</p>', storageCheck) : content}
 ${faqHtml}
 ${p.sourcesHtml ? `<section class="sources"><h2 id="sources">Sources</h2>${p.sourcesHtml}</section>` : ''}
+${reportLink(p)}
 </article>
 <aside class="side">${toc}<div class="legend"><strong>Fact labels</strong><p><span class="tag tag-confirmed">Confirmed</span> Official publisher or platform source</p><p><span class="tag tag-reported">Reported</span> Press previews</p><p><span class="tag tag-unknown">Not yet known</span> Not announced</p></div></aside>
 </div>
@@ -361,6 +398,8 @@ ${p.sourcesHtml ? `<section class="sources"><h2 id="sources">Sources</h2>${p.sou
   return layout({ title: full.length <= 65 ? full : p.title, description: p.description, url: p.url, body, jsonld, scripts, ads });
 }
 
+// Guides people can read, newest change first. About and privacy are left out.
+const recentlyUpdated = () => pages.filter((p) => p.nav || p.isMission).sort((a, b) => b.updated.localeCompare(a.updated) || a.order - b.order);
 function renderHome() {
   const featured = nav.map(({ url }) => guides.find((guide) => guide.url === url));
   const topFaq = featured.flatMap((p) => p.faq.slice(0, 1).map((f) => ({ ...f, url: p.url + '#' + f.id })));
@@ -379,6 +418,7 @@ ${searchUi}
 <section><h2>Get ready to play</h2>${quickJumps(launchJumps, 'Launch problems')}</section>
 <section><h2>Guides</h2><div class="cards">${[...featured, ...guides.filter((guide) => !featured.includes(guide))].map(card).join('')}</div></section>
 <section><h2>Explore Leonida</h2><div class="regions">${site.regions.map((r, i) => `<a class="region r${i + 1}" href="/map-locations/#${slugify(r.name)}"><b>${esc(r.name)}</b><span>${esc(r.blurb)}</span></a>`).join('')}</div></section>
+<section><h2 id="latest-updates">Latest guide updates</h2><ul class="news">${recentlyUpdated().slice(0, 5).map((p) => `<li><a href="${p.url}">${esc(p.h1 || p.title)}</a><span>${p.isMission ? esc(statusLabel(p)) : `Updated <time datetime="${p.updated}">${fmtDate(p.updated)}</time>`}</span></li>`).join('')}</ul><p><a href="/feed.xml">Follow updates in a feed reader</a></p></section>
 <section class="faq"><h2>Top questions</h2>${topFaq.map((f) => `<details><summary>${esc(f.q)}</summary>${f.html}<p><a href="${f.url}">Read the full guide →</a></p></details>`).join('')}</section>
 </div>`;
   const jsonld = [
@@ -412,6 +452,9 @@ const searchAliases = {
   '/launch-help/#xbox-one-cloud-gaming': ['can i play on xbox one', 'xbox one', 'cloud gaming', 'game pass', 'cloud playtime'],
 };
 
+const pageAliases = (p) => (p.aliases ? p.aliases.split('|').map((alias) => alias.trim()).filter(Boolean) : []);
+// Search and AI exports keep the tested/untested distinction, the date and the citations.
+const missionFields = (p) => (p.isMission ? { status: p.tested ? 'tested' : 'community', label: statusLabel(p), date: p.tested ? p.testedDate : p.checkedDate } : {});
 function sectionResults(page) {
   const parts = page.html.split(/<h[23] id="([^"]+)">(.*?)<\/h[23]>/);
   const results = [];
@@ -419,7 +462,7 @@ function sectionResults(page) {
     const [id, heading, body] = parts.slice(i, i + 3);
     const url = `${page.url}#${id}`;
     const summary = stripTags((body.match(/<(?:p|ol|ul)>[\s\S]*?<\/(?:p|ol|ul)>/) || [body])[0]);
-    if (summary) results.push({ q: stripTags(heading), a: summary.slice(0, 220), url, kind: page.isMission ? 'objective' : 'support', aliases: searchAliases[url] || [] });
+    if (summary) results.push({ q: stripTags(heading), a: summary.slice(0, 220), url, kind: page.isMission ? 'objective' : 'support', aliases: searchAliases[url] || [], ...(page.isMission ? { parent: page.h1 || page.title, parentAliases: pageAliases(page), ...missionFields(page) } : {}) });
   }
   return results;
 }
@@ -436,7 +479,7 @@ write('404.html', layout({ title: `Page not found | ${site.name}`, description: 
 for (const f of fs.readdirSync(path.join(ROOT, 'assets'))) fs.copyFileSync(path.join(ROOT, 'assets', f), path.join(OUT, f));
 const searchable = [...guides, ...missions.filter((page) => !page.nav)];
 write('search.json', JSON.stringify([
-  ...searchable.map((p) => ({ q: p.h1 || p.title, a: stripTags(inline(p.answer)), url: p.url, aliases: [...(searchAliases[p.url] || []), ...(p.aliases ? p.aliases.split('|').map((alias) => alias.trim()).filter(Boolean) : [])] })),
+  ...searchable.map((p) => ({ q: p.h1 || p.title, a: stripTags(inline(p.answer)), url: p.url, aliases: [...(searchAliases[p.url] || []), ...pageAliases(p)], ...missionFields(p), ...(p.isMission ? { sources: p.sourceLinks } : {}) })),
   ...searchable.filter((p) => p.isMission || p.slug === 'launch-help').flatMap(sectionResults),
   ...searchable.flatMap((p) => p.faq.map((f) => ({ q: f.q, a: f.text.slice(0, 220), url: `${p.url}#${f.id}` }))),
 ]));
@@ -458,14 +501,27 @@ write('llms.txt', `# ${site.name}
 
 ## Guides
 
-${searchable.map((p) => `- [${p.title}](${BASE}${p.url}): ${plainAnswer(p)}`).join('\n')}
+${searchable.map((p) => `- [${p.title}](${BASE}${p.url}): ${p.isMission ? `[${statusLabel(p)}] ` : ''}${plainAnswer(p)}`).join('\n')}
 
 ## Optional
 
 - [Full text of all guides](${BASE}/llms-full.txt)
 - [About, sources and disclosure](${BASE}/about/)
 `);
-write('llms-full.txt', searchable.map((p) => `# ${p.title}\nURL: ${BASE}${p.url}\nLast updated: ${p.updated}\n\nQuick answer: ${stripTags(inline(p.answer))}\n\n${p.plain}\n\n${p.faq.map((f) => `Q: ${f.q}\nA: ${f.text}`).join('\n\n')}`).join('\n\n---\n\n') + '\n');
+write('llms-full.txt', searchable.map((p) => `# ${p.title}\nURL: ${BASE}${p.url}\nLast updated: ${p.updated}\n${p.isMission ? `Status: ${statusLabel(p)}\n` : ''}\nQuick answer: ${stripTags(inline(p.answer))}\n\n${p.plain}\n\n${p.faq.map((f) => `Q: ${f.q}\nA: ${f.text}`).join('\n\n')}${p.sourceLinks.length ? `\n\nSources:\n${p.sourceLinks.map((link) => `- ${link}`).join('\n')}` : ''}`).join('\n\n---\n\n') + '\n');
+const feedPages = recentlyUpdated().slice(0, 30);
+write('feed.xml', `<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>${esc(site.name)} guide updates</title>
+<subtitle>${esc(site.description)}</subtitle>
+<link href="${BASE}/feed.xml" rel="self"/>
+<link href="${BASE}/"/>
+<id>${BASE}/</id>
+<updated>${latest}T12:00:00Z</updated>
+<author><name>${esc(site.name)}</name></author>
+${feedPages.map((p) => `<entry><title>${esc(p.h1 || p.title)}</title><link href="${BASE}${p.url}"/><id>${BASE}${p.url}</id><updated>${p.updated}T12:00:00Z</updated><summary>${esc(`${p.isMission ? `${statusLabel(p)}. ` : ''}${p.description}`)}</summary></entry>`).join('\n')}
+</feed>
+`);
 if (site.indexNowKey) write(`${site.indexNowKey}.txt`, site.indexNowKey + '\n');
 if (adReady) write('ads.txt', `google.com, ${site.adsenseClient.replace('ca-', '')}, DIRECT, f08c47fec0942fa0\n`);
 

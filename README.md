@@ -53,8 +53,22 @@ Open http://127.0.0.1:4173. The check verifies titles, internal links and anchor
 
 Use this tier when nobody on the team has played the mission yet. It never carries a tested label.
 
-- Same file location and format as above, with `status: community` and `checkedDate: YYYY-MM-DD`. Leave out `testedPlatform`, `testedDate` and `testedBuild`. The build fails if they are present.
-- Write the steps in your own words from public reports published after release. Link at least two different source sites under `## Sources`. The build fails with fewer.
+- **The switch.** No community guide builds until an editor confirms the retail release. In `site.json`, set `communityGuides.enabled` to `true`, `releaseConfirmedOn` to the day you confirmed it, and `releaseSource` to an https page on Rockstar, PlayStation or Xbox that shows the game is out. The launch date passing is not enough, and the daily task may not change this setting.
+- Same file location and format as above, with these fields. Leave out `testedPlatform`, `testedDate` and `testedBuild`.
+
+  ```text
+  status: community
+  checkedDate: YYYY-MM-DD
+  sourceBasis: retail-gameplay
+  independentSources: 2
+  sourceReview: automated
+  ```
+
+  - `checkedDate` is a real date, from launch day to today.
+  - `sourceBasis: retail-gameplay` states that every linked source shows or says it played the released game. Pre-release previews, leaks and datamines do not qualify.
+  - `independentSources` counts sources with their own first-hand play. Two reports that repeat or cite each other count as one. It cannot exceed the number of different source sites linked.
+  - `sourceReview` is `owner`, `approved-tester` or `automated`. The page shows which one. Never write a person's name here and never claim a review that did not happen.
+- Write the steps in your own words. Link the sources under `## Sources`. Two pages on one site count as one site.
 - The page shows a "Community-sourced" label and a "Not tested by us yet" notice. The mission hub lists these guides apart from tested ones.
 - To upgrade a guide after real play, switch it to `status: published`, add the tested fields, and rewrite any step your notes do not support. Keep the slug.
 
@@ -68,15 +82,28 @@ Put this on its own line in any guide:
 
 The page shows a play button, the channel name and a link to the upload. YouTube loads only after the reader presses play. Use the creator's own upload. Never download, re-upload or cut someone else's footage, and write a spoiler-free label instead of copying a spoiler title.
 
+## Tests and readiness report
+
+```bash
+node test.mjs
+node audit.mjs
+```
+
+`test.mjs` builds temporary copies of the site with fixture missions and checks the rules above, search ranking and the ad gate. It never writes fixtures into `content/` or `dist/`. The deploy workflow runs it before publishing.
+
+`audit.mjs` reports what can earn or measure today and what is only prepared. It prints no IDs and estimates no earnings.
+
 For general guides, edit `content/*.md`. Keep the current slug and headings that other pages link to, update `updated` after a material change, and put source links under `## Sources`. Questions under `## FAQ` use H3 headings. Use `{confirmed}`, `{reported}` and `{unknown}` for official statements, reporting and unknowns.
 
 ## Deployment and updates
 
-The Pages workflow builds and checks pushes to `main`, on its six-hour schedule, or when run manually. It publishes `dist/`. After a push or manual run it also runs `node indexnow.mjs`, which tells Bing and other IndexNow search engines which pages changed. The key is `indexNowKey` in `site.json`. Test a branch or local copy first. Use the last known good build or revert the relevant commit if a release fails. `baseUrl` in `site.json` supplies canonicals and sitemap URLs.
+The Pages workflow builds and checks pushes to `main`, on its six-hour schedule, or when run manually. It publishes `dist/`. After a push it also runs `node indexnow.mjs`, which tells Bing and other IndexNow search engines about guides whose source file changed in that push. Unchanged pages are never resubmitted. An accepted submission is not proof of indexing. The key is `indexNowKey` in `site.json`.
+
+`/feed.xml` is an Atom feed of guide updates, built from each guide's `updated` date. The corrections link on each guide comes from `correctionsUrl` in `site.json`. Test a branch or local copy first. Use the last known good build or revert the relevant commit if a release fails. `baseUrl` in `site.json` supplies canonicals and sitemap URLs.
 
 Launch-aware editorial blocks switch on a rebuild using the `launchDate` in `site.json`. Players should check their own region and platform using `/release-date/`. `/news/` is a secondary footer feed, marked `noindex` and left out of the sitemap. The build refreshes it from configured feeds unless `NO_FETCH=1`. Walkthroughs require a manual test and edit.
 
 ## Revenue settings
 
 - **Product links.** `aff:ps5-boxed`, `aff:xbox-boxed`, `aff:storage-ps5` and `aff:storage-xbox` currently lead to ordinary product pages. When the program approves this site and SKU, set that record's `affiliateUrl` in `site.json`, keep its ordinary `url` as fallback, and verify the nearby visible disclosure. An active tracked link receives `rel="sponsored nofollow noopener"`.
-- **Ads.** Leave ads off until the host, domain, provider and consent setup are cleared. Set both `adsenseClient` and `adsenseSlot` in `site.json`. Compare generated `ads.txt` with the account's entry. Add `ads: yes` only to an eligible published mission with at least three body H2s. Its first optional slot comes after the quick answer and two sections. Build and test a page on mobile before enabling more placements.
+- **Ads.** Leave ads off until the host, domain, provider and consent setup are cleared. Ads need four settings in `site.json`: `adsenseClient`, `adsenseSlot`, `adsEnabled: true` (the provider approved this site) and `adsConsentConfirmed: true` (the consent and privacy setup is done and the privacy page matches it). IDs alone do nothing. Compare generated `ads.txt` with the account's entry. Add `ads: yes` only to an eligible published mission with at least three body H2s. Its first optional slot comes after the quick answer and two sections. Build and test a page on mobile before enabling more placements.

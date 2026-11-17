@@ -23,17 +23,23 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # indexnow.mjs compares this push with the commit before it
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: node build.mjs
       - run: node check.mjs
+      - run: node test.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
       - id: deployment
         uses: actions/deploy-pages@v4
-      # Tell Bing and other IndexNow engines about changed pages. Skipped on the 6-hour timer.
-      - if: github.event_name != 'schedule'
+      # Tell Bing and other IndexNow engines only about guides changed in this push. Never on the timer or a manual run.
+      - if: github.event_name == 'push'
         continue-on-error: true
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
         run: node indexnow.mjs

@@ -23,12 +23,26 @@ for (const f of files) {
   if ((h.match(/<h1/g) || []).length !== 1) fail('page needs exactly one h1', f);
   if (h.includes('Community-sourced</span>') && /Tested on |Tested <time/.test(visible)) fail('community guide carries a tested label', f);
   if (!h.includes('property="og:image"')) fail('missing social image tag', f);
+  if (h.includes('Community-sourced</span>') && !h.includes('Not tested by us yet.')) fail('community guide is missing its untested notice', f);
+  if (/FIXTURE|zz-fixture|\/\/(www\.)?example\.(com|org|net)/.test(h)) fail('test fixture content in a built page', f);
 }
-for (const f of ['sitemap.xml', 'robots.txt', 'llms.txt', 'llms-full.txt', 'search.json', 'og.png']) if (!fs.existsSync(path.join('dist', f))) fail('missing', f);
+for (const f of ['sitemap.xml', 'robots.txt', 'llms.txt', 'llms-full.txt', 'search.json', 'og.png', 'feed.xml']) if (!fs.existsSync(path.join('dist', f))) fail('missing', f);
 if (fs.existsSync('dist/search.json')) {
   for (const result of JSON.parse(fs.readFileSync('dist/search.json', 'utf8'))) {
     if (!result.q || !result.url?.startsWith('/')) fail('bad search record', result);
     else checkTarget(result.url, 'search.json');
+  }
+}
+for (const f of ['search.json', 'llms.txt', 'llms-full.txt', 'sitemap.xml', 'feed.xml']) {
+  if (fs.existsSync(path.join('dist', f)) && /FIXTURE|zz-fixture/.test(fs.readFileSync(path.join('dist', f), 'utf8'))) fail('test fixture content in', f);
+}
+if (fs.existsSync('dist/feed.xml')) {
+  const feed = fs.readFileSync('dist/feed.xml', 'utf8');
+  for (const m of feed.matchAll(/<entry>.*?<link href="https?:\/\/[^/]+(\/[^"]*)"\/>/g)) checkTarget(m[1], 'feed.xml');
+}
+if (fs.existsSync('dist/search.json')) {
+  for (const result of JSON.parse(fs.readFileSync('dist/search.json', 'utf8'))) {
+    if (result.url?.startsWith('/missions/') && result.url !== '/missions/' && !result.url.startsWith('/missions/#') && !(result.label && result.status && result.date)) fail('mission search record lost its tested or untested label', result.url);
   }
 }
 console.log(`${files.length} pages checked, ${problems} problem(s)`);

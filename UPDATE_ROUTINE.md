@@ -20,9 +20,12 @@ Add newly verified GTA 6 facts to `content/*.md`, so each guide answers its ques
 9. Change `updated:` to today's date on every page you edit. Do not change it on pages you did not edit.
 10. Do not edit `site.json`, `build.mjs`, `check.mjs`, `assets/` or `.github/`.
 12. Community-sourced mission guides (`status: community`, see README):
-    - Only after the official release. Use only sources published after release. Never use leaks, datamines or pre-release footage.
-    - Every step must be supported by at least two independent public sources that agree. Link them under `## Sources`. If sources disagree, leave the step out or say that reports differ.
-    - Write in your own short sentences. Never copy or closely paraphrase a guide, transcript, caption or description.
+    - The switch decides, not the calendar. Create one only if `site.json` has `communityGuides.enabled: true`. You may not change that setting. If it is off, skip this work and say so in the report.
+    - A source qualifies only if it shows or states first-hand play of the released retail game: its own footage or screenshots of the release build, or a named outlet stating it played the launch version. A publish date after launch does not prove this. Previews, leaks, datamines, trailers and speculation never qualify.
+    - Every step needs at least two qualifying sources that are independent. Sources are not independent if one cites, embeds, summarizes or copies the other, if they share an owner or network, or if they repeat the same wording or the same mistake. Two reports that repeat each other count as one.
+    - Set `independentSources` to the true count. If you cannot reach two for a step, leave the step out. If you cannot reach two for the mission, do not publish the guide.
+    - Set `sourceReview: automated` unless the owner or an approved tester reviewed the sources in this run and said so. Never write a person's name. Never claim a review that did not happen.
+    - Write in your own short sentences. Never copy or closely paraphrase a guide, transcript, caption or description. If sources disagree, say that reports differ or leave the step out.
     - Never add tested fields or the word "tested" about our own work. Never edit a `status: published` guide from public sources.
     - A creator's video may be credited with the `::: video` line: their own upload, at most two per page, a neutral spoiler-free label, no pre-release or cutscene-only videos. Never download, re-upload or clip footage.
     - Keep story outcomes out of titles, headings, descriptions, answers and aliases. If a mission name itself spoils the story, use a neutral public title.
@@ -36,7 +39,7 @@ Add newly verified GTA 6 facts to `content/*.md`, so each guide answers its ques
 3. Update the pages. Priority order after launch:
    - `launch-help.md`: keep error fixes, required free space, account region and cloud instructions accurate.
    - `content/missions/`, tested guides (`status: published`): use the README publication format once you have first-hand notes. Never write or change one from public sources alone.
-   - `content/missions/`, community-sourced guides (`status: community`): allowed only after the game's official release, under rule 12. The build lists them apart from tested guides.
+   - `content/missions/`, community-sourced guides (`status: community`): allowed only while the `communityGuides` switch in `site.json` is on, under rule 12. The build lists them apart from tested guides.
    - `progression.md` and `money-making.md`: add measured retail unlock conditions and payouts when you have test evidence and distinguish platform/build differences.
 4. Update a relevant existing answer for real player questions. Check reports against your evidence and keep existing route and section URLs stable.
 5. Run `node build.mjs` then `node check.mjs`. Fix every problem it reports.

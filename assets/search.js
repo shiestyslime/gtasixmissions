@@ -16,11 +16,17 @@
   }
 
   function prepareEntry(entry) {
-    const aliases = Array.isArray(entry.aliases) ? entry.aliases.filter((alias) => typeof alias === 'string') : [];
-    const phrases = [entry.q, ...aliases].map(normalize).filter(Boolean);
+    const strings = (list) => (Array.isArray(list) ? list.filter((item) => typeof item === 'string') : []);
+    const own = [entry.q, ...strings(entry.aliases)].map(normalize).filter(Boolean);
+    // A step inside a mission also answers "mission name + step" in either order.
+    const parents = typeof entry.parent === 'string' ? [entry.parent, ...strings(entry.parentAliases)].map(normalize).filter(Boolean) : [];
+    const combined = parents.flatMap((parent) => own.flatMap((phrase) => [`${parent} ${phrase}`, `${phrase} ${parent}`]));
+    const phrases = [...own, ...combined];
     const terms = new Set(phrases.flatMap(words));
+    const ownTerms = new Set(own.flatMap(words));
+    const parentTerms = new Set(parents.flatMap(words));
     const answerTerms = new Set(words(normalize(entry.a)));
-    return { ...entry, phrases, terms, answerTerms };
+    return { ...entry, phrases, terms, ownTerms, parentTerms, answerTerms };
   }
 
   function loadIndex() {
@@ -41,7 +47,10 @@
   }
 
   function score(entry, phrase, queryWords) {
-    const objectiveBonus = entry.kind === 'objective' ? 30 : 0;
+    // A query that only names the mission should open the mission page first, then its steps.
+    if (entry.parentTerms.size && queryWords.length && queryWords.every((word) => entry.parentTerms.has(word) && !entry.ownTerms.has(word))) return 300;
+    const parentHits = queryWords.filter((word) => entry.parentTerms.has(word) && !entry.ownTerms.has(word)).length;
+    const objectiveBonus = (entry.kind === 'objective' ? 30 : 0) + 5 * parentHits;
     if (entry.phrases.includes(phrase)) return 1000 + objectiveBonus;
     const compact = queryWords.join(' ');
     if (compact && entry.phrases.some((candidate) => words(candidate).join(' ') === compact)) return 900 + objectiveBonus;
@@ -94,6 +103,13 @@
           link.href = entry.url;
           link.textContent = entry.q;
           item.append(link);
+          const context = [typeof entry.parent === 'string' ? entry.parent : '', typeof entry.label === 'string' ? entry.label : ''].filter(Boolean).join(' · ');
+          if (context) {
+            const meta = document.createElement('span');
+            meta.className = 'result-meta';
+            meta.textContent = context;
+            item.append(meta);
+          }
           if (entry.a) {
             const answer = document.createElement('p');
             answer.textContent = entry.a;
@@ -137,6 +153,8 @@
     }
   }
 
+  // Outside a browser (tests), expose the ranking functions and stop.
+  if (typeof document === 'undefined') { globalThis.__siteSearch = { normalize, words, prepareEntry, score }; return; }
   document.querySelectorAll('[data-site-search]').forEach(attachSearch);
   revealLinkedAnswer();
   window.addEventListener('hashchange', revealLinkedAnswer);
