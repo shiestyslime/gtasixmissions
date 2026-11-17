@@ -37,6 +37,8 @@ function inline(s) {
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, t, u) => link(t, unent(u)));
 }
+// A credited YouTube video. Nothing loads from YouTube until the reader presses play.
+const videoBlock = (id, label, channel) => `<figure class="video" data-video="${id}"><button type="button" class="video-play" hidden><span aria-hidden="true">▶</span> Play video here</button><figcaption><b>${esc(label)}</b> Video by ${esc(channel)} on YouTube. <a href="https://www.youtube.com/watch?v=${id}" rel="noopener">Watch on YouTube</a>. <span class="video-note">Community video. Not made or tested by this site.</span></figcaption></figure>`;
 function md(src) {
   const lines = src.split('\n');
   const out = [];
@@ -59,13 +61,17 @@ function md(src) {
       while (i < lines.length && lines[i].startsWith('|')) rows.push(lines[i++].trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim()));
       const [head, , ...body] = rows;
       out.push(`<div class="table-wrap"><table><thead><tr>${head.map((c) => `<th>${inline(c)}</th>`).join('')}</tr></thead><tbody>${body.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`);
+    } else if ((m = l.match(/^::: video ([\w-]{11}) \| ([^|]+) \| ([^|]+)$/))) {
+      out.push(videoBlock(m[1], m[2].trim(), m[3].trim())); i++;
+    } else if (l.startsWith(':::')) {
+      throw new Error(`Bad ":::" line (use "::: video <11-char id> | label | channel"): ${l}`);
     } else if (l.startsWith('> ')) {
       const buf = [];
       while (i < lines.length && lines[i].startsWith('> ')) buf.push(lines[i++].slice(2));
       out.push(`<aside class="note">${inline(buf.join(' '))}</aside>`);
     } else {
       const buf = [];
-      while (i < lines.length && lines[i].trim() && !/^(#{2,3} |[-*] |\d+\. |\||> )/.test(lines[i])) buf.push(lines[i++]);
+      while (i < lines.length && lines[i].trim() && !/^(#{2,3} |[-*] |\d+\. |\||> |:::)/.test(lines[i])) buf.push(lines[i++]);
       out.push(`<p>${inline(buf.join(' '))}</p>`);
     }
   }
@@ -84,13 +90,19 @@ function loadPage(file, isMission = false) {
     const k = line.indexOf(':');
     if (k > 0) meta[line.slice(0, k).trim()] = line.slice(k + 1).trim();
   }
-  if (isMission && meta.status !== 'published') return null;
+  // Missions have two public tiers. "published" = tested first-hand. "community" = built from public reports, never labeled tested.
+  if (isMission && !['published', 'community'].includes(meta.status)) return null;
+  const tested = isMission && meta.status === 'published';
+  const community = isMission && !tested;
   const required = ['title', 'slug', 'description', 'answer', 'updated'];
-  if (isMission) required.push('testedPlatform', 'testedDate');
+  if (tested) required.push('testedPlatform', 'testedDate');
+  if (community) required.push('checkedDate');
   for (const key of required) if (!meta[key]) throw new Error(`${file}: missing "${key}"`);
   const routeSlug = isMission ? /^missions\/[a-z0-9]+(?:-[a-z0-9]+)*$/ : /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
   if (!routeSlug.test(meta.slug)) throw new Error(`${file}: invalid page slug`);
-  if (isMission && !/^\d{4}-\d{2}-\d{2}$/.test(meta.testedDate)) throw new Error(`${file}: invalid test date`);
+  if (tested && !/^\d{4}-\d{2}-\d{2}$/.test(meta.testedDate)) throw new Error(`${file}: invalid test date`);
+  if (community && !/^\d{4}-\d{2}-\d{2}$/.test(meta.checkedDate)) throw new Error(`${file}: invalid checkedDate`);
+  if (community && (meta.testedPlatform || meta.testedDate || meta.testedBuild)) throw new Error(`${file}: a community guide cannot carry tested fields`);
   if (LAUNCHED && meta.answer_postlaunch) meta.answer = meta.answer_postlaunch;
   let body = phase(m[2]);
   const cut = (heading) => {
@@ -101,6 +113,10 @@ function loadPage(file, isMission = false) {
     return part;
   };
   const sources = cut('Sources');
+  if (community) {
+    const hosts = new Set([...sources.matchAll(/\]\(https?:\/\/([^/)]+)/g)].map((x) => x[1].replace(/^www\./, '')));
+    if (hosts.size < 2) throw new Error(`${file}: a community guide needs links to at least two different source sites under "## Sources"`);
+  }
   const faq = cut('FAQ').split(/^### /m).slice(1).map((chunk) => {
     const [q, ...rest] = chunk.split('\n');
     const html = md(rest.join('\n'));
@@ -108,7 +124,7 @@ function loadPage(file, isMission = false) {
   });
   const html = md(body);
   const toc = [...html.matchAll(/<h2 id="([^"]+)">(.*?)<\/h2>/g)].map((x) => ({ id: x[1], text: stripTags(x[2]) }));
-  return { ...meta, isMission, order: Number(meta.order || 99), html, toc, faq, sourcesHtml: sources ? md(sources) : '', plain: stripTags(html).replace('[storage-check]', '').trim(), url: `/${meta.slug}/` };
+  return { ...meta, isMission, tested, community, order: Number(meta.order || 99), html, toc, faq, sourcesHtml: sources ? md(sources) : '', plain: stripTags(html).replace('[storage-check]', '').trim(), url: `/${meta.slug}/` };
 }
 function readPages(dir, isMission = false) {
   const folder = path.join(ROOT, 'content', dir);
@@ -228,7 +244,11 @@ function layout({ title, description, url, body, jsonld = [], ogType = 'article'
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${canonical}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="${BASE}/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="${BASE}/og.png">
 <meta name="robots" content="${index ? 'index, follow, max-snippet:-1, max-image-preview:large' : 'noindex, follow'}">
 <meta name="theme-color" content="#170b30">
 ${url === '/' && site.googleSiteVerification ? `<meta name="google-site-verification" content="${esc(site.googleSiteVerification)}">` : ''}
@@ -294,9 +314,12 @@ const storageCheck = `<form class="storage-check" data-storage-check hidden>
 </fieldset></form>`;
 
 function missionIndex() {
-  const published = missions.length === 1 ? '1 verified walkthrough' : `${missions.length} verified walkthroughs`;
+  const tested = missions.filter((mission) => mission.tested);
+  const community = missions.filter((mission) => mission.community);
+  const published = tested.length === 1 ? '1 verified walkthrough' : `${tested.length} verified walkthroughs`;
   return `<section class="mission-list"><h2 id="walkthroughs">${published}</h2>
-${missions.length ? `<ul>${missions.map((mission) => `<li><a href="${mission.url}">${esc(mission.h1 || mission.title)}</a> <span>Tested on ${esc(mission.testedPlatform)}</span></li>`).join('')}</ul>` : '<p>Verified guides will appear here after retail play and review.</p>'}
+${tested.length ? `<ul>${tested.map((mission) => `<li><a href="${mission.url}">${esc(mission.h1 || mission.title)}</a> <span>Tested on ${esc(mission.testedPlatform)}</span></li>`).join('')}</ul>` : '<p>Verified guides will appear here after retail play and review.</p>'}
+${community.length ? `<h2 id="community-guides">Community-sourced guides</h2><p>Built from public player reports and videos, with every source linked. Not yet tested by us.</p><ul>${community.map((mission) => `<li><a href="${mission.url}">${esc(mission.h1 || mission.title)}</a> <span>Sources checked ${fmtDate(mission.checkedDate)}</span></li>`).join('')}</ul>` : ''}
 </section>`;
 }
 
@@ -306,16 +329,19 @@ function renderPage(p) {
   // Keep the answer and first two sections ahead of any optional ad.
   const adPosition = [...p.html.matchAll(/<h2 /g)][2]?.index;
   const ads = p.isMission && p.ads === 'yes' && adPosition !== undefined;
+  const hasVideo = p.html.includes('data-video=');
+  const communityNote = p.community ? '<aside class="note community-note"><strong>Not tested by us yet.</strong> These steps come from public player reports and videos, linked under Sources. We replace them with our own tested steps after we play this mission.</aside>' : '';
   const content = ads ? p.html.slice(0, adPosition) + adSlot('in-article') + p.html.slice(adPosition) : p.html;
   const launchHelp = p.slug === 'launch-help';
   const missionHub = p.slug === 'missions';
-  const phaseLabel = p.isMission ? `Tested on ${esc(p.testedPlatform)}` : LAUNCHED ? 'Launch guide' : 'Pre-launch info';
+  const phaseLabel = p.tested ? `Tested on ${esc(p.testedPlatform)}` : p.community ? 'Community-sourced' : LAUNCHED ? 'Launch guide' : 'Pre-launch info';
   const toc = p.toc.length > 2 ? `<nav class="toc" aria-label="On this page"><strong>On this page</strong><ul>${p.toc.map((t) => `<li><a href="#${t.id}">${esc(t.text)}</a></li>`).join('')}${p.faq.length ? '<li><a href="#faq">FAQ</a></li>' : ''}</ul></nav>` : '';
-  const freshness = p.isMission ? `Tested <time datetime="${p.testedDate}">${fmtDate(p.testedDate)}</time>${p.testedBuild ? ` · Build ${esc(p.testedBuild)}` : ''}` : `Updated <time datetime="${p.updated}">${fmtDate(p.updated)}</time>`;
+  const freshness = p.community ? `Sources checked <time datetime="${p.checkedDate}">${fmtDate(p.checkedDate)}</time>` : p.isMission ? `Tested <time datetime="${p.testedDate}">${fmtDate(p.testedDate)}</time>${p.testedBuild ? ` · Build ${esc(p.testedBuild)}` : ''}` : `Updated <time datetime="${p.updated}">${fmtDate(p.updated)}</time>`;
   const body = `${pageHero(p.nav || p.title, p.h1 || p.title, `<p class="meta"><span class="pill">${phaseLabel}</span> ${freshness} · <a href="/about/#how-we-label-facts">How we label facts</a></p>`)}
 <div class="wrap article-grid">
 <article>
 <div class="answer"><span class="answer-label">Quick answer</span><p>${inline(p.answer)}</p></div>
+${communityNote}
 ${launchHelp ? quickJumps(launchJumps, 'Jump to a launch problem') : ''}
 ${missionHub ? `${searchUi}${missionIndex()}` : ''}
 ${launchHelp ? content.replace('<p>[storage-check]</p>', storageCheck) : content}
@@ -331,7 +357,7 @@ ${p.sourcesHtml ? `<section class="sources"><h2 id="sources">Sources</h2>${p.sou
   ];
   if (p.faq.length) jsonld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: p.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.text } })) });
   const full = `${p.title} | ${site.name}`;
-  const scripts = `${missionHub || p.faq.length ? searchScript : ''}${launchHelp ? '<script defer src="/storage.js"></script>' : ''}`;
+  const scripts = `${missionHub || p.faq.length ? searchScript : ''}${launchHelp ? '<script defer src="/storage.js"></script>' : ''}${hasVideo ? '<script defer src="/video.js"></script>' : ''}`;
   return layout({ title: full.length <= 65 ? full : p.title, description: p.description, url: p.url, body, jsonld, scripts, ads });
 }
 
@@ -440,6 +466,7 @@ ${searchable.map((p) => `- [${p.title}](${BASE}${p.url}): ${plainAnswer(p)}`).jo
 - [About, sources and disclosure](${BASE}/about/)
 `);
 write('llms-full.txt', searchable.map((p) => `# ${p.title}\nURL: ${BASE}${p.url}\nLast updated: ${p.updated}\n\nQuick answer: ${stripTags(inline(p.answer))}\n\n${p.plain}\n\n${p.faq.map((f) => `Q: ${f.q}\nA: ${f.text}`).join('\n\n')}`).join('\n\n---\n\n') + '\n');
+if (site.indexNowKey) write(`${site.indexNowKey}.txt`, site.indexNowKey + '\n');
 if (adReady) write('ads.txt', `google.com, ${site.adsenseClient.replace('ca-', '')}, DIRECT, f08c47fec0942fa0\n`);
 
 console.log(`Built ${pages.length + 1 + (news.length ? 1 : 0)} pages to dist/ (${LAUNCHED ? 'post-launch' : 'pre-launch'} mode, ${news.length} headlines)`);

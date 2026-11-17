@@ -5,8 +5,8 @@ slug: missions
 order: 5
 description: Find GTA 6 mission objectives, tested checkpoint fixes and what to do next. Guides are added as they are verified in the released game.
 answer: Walkthroughs will appear here after the game launches and we can test them. Check launch help if you are trying to install, redeem or open GTA 6.
-answer_postlaunch: Use the mission list and objective search to find a published walkthrough. Each guide shows the platform and date it was tested.
-updated: 2026-11-15
+answer_postlaunch: Use the mission list and objective search to find a walkthrough. Each guide says whether we tested it ourselves or built it from public player reports.
+updated: 2026-11-16
 ---
 
 ## Is there a GTA 6 mission list?
@@ -15,12 +15,12 @@ updated: 2026-11-15
 {unknown} Rockstar has not published a campaign mission list or mission count. There are no verified walkthroughs here yet. Check [release and unlock times](/release-date/) if you are waiting to play.
 :::
 ::: postlaunch
-The index covers missions with published walkthroughs. If a mission is missing, check back as we verify more of the campaign.
+The index covers missions with published walkthroughs. Tested guides come first. Community-sourced guides are listed separately and say they are not tested by us yet. If a mission is missing, check back as we add more of the campaign.
 :::
 
 ## Find an objective
 
-Search for the mission title or a short phrase from the objective on your screen. Choose the matching step for the immediate action. Check the recovery note if the objective fails to advance. Guides list the tested platform and date, and separate plot details from the steps you need to play.
+Search for the mission title or a short phrase from the objective on your screen. Choose the matching step for the immediate action. Check the recovery note if the objective fails to advance. Tested guides list the platform and date. Community-sourced guides link every source. Both keep plot details apart from the steps you need to play.
 
 Follow [story progression](/progression/) for help finding the next mission. Use [launch help](/launch-help/) if you cannot start the game itself.
 
@@ -38,7 +38,7 @@ Follow [story progression](/progression/) for help finding the next mission. Use
 
 ### How many missions are in GTA 6?
 
-Rockstar has published no total. This guide lists only verified missions with walkthroughs.
+Rockstar has published no total. This guide lists only missions that have a walkthrough here.
 
 ### What should I search if I'm stuck on a mission?
 

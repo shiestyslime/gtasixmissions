@@ -33,3 +33,7 @@ jobs:
           path: dist
       - id: deployment
         uses: actions/deploy-pages@v4
+      # Tell Bing and other IndexNow engines about changed pages. Skipped on the 6-hour timer.
+      - if: github.event_name != 'schedule'
+        continue-on-error: true
+        run: node indexnow.mjs

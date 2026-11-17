@@ -21,8 +21,10 @@ for (const f of files) {
   if (/\{(confirmed|reported|unknown)\}|\*\*|\]\(|^:::/m.test(visible)) fail('raw markup left in page', f);
   if (!/<title>.+<\/title>/.test(h) || !/name="description" content=".{50,}"/.test(h)) fail('missing title or description', f);
   if ((h.match(/<h1/g) || []).length !== 1) fail('page needs exactly one h1', f);
+  if (h.includes('Community-sourced</span>') && /Tested on |Tested <time/.test(visible)) fail('community guide carries a tested label', f);
+  if (!h.includes('property="og:image"')) fail('missing social image tag', f);
 }
-for (const f of ['sitemap.xml', 'robots.txt', 'llms.txt', 'llms-full.txt', 'search.json']) if (!fs.existsSync(path.join('dist', f))) fail('missing', f);
+for (const f of ['sitemap.xml', 'robots.txt', 'llms.txt', 'llms-full.txt', 'search.json', 'og.png']) if (!fs.existsSync(path.join('dist', f))) fail('missing', f);
 if (fs.existsSync('dist/search.json')) {
   for (const result of JSON.parse(fs.readFileSync('dist/search.json', 'utf8'))) {
     if (!result.q || !result.url?.startsWith('/')) fail('bad search record', result);

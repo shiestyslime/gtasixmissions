@@ -19,6 +19,14 @@ Add newly verified GTA 6 facts to `content/*.md`, so each guide answers its ques
 8. Keep the page format: front matter, `answer` line, sections, `## FAQ`, `## Sources`.
 9. Change `updated:` to today's date on every page you edit. Do not change it on pages you did not edit.
 10. Do not edit `site.json`, `build.mjs`, `check.mjs`, `assets/` or `.github/`.
+12. Community-sourced mission guides (`status: community`, see README):
+    - Only after the official release. Use only sources published after release. Never use leaks, datamines or pre-release footage.
+    - Every step must be supported by at least two independent public sources that agree. Link them under `## Sources`. If sources disagree, leave the step out or say that reports differ.
+    - Write in your own short sentences. Never copy or closely paraphrase a guide, transcript, caption or description.
+    - Never add tested fields or the word "tested" about our own work. Never edit a `status: published` guide from public sources.
+    - A creator's video may be credited with the `::: video` line: their own upload, at most two per page, a neutral spoiler-free label, no pre-release or cutscene-only videos. Never download, re-upload or clip footage.
+    - Keep story outcomes out of titles, headings, descriptions, answers and aliases. If a mission name itself spoils the story, use a neutral public title.
+    - At most six new community guides per run. Start with the earliest missions and the blockers players report most.
 11. Publishing: the owner approved pushing content changes. Push only when `node check.mjs` reports 0 problems. Stage only `content`, `CHANGELOG.md` and `data/news.json`. Push to `origin main` only. Never force-push.
 
 ## Steps
@@ -27,7 +35,8 @@ Add newly verified GTA 6 facts to `content/*.md`, so each guide answers its ques
 2. Check Rockstar support, PlayStation support, Xbox support and the exact relevant storefront or patch notice. Use community reports and other guides to identify questions to verify.
 3. Update the pages. Priority order after launch:
    - `launch-help.md`: keep error fixes, required free space, account region and cloud instructions accurate.
-   - `content/missions/`: use the README publication format once you have first-hand notes. The build populates the mission index and links objectives automatically. Keep unverified drafts private or leave them in draft status.
+   - `content/missions/`, tested guides (`status: published`): use the README publication format once you have first-hand notes. Never write or change one from public sources alone.
+   - `content/missions/`, community-sourced guides (`status: community`): allowed only after the game's official release, under rule 12. The build lists them apart from tested guides.
    - `progression.md` and `money-making.md`: add measured retail unlock conditions and payouts when you have test evidence and distinguish platform/build differences.
 4. Update a relevant existing answer for real player questions. Check reports against your evidence and keep existing route and section URLs stable.
 5. Run `node build.mjs` then `node check.mjs`. Fix every problem it reports.

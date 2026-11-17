@@ -2,9 +2,9 @@
 title: Privacy Policy
 slug: privacy
 order: 21
-description: How this guide handles local searches, storage input, site logs and external store links.
+description: How this guide handles local searches, storage input, site logs, embedded videos and external store links.
 answer: Searches and storage calculations stay on your device. This guide does not ask you to create an account or submit a game code.
-updated: 2026-11-15
+updated: 2026-11-16
 ---
 
 ## What we collect
@@ -20,6 +20,10 @@ If advertising is enabled, third-party vendors, including Google, may use cookie
 ## Fonts
 
 This site loads one font from Google Fonts. Your browser contacts Google's servers to download it.
+
+## Videos
+
+Some guides include a video from YouTube. Nothing loads from YouTube until you press play. After you press play, YouTube's player loads in privacy-enhanced mode and YouTube's own privacy policy applies.
 
 ## Affiliate links
 
