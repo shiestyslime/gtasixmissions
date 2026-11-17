@@ -35,6 +35,7 @@ function missionPublishTime() {
 const domainOf = (host) => host.toLowerCase().replace(/:\d+$/, '').split('.').slice(-2).join('.');
 const PLACEHOLDER_DOMAINS = new Set(['example.com', 'example.org', 'example.net', 'localhost']);
 const OFFICIAL_DOMAINS = new Set(['rockstargames.com', 'playstation.com', 'xbox.com']);
+const PLATFORMS = new Set(['PS5', 'Xbox Series X|S']);
 const MISSION_AFTER = missionPublishTime();
 const MISSIONS_OPEN = NOW >= MISSION_AFTER;
 const LAUNCH_DAY = new Date(MISSION_AFTER.getTime() - 12 * 36e5).toISOString().slice(0, 10); // earliest local calendar day anywhere at that moment
@@ -57,6 +58,7 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const unent = (s) => s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0?39;|&apos;|&#8217;|&#x2019;/g, "'").replace(/&#8216;/g, "'").replace(/&#822[01];/g, '"').replace(/&#8211;/g, '-').replace(/&amp;/g, '&');
 const stripTags = (h) => unent(h.replace(/<\/(?:p|h[23]|li|tr)>/g, ' ').replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
+const NO_CITES = /<sup class="cite">[\s\S]*?<\/sup>/g; // search excerpts leave out citation numbers; the record carries the links
 const TAGS = { confirmed: 'Confirmed', reported: 'Reported', unknown: 'Not yet known' };
 
 // ---------- tiny markdown ----------
@@ -70,9 +72,12 @@ function link(text, url) {
   }
   return /^https?:/.test(url) ? `<a href="${esc(url)}" rel="noopener">${text}</a>` : `<a href="${esc(url)}">${text}</a>`;
 }
+// {src:2} or {src:1,3} cites numbered items under "## Sources", right next to the claim.
+const cite = (nums) => `<sup class="cite">[${nums.split(',').map((n) => `<a href="#source-${Number(n)}">${Number(n)}</a>`).join(', ')}]</sup>`;
 function inline(s) {
   return esc(s)
     .replace(/\{(confirmed|reported|unknown)\}/g, (_, t) => `<span class="tag tag-${t}">${TAGS[t]}</span>`)
+    .replace(/ ?\{src:(\d+(?:, ?\d+)*)\}/g, (_, nums) => cite(nums.replace(/ /g, '')))
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, t, u) => link(t, unent(u)));
 }
@@ -86,9 +91,10 @@ function md(src) {
     const l = lines[i];
     if (!l.trim()) { i++; continue; }
     let m;
-    if ((m = l.match(/^(#{2,3}) (.+)/))) {
+    if ((m = l.match(/^(#{2,3}) (.+?)(?: \{#([a-z0-9]+(?:-[a-z0-9]+)*)\})?$/))) {
+      // "## Heading {#fixed-id}" keeps a linked step's URL stable when its wording is edited later.
       const tag = m[1].length === 2 ? 'h2' : 'h3';
-      out.push(`<${tag} id="${slugify(m[2])}">${inline(m[2])}</${tag}>`); i++;
+      out.push(`<${tag} id="${m[3] || slugify(m[2])}">${inline(m[2])}</${tag}>`); i++;
     } else if (/^[-*] /.test(l) || /^\d+\. /.test(l)) {
       const ordered = /^\d+\. /.test(l);
       const re = ordered ? /^\d+\. / : /^[-*] /;
@@ -111,13 +117,98 @@ function md(src) {
     } else {
       const buf = [];
       while (i < lines.length && lines[i].trim() && !/^(#{2,3} |[-*] |\d+\. |\||> |:::)/.test(lines[i])) buf.push(lines[i++]);
-      out.push(`<p>${inline(buf.join(' '))}</p>`);
+      const text = buf.join(' ');
+      out.push(text.startsWith('{nav} ') ? `<p class="nav-note">${inline(text.slice(6))}</p>` : `<p>${inline(text)}</p>`);
     }
   }
   return out.join('\n');
 }
 // "::: prelaunch" / "::: postlaunch" blocks: only one side is kept, chosen by today's date.
 const phase = (src) => src.replace(/^::: (prelaunch|postlaunch)\n([\s\S]*?)\n:::$/gm, (_, k, body) => ((k === 'postlaunch') === LAUNCHED ? body : ''));
+
+// ---------- sources ----------
+// One upload has one identity however its link is written: youtube.com/watch, youtu.be, shorts, live, embed, m. and nocookie.
+const YT_HOST = /^(?:(?:www|m|music)\.)?(?:youtube\.com|youtube-nocookie\.com)$/;
+function canonicalSource(value) {
+  const u = new URL(value);
+  const host = u.hostname.toLowerCase();
+  const id = host === 'youtu.be' || host === 'www.youtu.be' ? u.pathname.split('/')[1]
+    : YT_HOST.test(host) ? u.searchParams.get('v') || (u.pathname.match(/^\/(?:embed|shorts|live|v)\/([\w-]{11})/) || [])[1] : null;
+  if (id !== null && id !== undefined) { if (!/^[\w-]{11}$/.test(id)) throw new Error(`Not a YouTube video link: ${value}`); return `youtube:${id}`; }
+  for (const key of [...u.searchParams.keys()]) if (/^(utm_|fbclid$|gclid$|ref$)/.test(key)) u.searchParams.delete(key);
+  u.searchParams.sort();
+  return `${host.replace(/^(www|m|amp)\./, '')}${u.pathname.replace(/\/+$/, '').toLowerCase()}${u.searchParams.toString() ? `?${u.searchParams}` : ''}`;
+}
+// "12:34", "1:02:03" or a YouTube t= value ("754", "754s", "12m34s") in seconds.
+const clockSeconds = (t) => (/^\d+(?::\d{2}){1,2}$/.test(t) ? t.split(':').reduce((a, x) => a * 60 + Number(x), 0) : NaN);
+const tParamSeconds = (t) => { const m = String(t).match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)?$/); return m && t ? (Number(m[1] || 0) * 3600 + Number(m[2] || 0) * 60 + Number(m[3] || 0)) : NaN; };
+const idOf = (v) => v.toLowerCase().replace(/^@/, '').replace(/[^a-z0-9]+/g, '');
+const sourceMeta = (r) => [r.by && `by ${r.by}`, r.at && `evidence at ${r.at}`, r.group && `origin group ${r.group}`].filter(Boolean).join(' · ');
+// A source item: - [What it shows](url) | by: Creator or publisher | group: origin-id | at: 12:34 or article section
+function parseSources(file, sources, isMission) {
+  return sources.split('\n').filter((line) => /^([-*]|\d+\.) /.test(line)).map((line, i) => {
+    const [head, ...parts] = line.replace(/^([-*]|\d+\.) /, '').split(' | ');
+    const linkMatch = head.trim().match(/^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/);
+    const record = { n: i + 1, url: (head.match(/\]\((https?:\/\/[^)\s]+)\)/) || [])[1] || '', label: linkMatch ? linkMatch[1] : '' };
+    if (!isMission) return record;
+    for (const part of parts) {
+      const k = part.indexOf(':');
+      const key = part.slice(0, k).trim();
+      if (k < 1 || !['by', 'group', 'at'].includes(key) || !part.slice(k + 1).trim()) throw new Error(`${file}: source ${i + 1}: use "| by: … | group: … | at: …" after the link`);
+      record[key] = part.slice(k + 1).trim();
+    }
+    if (record.url) record.key = canonicalSource(record.url);
+    return record;
+  });
+}
+// Declared metadata is checked for consistency. It cannot prove what the footage shows or that sources are truly independent.
+function checkIndependence(file, records) {
+  const keys = new Map();
+  const groupOfCreator = new Map();
+  for (const r of records) {
+    if (!r.url || !r.label) throw new Error(`${file}: source ${r.n} must be one link: - [What it shows](https://…) | by: … | group: … | at: …`);
+    for (const key of ['by', 'group', 'at']) if (!r[key]) throw new Error(`${file}: source ${r.n} needs "${key}:" (creator or publisher, origin group, and where the evidence is)`);
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(r.group)) throw new Error(`${file}: source ${r.n}: group must be a short id like "creator-a"`);
+    // One upload or page may be listed again for a different evidence location (a long playthrough at 02:00 and 10:00),
+    // but only with the same creator and group. It never adds an origin, whatever form its link takes.
+    const first = keys.get(r.key);
+    if (first) {
+      if (idOf(first.by) !== idOf(r.by) || first.group !== r.group) throw new Error(`${file}: sources ${first.n} and ${r.n} are the same upload or page but name a different creator or group. One upload is one origin`);
+      if (first.locations.has(r.at)) throw new Error(`${file}: sources ${first.n} and ${r.n} are the same upload or page at the same location (${r.at}). List it once`);
+      first.locations.add(r.at);
+    } else keys.set(r.key, { n: r.n, by: r.by, group: r.group, locations: new Set([r.at]) });
+    if (r.key.startsWith('youtube:')) {
+      if (Number.isNaN(clockSeconds(r.at))) throw new Error(`${file}: source ${r.n} is a video; "at:" must be a timestamp like 12:34`);
+      const t = new URL(r.url).searchParams.get('t');
+      if (t !== null && tParamSeconds(t) !== clockSeconds(r.at)) throw new Error(`${file}: source ${r.n}: the link's t=${t} does not match "at: ${r.at}"`);
+    }
+    // One creator or publisher is one origin, however many uploads or pages it has.
+    const creator = idOf(r.by);
+    if (groupOfCreator.has(creator) && groupOfCreator.get(creator) !== r.group) throw new Error(`${file}: "${r.by}" appears in two origin groups. One creator or publisher counts once; put all of its sources in one group`);
+    groupOfCreator.set(creator, r.group);
+  }
+  const groups = new Set(records.map((r) => r.group)).size;
+  if (groups < 2) throw new Error(`${file}: a community guide needs sources from at least two independent origin groups (different creators or publishers, neither copying the other)`);
+  return groups;
+}
+// The parts of a community guide that need evidence: every paragraph, list item, table row and note.
+// "{nav} " starts a navigation-only paragraph: it needs no citation but must link to a page on this site.
+function evidenceUnits(file, body) {
+  const units = [];
+  const lines = body.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const l = lines[i];
+    if (!l.trim() || /^#{2,3} /.test(l) || /^::: video /.test(l) || /^\|[\s:|-]+\|?$/.test(l)) continue;
+    if (/^\|/.test(l)) { if (lines[i + 1] && /^\|[\s:|-]+\|?$/.test(lines[i + 1])) continue; units.push(l); continue; } // header row skipped
+    if (/^([-*]|\d+\.) /.test(l)) { units.push(l); continue; }
+    const buf = [l];
+    while (lines[i + 1] && lines[i + 1].trim() && !/^(#{2,3} |[-*] |\d+\. |\||:::)/.test(lines[i + 1]) && (/^> /.test(l) === /^> /.test(lines[i + 1]))) buf.push(lines[++i]);
+    const text = buf.join(' ');
+    if (text.startsWith('{nav} ')) { if (!/\]\(\/[^)]*\)/.test(text) || /\{src:/.test(text)) throw new Error(`${file}: a "{nav}" paragraph is for links to other pages on this site only: "${text.slice(0, 80)}"`); continue; }
+    units.push(text);
+  }
+  return units;
+}
 
 // ---------- load content ----------
 function loadPage(file, isMission = false) {
@@ -149,7 +240,13 @@ function loadPage(file, isMission = false) {
     if (meta.sourceBasis !== 'retail-gameplay') throw new Error(`${file}: needs "sourceBasis: retail-gameplay" (every source shows or states play of the released game)`);
     if (!REVIEW_LABELS[meta.sourceReview]) throw new Error(`${file}: needs "sourceReview: owner", "approved-tester" or "automated"`);
   }
+  // "published" is the first public date. It is optional, never derived from "updated", and must not move later.
+  if (meta.published !== undefined && (!isRealDate(meta.published) || meta.published > meta.updated || meta.published > BUILD_DAY || (isMission && meta.published < LAUNCH_DAY))) throw new Error(`${file}: "published" must be a real date, not later than "updated" or today${isMission ? ', and not before launch day' : ''}`);
+  if (community && meta.sourcePlatforms !== undefined && !meta.sourcePlatforms.split(',').every((x) => PLATFORMS.has(x.trim()))) throw new Error(`${file}: "sourcePlatforms" lists only platforms the sources show, separated by commas: ${[...PLATFORMS].join(', ')}`);
+  if (isMission && stripTags(inline(meta.answer)).length > 300) throw new Error(`${file}: keep "answer" to one direct action of 300 characters or fewer`);
   if (LAUNCHED && meta.answer_postlaunch) meta.answer = meta.answer_postlaunch;
+  // The mission hub's answer depends on whether any mission guide is actually published, not on the date.
+  if (!isMission && meta.answer_missions && publishedMissions.length) meta.answer = meta.answer_missions;
   let body = phase(m[2]);
   const cut = (heading) => {
     const idx = body.search(new RegExp(`^## ${heading}\\s*$`, 'm'));
@@ -160,12 +257,20 @@ function loadPage(file, isMission = false) {
   };
   const sources = cut('Sources');
   const sourceLinks = [...sources.matchAll(/\]\((https?:\/\/[^)\s]+)\)/g)].map((x) => x[1]);
+  // Numbered sources: item N is the Nth list item under "## Sources". {src:N} cites it.
+  const sourceRecords = parseSources(file, sources, isMission);
+  const sourceItems = sourceRecords.map((r) => r.url);
+  const refsIn = (text) => [...text.matchAll(/\{src:(\d+(?:, ?\d+)*)\}/g)].flatMap((x) => x[1].split(',').map(Number));
+  for (const n of refsIn(body + meta.answer)) if (n < 1 || n > sourceItems.length || !sourceItems[n - 1]) throw new Error(`${file}: {src:${n}} does not match a linked item under "## Sources"`);
+  let independentGroups = 0;
   if (community) {
-    const domains = new Set(sourceLinks.map((link) => domainOf(new URL(link).hostname)));
-    if ([...domains].some((domain) => PLACEHOLDER_DOMAINS.has(domain) || /\.(test|example|invalid|localhost)$/.test(domain))) throw new Error(`${file}: placeholder source links are not allowed`);
-    if (domains.size < 2) throw new Error(`${file}: a community guide needs links to at least two different source sites under "## Sources"`);
-    const independent = Number(meta.independentSources);
-    if (!Number.isInteger(independent) || independent < 2 || independent > domains.size) throw new Error(`${file}: "independentSources" must be a whole number from 2 to the number of linked source sites. Count only sources with their own first-hand play, not reports that repeat each other`);
+    if (sourceLinks.some((link) => { const d = domainOf(new URL(link).hostname); return PLACEHOLDER_DOMAINS.has(d) || /\.(test|example|invalid|localhost)$/.test(d); })) throw new Error(`${file}: placeholder source links are not allowed`);
+    independentGroups = checkIndependence(file, sourceRecords);
+    if (meta.independentSources !== undefined && Number(meta.independentSources) !== independentGroups) throw new Error(`${file}: "independentSources" says ${meta.independentSources} but the source records show ${independentGroups} independent group(s). Leave the field out; the build counts groups`);
+    // The quick answer and every step, paragraph, table row and note need two independent groups cited beside them.
+    const groupsOf = (text) => new Set(refsIn(text).map((n) => sourceRecords[n - 1].group));
+    if (groupsOf(meta.answer).size < 2) throw new Error(`${file}: the quick answer must cite sources from at least two independent groups with {src:N}`);
+    for (const unit of evidenceUnits(file, body)) if (groupsOf(unit).size < 2) throw new Error(`${file}: this text must cite sources from at least two independent groups with {src:N}: "${unit.trim().slice(0, 80)}"`);
   }
   const faq = cut('FAQ').split(/^### /m).slice(1).map((chunk) => {
     const [q, ...rest] = chunk.split('\n');
@@ -174,7 +279,12 @@ function loadPage(file, isMission = false) {
   });
   const html = md(body);
   const toc = [...html.matchAll(/<h2 id="([^"]+)">(.*?)<\/h2>/g)].map((x) => ({ id: x[1], text: stripTags(x[2]) }));
-  return { ...meta, isMission, tested, community, sourceLinks, order: Number(meta.order || 99), html, toc, faq, sourcesHtml: sources ? md(sources) : '', plain: stripTags(html).replace('[storage-check]', '').trim(), url: `/${meta.slug}/` };
+  let n = 0;
+  // Mission sources are a numbered list built from the records, so page, search and AI exports show the same fields.
+  const sourcesHtml = !sources ? '' : isMission ? `<ol>${sourceRecords.map((r) => `<li id="source-${r.n}">${r.label ? link(inline(r.label), r.url) : link(esc(r.url), r.url)}${sourceMeta(r) ? ` <span class="source-meta">${esc(sourceMeta(r))}</span>` : ''}</li>`).join('')}</ol>`
+    : md(sources).replace(/<li>/g, () => `<li id="source-${++n}">`);
+  if (community) meta.independentSources = String(independentGroups);
+  return { ...meta, isMission, tested, community, sourceLinks, sourceItems, sourceRecords, order: Number(meta.order || 99), html, toc, faq, sourcesHtml, plain: stripTags(html).replace('[storage-check]', '').trim(), url: `/${meta.slug}/` };
 }
 function readPages(dir, isMission = false) {
   const folder = path.join(ROOT, 'content', dir);
@@ -182,9 +292,15 @@ function readPages(dir, isMission = false) {
   return fs.readdirSync(folder).filter((file) => file.endsWith('.md'))
     .map((file) => loadPage(path.join(folder, file), isMission)).filter(Boolean);
 }
-const missions = readPages('missions', true).sort((a, b) => a.order - b.order);
+let publishedMissions = [];
+const missions = readPages('missions', true).sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug));
+publishedMissions = missions;
 const pages = [...readPages(''), ...missions].sort((a, b) => a.order - b.order);
 if (new Set(pages.map((page) => page.slug)).size !== pages.length) throw new Error('Duplicate page slug');
+// The hub lists every mission guide, so its freshness is the newest of its own edit and its listed guides' edits.
+// A rebuild with no content change leaves it as it was. Removing a guide needs a manual "updated" on content/missions.md.
+const hub = pages.find((p) => p.slug === 'missions');
+if (hub) hub.updated = [hub.updated, ...missions.map((m) => m.updated)].sort().pop();
 const guides = pages.filter((p) => p.nav);
 
 // ---------- news (headlines from publisher RSS feeds, cached in data/news.json) ----------
@@ -302,6 +418,7 @@ function layout({ title, description, url, body, jsonld = [], ogType = 'article'
 <meta name="robots" content="${index ? 'index, follow, max-snippet:-1, max-image-preview:large' : 'noindex, follow'}">
 <meta name="theme-color" content="#170b30">
 ${url === '/' && site.googleSiteVerification ? `<meta name="google-site-verification" content="${esc(site.googleSiteVerification)}">` : ''}
+${url === '/' && site.bingSiteVerification ? `<meta name="msvalidate.01" content="${esc(site.bingSiteVerification)}">` : ''}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/atom+xml" title="${esc(site.name)} guide updates" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -338,7 +455,8 @@ const org = { '@type': 'Organization', name: site.name, url: BASE + '/' };
 const fmtDate = (d) => new Date(d.length === 10 ? d + 'T12:00:00Z' : d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
 const card = (p) => `<a class="card" href="${p.url}"><span class="card-icon">${icon(p.slug)}</span><h3>${esc(p.nav || p.title)}</h3><p>${esc(p.description)}</p><span class="card-go" aria-hidden="true">Read guide →</span></a>`;
 const newsList = (items) => `<ul class="news">${items.map((n) => `<li><a href="${esc(n.link)}" rel="nofollow noopener">${esc(n.title)}</a><span>${esc(n.source)} · <time datetime="${n.date}">${fmtDate(n.date)}</time></span></li>`).join('')}</ul>`;
-const pageHero = (crumb, h1, meta) => `<div class="page-hero"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span aria-hidden="true">/</span> ${esc(crumb)}</nav><h1>${esc(h1)}</h1>${meta}</div></div>`;
+// crumb is the current page's label, or [parent links..., current label]. The JSON-LD trail uses the same list.
+const pageHero = (crumb, h1, meta) => { const trail = Array.isArray(crumb) ? crumb : [crumb]; return `<div class="page-hero"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span aria-hidden="true">/</span> ${trail.map((c) => (typeof c === 'string' ? esc(c) : `<a href="${c.url}">${esc(c.label)}</a> <span aria-hidden="true">/</span>`)).join(' ')}</nav><h1>${esc(h1)}</h1>${meta}</div></div>`; };
 const searchUi = `<form class="search" role="search" data-site-search hidden>
 <label for="q">Find a mission or objective</label>
 <input id="q" type="search" placeholder="Mission, objective, or error" autocomplete="off" aria-controls="results" aria-describedby="search-status">
@@ -365,14 +483,25 @@ const storageCheck = `<form class="storage-check" data-storage-check hidden>
 </fieldset></form>`;
 
 const statusLabel = (p) => p.tested ? `Tested on ${p.testedPlatform}, ${fmtDate(p.testedDate)}` : p.community ? `Community-sourced, not tested by this site. Sources checked ${fmtDate(p.checkedDate)} (${p.sourceReview === 'automated' ? 'automated check, no human review' : p.sourceReview === 'owner' ? 'source check reviewed by the site owner' : 'source check reviewed by an approved tester'})` : '';
+// Every availability statement on the hub comes from the guides actually published in this build.
 function missionIndex() {
   const tested = missions.filter((mission) => mission.tested);
   const community = missions.filter((mission) => mission.community);
-  const published = tested.length === 1 ? '1 verified walkthrough' : `${tested.length} verified walkthroughs`;
-  return `<section class="mission-list"><h2 id="walkthroughs">${published}</h2>
-${tested.length ? `<ul>${tested.map((mission) => `<li><a href="${mission.url}">${esc(mission.h1 || mission.title)}</a> <span>Tested on ${esc(mission.testedPlatform)}</span></li>`).join('')}</ul>` : '<p>Verified guides will appear here after retail play and review.</p>'}
-${community.length ? `<h2 id="community-guides">Community-sourced guides</h2><p>Built from public player reports and videos, with every source linked. Not yet tested by us.</p><ul>${community.map((mission) => `<li><a href="${mission.url}">${esc(mission.h1 || mission.title)}</a> <span>Sources checked ${fmtDate(mission.checkedDate)}</span></li>`).join('')}</ul>` : ''}
+  const count = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+  if (!missions.length) return `<section class="mission-list" id="mission-guides"><h2 id="walkthroughs">Mission guides</h2><p>No mission guides are published yet. A guide appears here only after the retail release is confirmed and its steps are checked against gameplay.</p></section>`;
+  const item = (mission, note) => `<li><a href="${mission.url}">${esc(mission.h1 || mission.title)}</a> <span>${note}</span></li>`;
+  return `<section class="mission-list" id="mission-guides"><h2 id="walkthroughs">${count(tested.length, 'verified walkthrough')}</h2>
+${tested.length ? `<ul>${tested.map((mission) => item(mission, `Tested on ${esc(mission.testedPlatform)}, ${fmtDate(mission.testedDate)}`)).join('')}</ul>` : '<p>None of the guides below has been tested by us yet.</p>'}
+${community.length ? `<h2 id="community-guides">Community-sourced guides (${community.length})</h2><p>Built from public gameplay videos and player reports, with every source linked. Not tested by us.</p><ul>${community.map((mission) => item(mission, `Sources checked ${fmtDate(mission.checkedDate)}`)).join('')}</ul>` : ''}
 </section>`;
+}
+// What the guide covers and how we know, stated once near the top of every mission guide.
+function scopePanel(p) {
+  const rows = p.tested
+    ? [['Evidence', `Tested by this site on ${esc(p.testedPlatform)} on ${fmtDate(p.testedDate)}.`], ['Game version', p.testedBuild ? esc(p.testedBuild) : 'Not recorded'], ['Other platforms', 'Not tested by us. Steps may differ.']]
+    : [['Evidence', `Built from retail gameplay by ${p.independentSources} independent creators or publishers, as declared under Sources. Not tested by this site.`], ['Platforms in sources', p.sourcePlatforms ? esc(p.sourcePlatforms.split(',').map((x) => x.trim()).join(', ')) : 'Not stated'], ['Sources checked', `${fmtDate(p.checkedDate)}. ${REVIEW_LABELS[p.sourceReview]}`]];
+  rows.push(['Published by', `${esc(site.name)}. No named author.`]);
+  return `<dl class="scope" aria-label="Guide scope">${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>`;
 }
 
 // Corrections go to a public form. The warning is part of the link text block so nobody posts a code or personal detail.
@@ -382,7 +511,13 @@ function reportLink(p) {
   return `<p class="report"><a href="${esc(href)}" rel="nofollow noopener">Report a problem with this guide</a>. This opens a public form on GitHub and needs a free GitHub account. Anyone can read what you post, so leave out game codes, account names and personal details.</p>`;
 }
 function renderPage(p) {
-  const related = nav.map(({ url }) => guides.find((guide) => guide.url === url)).filter((item) => item.slug !== p.slug).slice(0, 3);
+  const related = p.isMission ? ['missions', 'progression', 'launch-help'].map((slug) => pages.find((page) => page.slug === slug)).filter(Boolean)
+    : nav.map(({ url }) => guides.find((guide) => guide.url === url)).filter((item) => item.slug !== p.slug).slice(0, 3);
+  const hubPage = pages.find((page) => page.slug === 'missions');
+  const crumbs = p.isMission && hubPage ? [{ label: hubPage.nav, url: hubPage.url }, p.h1 || p.title] : p.nav || p.title;
+  const at = missions.indexOf(p);
+  const neighbours = at < 0 ? '' : [[missions[at - 1], 'Previous guide in the list'], [missions[at + 1], 'Next guide in the list']].filter(([m]) => m).map(([m, label]) => `<li><span>${label}</span> <a href="${m.url}">${esc(m.h1 || m.title)}</a></li>`).join('');
+  const missionNav = p.isMission ? `<nav class="mission-nav" aria-label="More mission guides"><ul>${neighbours}<li><a href="/missions/#mission-guides">All mission guides</a></li></ul></nav>` : '';
   const faqHtml = p.faq.length ? `<section class="faq"><h2 id="faq">Frequently asked questions</h2>${p.faq.map((f) => `<details id="${f.id}"><summary>${esc(f.q)}</summary>${f.html}</details>`).join('')}</section>` : '';
   // Keep the answer and first two sections ahead of any optional ad.
   const adPosition = [...p.html.matchAll(/<h2 /g)][2]?.index;
@@ -392,13 +527,14 @@ function renderPage(p) {
   const content = ads ? p.html.slice(0, adPosition) + adSlot('in-article') + p.html.slice(adPosition) : p.html;
   const launchHelp = p.slug === 'launch-help';
   const missionHub = p.slug === 'missions';
-  const phaseLabel = p.tested ? `Tested on ${esc(p.testedPlatform)}` : p.community ? 'Community-sourced' : LAUNCHED ? 'Launch guide' : 'Pre-launch info';
+  const phaseLabel = p.tested ? `Tested on ${esc(p.testedPlatform)}` : p.community ? 'Community-sourced' : missionHub && missions.length ? 'Mission index' : LAUNCHED ? 'Launch guide' : 'Pre-launch info';
   const toc = p.toc.length > 2 ? `<nav class="toc" aria-label="On this page"><strong>On this page</strong><ul>${p.toc.map((t) => `<li><a href="#${t.id}">${esc(t.text)}</a></li>`).join('')}${p.faq.length ? '<li><a href="#faq">FAQ</a></li>' : ''}</ul></nav>` : '';
   const freshness = p.community ? `Sources checked <time datetime="${p.checkedDate}">${fmtDate(p.checkedDate)}</time>` : p.isMission ? `Tested <time datetime="${p.testedDate}">${fmtDate(p.testedDate)}</time>${p.testedBuild ? ` · Build ${esc(p.testedBuild)}` : ''}` : `Updated <time datetime="${p.updated}">${fmtDate(p.updated)}</time>`;
-  const body = `${pageHero(p.nav || p.title, p.h1 || p.title, `<p class="meta"><span class="pill">${phaseLabel}</span> ${freshness} · <a href="/about/#how-we-label-facts">How we label facts</a></p>`)}
+  const body = `${pageHero(crumbs, p.h1 || p.title, `<p class="meta"><span class="pill">${phaseLabel}</span> ${freshness} · <a href="/about/#how-we-label-facts">How we label facts</a></p>`)}
 <div class="wrap article-grid">
 <article>
 <div class="answer"><span class="answer-label">Quick answer</span><p>${inline(p.answer)}</p></div>
+${p.isMission ? scopePanel(p) : ''}
 ${communityNote}
 ${launchHelp ? quickJumps(launchJumps, 'Jump to a launch problem') : ''}
 ${missionHub ? `${searchUi}${missionIndex()}` : ''}
@@ -406,13 +542,15 @@ ${launchHelp ? content.replace('<p>[storage-check]</p>', storageCheck) : content
 ${faqHtml}
 ${p.sourcesHtml ? `<section class="sources"><h2 id="sources">Sources</h2>${p.sourcesHtml}</section>` : ''}
 ${reportLink(p)}
+${missionNav}
 </article>
 <aside class="side">${toc}<div class="legend"><strong>Fact labels</strong><p><span class="tag tag-confirmed">Confirmed</span> Official publisher or platform source</p><p><span class="tag tag-reported">Reported</span> Press previews</p><p><span class="tag tag-unknown">Not yet known</span> Not announced</p></div></aside>
 </div>
 <section class="wrap related"><h2>Keep reading</h2><div class="cards">${related.map(card).join('')}</div></section>`;
   const jsonld = [
-    { '@context': 'https://schema.org', '@type': 'Article', headline: p.h1 || p.title, description: p.description, dateModified: p.updated, datePublished: p.published || p.updated, mainEntityOfPage: BASE + p.url, author: org, publisher: org, about: { '@type': 'VideoGame', name: 'Grand Theft Auto VI' } },
-    { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: BASE + '/' }, { '@type': 'ListItem', position: 2, name: p.nav || p.title, item: BASE + p.url }] },
+    // datePublished only when the guide records its first public date. It is never copied from "updated".
+    { '@context': 'https://schema.org', '@type': 'Article', headline: p.h1 || p.title, description: p.description, ...(p.published ? { datePublished: p.published } : {}), dateModified: p.updated, mainEntityOfPage: BASE + p.url, author: org, publisher: org, about: { '@type': 'VideoGame', name: 'Grand Theft Auto VI' }, ...(p.isMission && hubPage ? { isPartOf: { '@type': 'CollectionPage', name: hubPage.title, url: BASE + hubPage.url } } : {}) },
+    { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ name: 'Home', url: '/' }, ...(Array.isArray(crumbs) ? crumbs.slice(0, -1) : []).map((c) => ({ name: c.label, url: c.url })), { name: Array.isArray(crumbs) ? crumbs.at(-1) : crumbs, url: p.url }].map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: BASE + c.url })) },
   ];
   if (p.faq.length) jsonld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: p.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.text } })) });
   const full = `${p.title} | ${site.name}`;
@@ -476,7 +614,18 @@ const searchAliases = {
 
 const pageAliases = (p) => (p.aliases ? p.aliases.split('|').map((alias) => alias.trim()).filter(Boolean) : []);
 // Search and AI exports keep the tested/untested distinction, the date and the citations.
-const missionFields = (p) => (p.isMission ? { status: p.tested ? 'tested' : 'community', label: statusLabel(p), date: p.tested ? p.testedDate : p.checkedDate, ...(p.community ? { review: p.sourceReview } : {}), sources: p.sourceLinks } : {});
+const missionFields = (p) => (p.isMission ? { status: p.tested ? 'tested' : 'community', label: statusLabel(p), date: p.tested ? p.testedDate : p.checkedDate, ...(p.community ? { review: p.sourceReview } : {}), platform: p.tested ? p.testedPlatform : p.sourcePlatforms || '', sources: p.sourceLinks } : {});
+// A mission search record carries only the sources cited inside its own excerpt (sourceScope "cited").
+// A tested guide's uncited excerpt keeps the page list as background reading (sourceScope "page"); its evidence is our own play.
+// A community excerpt with no citation gets no record at all, so no unsupported text is shown with borrowed sources.
+const firstBlock = (html) => (html.match(/<(p|ol|ul)>[\s\S]*?<\/\1>/) || [''])[0];
+function sourcesFor(p, html) {
+  if (!p.isMission) return {};
+  const nums = [...new Set([...html.matchAll(/href="#source-(\d+)"/g)].map((x) => Number(x[1])))];
+  const records = nums.length ? nums.map((n) => p.sourceRecords[n - 1]) : p.tested ? p.sourceRecords : [];
+  return { sources: records.map((r) => r.url), evidence: records.map(({ n, url, by, group, at }) => ({ n, url, ...(by ? { by } : {}), ...(group ? { group } : {}), ...(at ? { at } : {}) })), sourceScope: nums.length ? 'cited' : p.tested ? 'page' : 'none' };
+}
+const unsupported = (record) => record.status === 'community' && record.sourceScope === 'none';
 const parentFields = (p) => (p.isMission ? { parent: p.h1 || p.title, parentAliases: pageAliases(p) } : {});
 function sectionResults(page) {
   const parts = page.html.split(/<h[23] id="([^"]+)">(.*?)<\/h[23]>/);
@@ -484,8 +633,10 @@ function sectionResults(page) {
   for (let i = 1; i < parts.length; i += 3) {
     const [id, heading, body] = parts.slice(i, i + 3);
     const url = `${page.url}#${id}`;
-    const summary = stripTags((body.match(/<(?:p|ol|ul)>[\s\S]*?<\/(?:p|ol|ul)>/) || [body])[0]);
-    if (summary) results.push({ q: stripTags(heading), a: summary.slice(0, 220), url, kind: page.isMission ? 'objective' : 'support', aliases: searchAliases[url] || [], ...parentFields(page), ...missionFields(page) });
+    const block = page.isMission ? firstBlock(body) : (body.match(/<(?:p|ol|ul)>[\s\S]*?<\/(?:p|ol|ul)>/) || [body])[0];
+    const summary = stripTags(block.replace(NO_CITES, ''));
+    const record = { q: stripTags(heading), a: summary.slice(0, 220), url, kind: page.isMission ? 'objective' : 'support', aliases: searchAliases[url] || [], ...parentFields(page), ...missionFields(page), ...sourcesFor(page, block) };
+    if (summary && !unsupported(record)) results.push(record);
   }
   return results;
 }
@@ -502,9 +653,9 @@ write('404.html', layout({ title: `Page not found | ${site.name}`, description: 
 for (const f of fs.readdirSync(path.join(ROOT, 'assets'))) fs.copyFileSync(path.join(ROOT, 'assets', f), path.join(OUT, f));
 const searchable = [...guides, ...missions.filter((page) => !page.nav)];
 write('search.json', JSON.stringify([
-  ...searchable.map((p) => ({ q: p.h1 || p.title, a: stripTags(inline(p.answer)), url: p.url, aliases: [...(searchAliases[p.url] || []), ...pageAliases(p)], ...missionFields(p) })),
+  ...searchable.map((p) => ({ q: p.h1 || p.title, a: stripTags(inline(p.answer).replace(NO_CITES, '')), url: p.url, aliases: [...(searchAliases[p.url] || []), ...pageAliases(p)], ...missionFields(p), ...sourcesFor(p, inline(p.answer)) })),
   ...searchable.filter((p) => p.isMission || p.slug === 'launch-help').flatMap(sectionResults),
-  ...searchable.flatMap((p) => p.faq.map((f) => ({ q: f.q, a: f.text.slice(0, 220), url: `${p.url}#${f.id}`, ...parentFields(p), ...missionFields(p) }))),
+  ...searchable.flatMap((p) => p.faq.map((f) => { const block = p.isMission ? firstBlock(f.html) : f.html; return { q: f.q, a: stripTags(block.replace(NO_CITES, '')).slice(0, 220), url: `${p.url}#${f.id}`, ...parentFields(p), ...missionFields(p), ...sourcesFor(p, block) }; }).filter((record) => !unsupported(record))),
 ]));
 
 const latest = pages.map((p) => p.updated).sort().pop();
@@ -517,7 +668,7 @@ ${pages.map((p) => `<url><loc>${BASE}${p.url}</loc><lastmod>${p.updated}</lastmo
 // Search and AI crawlers are explicitly welcome.
 const bots = ['Googlebot', 'Bingbot', 'GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended', 'CCBot'];
 write('robots.txt', `User-agent: *\nAllow: /\n\n${bots.map((b) => `User-agent: ${b}\nAllow: /\n`).join('\n')}\nSitemap: ${BASE}/sitemap.xml\n`);
-const plainAnswer = (p) => stripTags(inline(p.answer)).replace(/^(Confirmed|Reported|Not yet known) /, '');
+const plainAnswer = (p) => stripTags(inline(p.answer).replace(NO_CITES, '')).replace(/^(Confirmed|Reported|Not yet known) /, '');
 write('llms.txt', `# ${site.name}
 
 > ${site.description} Facts are labeled Confirmed (official publisher or platform source), Reported (press previews or reliable outlets) or Not yet known. Last updated ${latest}.
@@ -531,7 +682,7 @@ ${searchable.map((p) => `- [${p.title}](${BASE}${p.url}): ${p.isMission ? `[${st
 - [Full text of all guides](${BASE}/llms-full.txt)
 - [About, sources and disclosure](${BASE}/about/)
 `);
-write('llms-full.txt', searchable.map((p) => `# ${p.title}\nURL: ${BASE}${p.url}\nLast updated: ${p.updated}\n${p.isMission ? `Status: ${statusLabel(p)}\n` : ''}\nQuick answer: ${stripTags(inline(p.answer))}\n\n${p.plain}\n\n${p.faq.map((f) => `Q: ${f.q}\nA: ${f.text}`).join('\n\n')}${p.sourceLinks.length ? `\n\nSources:\n${p.sourceLinks.map((link) => `- ${link}`).join('\n')}` : ''}`).join('\n\n---\n\n') + '\n');
+write('llms-full.txt', searchable.map((p) => `# ${p.title}\nURL: ${BASE}${p.url}\n${p.published ? `First published: ${p.published}\n` : ''}Last updated: ${p.updated}\n${p.isMission ? `Status: ${statusLabel(p)}\n${p.community && p.sourcePlatforms ? `Platforms in sources: ${p.sourcePlatforms}\n` : ''}${p.tested && p.testedBuild ? `Game version tested: ${p.testedBuild}\n` : ''}` : ''}\nQuick answer: ${stripTags(inline(p.answer))}\n\n${p.plain}\n\n${p.faq.map((f) => `Q: ${f.q}\nA: ${f.text}`).join('\n\n')}${p.sourceLinks.length ? `\n\nSources:\n${(p.isMission ? p.sourceRecords.map((r) => `[${r.n}] ${r.url}${sourceMeta(r) ? ` (${sourceMeta(r)})` : ''}`) : p.sourceLinks.map((link) => `- ${link}`)).join('\n')}` : ''}`).join('\n\n---\n\n') + '\n');
 const feedPages = recentlyUpdated().slice(0, 30);
 write('feed.xml', `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">

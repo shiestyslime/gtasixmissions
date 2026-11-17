@@ -18,9 +18,12 @@ const run = (script, date, extra = {}) => { const env = { ...process.env, NO_FET
 const out = (rel) => fs.readFileSync(path.join(tmp, 'dist', rel), 'utf8');
 const clearMissions = () => { for (const f of fs.readdirSync(path.join(tmp, 'content/missions'))) fs.rmSync(path.join(tmp, 'content/missions', f)); };
 
-const community = (over = {}, sources = ['https://www.ign.com/wikis/a', 'https://www.gamespot.com/guides/b']) => {
-  const meta = { title: 'FIXTURE Dock Job Walkthrough', slug: 'missions/zz-fixture-dock-job', status: 'community', description: 'Private regression fixture for the community-sourced guide layout. Never published.', answer: 'Fixture answer for the dock job.', updated: '2026-11-20', checkedDate: '2026-11-20', sourceBasis: 'retail-gameplay', independentSources: '2', sourceReview: 'automated', aliases: 'dock job | harbor job', order: '90', ...over };
-  return `---\n${Object.entries(meta).filter(([, v]) => v !== null).map(([k, v]) => `${k}: ${v}`).join('\n')}\n---\n\n## How to start\n\nFixture dock start text.\n\n## Reach the crane\n\n1. Fixture crane step.\n\n## FAQ\n\n### What if the crane does not move?\n\nFixture crane answer.\n\n## Sources\n\n${sources.map((u, i) => `- [Source ${i + 1}](${u})`).join('\n')}\n`;
+const DEFAULT_SOURCES = [{ url: 'https://www.ign.com/wikis/a', by: 'IGN', group: 'ign', at: 'Dock section' }, { url: 'https://www.gamespot.com/guides/b', by: 'GameSpot', group: 'gamespot', at: 'Step 2' }];
+// A source is a URL string (gets its own creator and group) or { url, by, group, at }.
+const sourceLine = (src, i) => { const r = typeof src === 'string' ? { url: src, by: `Creator ${i + 1}`, group: `origin-${i + 1}`, at: 'Section one' } : src; return `- [Source ${i + 1}](${r.url})${['by', 'group', 'at'].filter((k) => r[k]).map((k) => ` | ${k}: ${r[k]}`).join('')}`; };
+const community = (over = {}, sources = DEFAULT_SOURCES) => {
+  const meta = { title: 'FIXTURE Dock Job Walkthrough', slug: 'missions/zz-fixture-dock-job', status: 'community', description: 'Private regression fixture for the community-sourced guide layout. Never published.', answer: 'Fixture answer for the dock job. {src:1,2}', updated: '2026-11-20', checkedDate: '2026-11-20', sourceBasis: 'retail-gameplay', sourceReview: 'automated', aliases: 'dock job | harbor job', order: '90', ...over };
+  return `---\n${Object.entries(meta).filter(([, v]) => v !== null).map(([k, v]) => `${k}: ${v}`).join('\n')}\n---\n\n## How to start\n\nFixture dock start text. {src:1,2}\n\n## Reach the crane {#crane-step}\n\n1. Fixture crane step. {src:1,2}\n\n## FAQ\n\n### What if the crane does not move?\n\nFixture crane answer. {src:1,2}\n\n## Sources\n\n${sources.map(sourceLine).join('\n')}\n`;
 };
 const tested = (over = {}) => {
   const meta = { title: 'FIXTURE Bank Run Walkthrough', slug: 'missions/zz-fixture-bank-run', status: 'published', description: 'Private regression fixture for the tested guide layout. It is never published anywhere.', answer: 'Fixture answer for the bank run.', updated: '2026-11-20', testedPlatform: 'PS5', testedDate: '2026-11-20', order: '91', ...over };
@@ -67,7 +70,7 @@ put('a.md', community({ updated: '2026-02-30' })); rejects('community guide with
 put('a.md', community({ checkedDate: '2026-02-30' })); rejects('impossible calendar date refused', '2026-11-20', 'checkedDate');
 put('a.md', community({ checkedDate: '2026-11-10' })); rejects('checkedDate before launch refused', '2026-11-20', 'checkedDate');
 put('a.md', community({}, ['https://example.com/a', 'https://other.example.com/b'])); rejects('example.com sources refused', '2026-11-20', 'placeholder');
-put('a.md', community({}, ['https://www.ign.com/a', 'https://uk.ign.com/b'])); rejects('two pages on one site are not two sources', '2026-11-20', 'two different source sites');
+put('a.md', community({}, [{ url: 'https://www.ign.com/a', by: 'IGN', group: 'ign', at: 'One' }, { url: 'https://uk.ign.com/b', by: 'IGN UK', group: 'ign', at: 'Two' }])); rejects('two pages from one origin group are not two sources', '2026-11-20', 'two independent origin groups');
 put('a.md', community({ sourceBasis: null })); rejects('missing sourceBasis refused', '2026-11-20', 'sourceBasis');
 put('a.md', community({ independentSources: '1' })); rejects('one independent source refused', '2026-11-20', 'independentSources');
 put('a.md', community({ independentSources: '5' })); rejects('independent count above linked sites refused', '2026-11-20', 'independentSources');
@@ -77,7 +80,7 @@ clearMissions();
 put('b.md', tested({ testedDate: '2026-12-25' })); rejects('tested date in the future refused', '2026-11-20', 'testedDate');
 put('b.md', tested({ testedDate: '2026-11-01' })); rejects('tested date before launch refused', '2026-11-20', 'testedDate');
 put('b.md', tested({ updated: '2099-12-31' })); rejects('tested guide with a future updated date refused', '2026-11-20', '"updated"');
-put('b.md', tested({ updated: '2026-11-18', testedDate: '2026-11-18' })); rejects('tested guide refused before launch time', '2026-11-18', 'before the mission publication time');
+put('b.md', tested({ updated: '2026-11-18', testedDate: '2026-11-18' })); rejects('tested guide refused before launch time', '2026-11-18T10:00:00Z', 'before the mission publication time');
 setSite({}); put('b.md', tested()); rejects('tested guide refused until the release is confirmed in site.json', '2026-11-20', 'releaseConfirmedOn');
 setSite({ communityGuides: { enabled: false, releaseConfirmedOn: '2026-11-19', releaseSource: 'https://www.rockstargames.com/VI' } });
 r = run('build.mjs', '2026-11-20'); expect('tested guide builds with a confirmed release even while community guides are off', r.ok, r.out);
@@ -86,22 +89,27 @@ setSite(gateOn);
 // 3b. Mission publication time: exact boundaries, evidence still required, safe fallback, bad settings refused
 const builds = (name, date) => { const b = run('build.mjs', date); expect(name, b.ok, b.out); };
 clearMissions();
-const launchNight = { updated: '2026-11-18', testedDate: '2026-11-18' }; // local US date on launch night
+const launchNight = { updated: '2026-11-18', testedDate: '2026-11-18' }; // a local date on the first regional launch night
+const iso = (ms) => new Date(ms).toISOString().replace('.000Z', 'Z');
+const GATE = Date.parse(baseSite.missionPublishAfter);
+const beforeGate = iso(GATE - 1000), atGate = iso(GATE), afterGate = iso(GATE + 1000);
+expect('the configured publication time is the official NZ PS5 unlock, 18 hours before the US PS5 time', baseSite.missionPublishAfter === '2026-11-18T11:00:00Z' && /store\.playstation\.com\/en-nz\//.test(baseSite.missionPublishAfterSource) && Date.parse('2026-11-19T05:00:00Z') - GATE === 18 * 36e5, baseSite.missionPublishAfter);
 expect('site.json sets a mission publication time earlier than launchDate', Date.parse(baseSite.missionPublishAfter) < Date.parse(baseSite.launchDate), `${baseSite.missionPublishAfter} ${baseSite.launchDate}`);
 setSite(gateOn); put('b.md', tested(launchNight));
-rejects('tested guide refused one second before the publication time', '2026-11-19T04:59:59Z', 'before the mission publication time');
-builds('tested guide with release evidence builds at the publication time', '2026-11-19T05:00:00Z');
-expect('editorial wording is still pre-launch at that moment', /pre-launch mode/.test(run('build.mjs', '2026-11-19T05:00:00Z').out));
-builds('tested guide with release evidence builds after the publication time', '2026-11-19T05:00:01Z');
-setSite({}); rejects('tested guide refused at the publication time without release evidence', '2026-11-19T05:00:00Z', 'releaseConfirmedOn');
-setSite({ communityGuides: { enabled: true, releaseConfirmedOn: '', releaseSource: '' } }); rejects('reaching the time does not publish even with the community switch on', '2026-11-19T05:00:00Z', 'releaseConfirmedOn');
+rejects('tested guide refused one second before the publication time', beforeGate, 'before the mission publication time');
+builds('tested guide with release evidence builds at the publication time', atGate);
+expect('editorial wording is still pre-launch at that moment', /pre-launch mode/.test(run('build.mjs', atGate).out));
+builds('tested guide with release evidence builds after the publication time', afterGate);
+setSite({}); rejects('tested guide refused at the publication time without release evidence', atGate, 'releaseConfirmedOn');
+setSite({ communityGuides: { enabled: true, releaseConfirmedOn: '', releaseSource: '' } }); rejects('reaching the time does not publish even with the community switch on', atGate, 'releaseConfirmedOn');
 clearMissions(); put('a.md', community({ updated: '2026-11-18', checkedDate: '2026-11-18' }));
-setSite(gateOn); rejects('community guide refused one second before the publication time', '2026-11-19T04:59:59Z', 'before the mission publication time');
-builds('community guide with switch and evidence builds at the publication time', '2026-11-19T05:00:00Z');
-setSite({ communityGuides: { ...gateOn.communityGuides, enabled: false } }); rejects('community guide refused at the publication time while its switch is off', '2026-11-19T05:00:00Z', 'switched off');
+setSite(gateOn); rejects('community guide refused one second before the publication time', beforeGate, 'before the mission publication time');
+builds('community guide with switch and evidence builds at the publication time', atGate);
+setSite({ communityGuides: { ...gateOn.communityGuides, enabled: false } }); rejects('community guide refused at the publication time while its switch is off', atGate, 'switched off');
 clearMissions(); put('b.md', tested(launchNight));
 const noSetting = { ...gateOn, missionPublishAfter: undefined, missionPublishAfterSource: undefined };
-setSite(noSetting); rejects('without the setting the gate falls back to launchDate (05:00 refused)', '2026-11-19T05:00:00Z', 'before the mission publication time');
+setSite(noSetting); rejects('without the setting the gate falls back to launchDate (configured time refused)', atGate, 'before the mission publication time');
+rejects('without the setting the US PS5 time is refused too', '2026-11-19T05:00:00Z', 'before the mission publication time');
 rejects('fallback refuses one second before launchDate', '2026-11-19T10:59:59Z', 'before the mission publication time');
 builds('fallback accepts at launchDate with release evidence', '2026-11-19T11:00:00Z');
 clearMissions();
@@ -112,11 +120,129 @@ for (const [label, patch, needle] of [
   ['an impossible date', { missionPublishAfter: '2026-02-30T05:00:00Z' }, 'missionPublishAfter must be'],
   ['an empty value', { missionPublishAfter: '' }, 'missionPublishAfter must be'],
   ['a time far before launch', { missionPublishAfter: '2020-01-01T00:00:00Z' }, '24 hours before launchDate'],
+  ['one second more than 24 hours before launchDate', { missionPublishAfter: iso(Date.parse(baseSite.launchDate) - 24 * 36e5 - 1000) }, '24 hours before launchDate'],
   ['a missing source', { missionPublishAfterSource: undefined }, 'missionPublishAfterSource'],
   ['an unofficial source', { missionPublishAfterSource: 'https://www.ign.com/x' }, 'missionPublishAfterSource'],
   ['a non-https source', { missionPublishAfterSource: 'http://store.playstation.com/x' }, 'missionPublishAfterSource'],
 ]) { setSite({ ...gateOn, ...patch }); rejects(`mission publication setting refused: ${label}`, '2026-11-20', needle); }
 setSite(gateOn);
+
+// 3c. Launch-window hub, hub freshness, first-publication date, citations and scope
+const hubHtml = () => out('missions/index.html');
+const ldOf = (html, type) => [...html.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)].map((m) => JSON.parse(m[1])).find((d) => d['@type'] === type);
+const lastmod = (url) => (out('sitemap.xml').match(new RegExp(`<loc>https://gtasixmissions.com${url}</loc><lastmod>([^<]+)</lastmod>`)) || [])[1];
+const hubDate = () => ({ shown: (hubHtml().match(/Updated <time datetime="([^"]+)"/) || [])[1], ld: ldOf(hubHtml(), 'Article').dateModified, map: lastmod('/missions/') });
+const sameDate = (d, v) => d.shown === v && d.ld === v && d.map === v;
+const early = atGate; // the earliest regional window, while editorial wording is still pre-launch
+clearMissions(); setSite(gateOn);
+builds('hub builds with no mission guides in the early unlock window', early);
+let h = hubHtml();
+expect('hub with zero guides says none are published, and nothing contradicts it', h.includes('No mission guides are published yet') && h.includes('No mission guides are published here yet') && !/\d+ verified walkthrough/.test(h) && !h.includes('There are no verified walkthroughs'));
+expect('hub freshness with zero guides is its own updated date', sameDate(hubDate(), '2026-11-15'), JSON.stringify(hubDate()));
+put('b.md', tested({ ...launchNight, updated: '2026-11-19' }));
+builds('tested guide builds in the early unlock window', early);
+h = hubHtml();
+expect('hub with one tested guide lists it and drops every "none published" line', h.includes('1 verified walkthrough') && h.includes('zz-fixture-bank-run') && !/No mission guides are published|no verified walkthroughs/i.test(h) && h.includes('Search the mission name') && h.includes('Mission index</span>'));
+expect('adding a guide moves hub date, Article dateModified and sitemap lastmod together', sameDate(hubDate(), '2026-11-19'), JSON.stringify(hubDate()));
+clearMissions(); put('a.md', community({ updated: '2026-11-18', checkedDate: '2026-11-18' }));
+builds('community guide builds in the early unlock window', early);
+h = hubHtml();
+expect('hub with only a community guide says 0 verified and lists it apart', h.includes('0 verified walkthroughs') && h.includes('None of the guides below has been tested by us yet') && h.includes('Community-sourced guides (1)') && !/No mission guides are published/.test(h));
+clearMissions(); put('b.md', tested({ updated: '2026-11-19' }));
+builds('hub freshness: first build', '2026-11-20');
+const firstHub = hubDate();
+builds('hub freshness: unchanged rebuild two days later', '2026-11-22');
+expect('an unchanged rebuild does not refresh the hub date', JSON.stringify(hubDate()) === JSON.stringify(firstHub) && firstHub.shown === '2026-11-19', `${JSON.stringify(firstHub)} ${JSON.stringify(hubDate())}`);
+put('b.md', tested({ updated: '2026-11-21' }));
+builds('hub freshness: listed guide edited', '2026-11-22');
+expect('editing a listed guide moves the hub date to that edit', sameDate(hubDate(), '2026-11-21'), JSON.stringify(hubDate()));
+expect('the home page and feed still use the newest content date', out('feed.xml').includes('<updated>2026-11-21T12:00:00Z</updated>'));
+clearMissions();
+
+// First publication date is kept, never copied from "updated"
+r = run('build.mjs', '2026-11-20');
+expect('no datePublished is claimed when a guide does not record one', !out('launch-help/index.html').includes('datePublished') && ldOf(out('launch-help/index.html'), 'Article').dateModified === '2026-11-15');
+fs.writeFileSync(guideFile, guideText.replace('updated: 2026-11-15', 'updated: 2026-11-15\npublished: 2026-11-15'));
+run('build.mjs', '2026-11-20');
+expect('a recorded first publication date is used', ldOf(out('launch-help/index.html'), 'Article').datePublished === '2026-11-15');
+fs.writeFileSync(guideFile, guideText.replace('updated: 2026-11-15', 'updated: 2026-11-20\npublished: 2026-11-15'));
+run('build.mjs', '2026-11-20');
+let art = ldOf(out('launch-help/index.html'), 'Article');
+expect('editing a guide moves dateModified but keeps datePublished', art.datePublished === '2026-11-15' && art.dateModified === '2026-11-20', JSON.stringify(art));
+for (const [label, value, date] of [['later than updated', '2026-11-18', '2026-11-20'], ['impossible', '2026-02-30', '2026-11-20'], ['in the future', '2026-11-25', '2026-11-20']]) {
+  fs.writeFileSync(guideFile, guideText.replace('updated: 2026-11-15', `updated: ${label === 'in the future' ? '2026-11-20' : '2026-11-17'}\npublished: ${value}`));
+  rejects(`published date refused: ${label}`, date, '"published"');
+}
+fs.writeFileSync(guideFile, guideText);
+put('b.md', tested({ published: '2026-11-15' })); rejects('a mission guide cannot claim publication before launch day', '2026-11-20', '"published"');
+clearMissions();
+
+// Citations next to each community step, and scope
+put('a.md', community().replace('Fixture crane step. {src:1,2}', 'Fixture crane step.')); rejects('community step without citations refused', '2026-11-20', 'must cite sources from at least two independent groups');
+put('a.md', community().replace('Fixture crane step. {src:1,2}', 'Fixture crane step. {src:1}')); rejects('community step citing one group refused', '2026-11-20', 'Fixture crane step');
+put('a.md', community().replace('Fixture crane answer. {src:1,2}', 'Fixture crane answer.')); rejects('community FAQ answer without citations refused', '2026-11-20', 'Fixture crane answer');
+put('a.md', community({ answer: 'Fixture answer for the dock job.' })); rejects('uncited quick answer refused', '2026-11-20', 'quick answer must cite');
+put('a.md', community({ answer: 'Fixture answer for the dock job. {src:1}' })); rejects('quick answer citing one group refused', '2026-11-20', 'quick answer must cite');
+put('a.md', community().replace('1. Fixture crane step. {src:1,2}', '1. Fixture crane step. {src:1,2}\n2. Uncited fixture lever step.')); rejects('an uncited list step beside a cited one is refused', '2026-11-20', 'Uncited fixture lever step');
+put('a.md', community().replace('Fixture dock start text. {src:1,2}', 'Fixture dock start text. {src:1,2}\n\nUncited fixture paragraph.')); rejects('an uncited paragraph in a cited section is refused', '2026-11-20', 'Uncited fixture paragraph');
+put('a.md', community().replace('Fixture dock start text. {src:1,2}', 'Fixture dock start text. {src:1,2}\n\n> Uncited fixture note.')); rejects('an uncited note is refused', '2026-11-20', 'Uncited fixture note');
+put('a.md', community().replace('Fixture dock start text. {src:1,2}', 'Fixture dock start text. {src:1,2}\n\n{nav} Press the fixture switch twice.')); rejects('{nav} text without a site link is refused', '2026-11-20', '"{nav}" paragraph');
+
+// Source identity and independence come from the records, not from host names
+const yt = (id, extra = '') => `https://www.youtube.com/watch?v=${id}${extra}`;
+const A = { url: yt('AAAAAAAAAAA', '&t=754s'), by: 'Creator A', group: 'creator-a', at: '12:34' };
+const B = { url: yt('BBBBBBBBBBB'), by: 'Creator B', group: 'creator-b', at: '3:00' };
+put('a.md', community({}, [A, B])); builds('two independent YouTube creators on one site are accepted', '2026-11-20');
+expect('the scope box shows the derived count of independent groups', out('missions/zz-fixture-dock-job/index.html').includes('by 2 independent creators or publishers'));
+put('a.md', community({}, [A, { ...B, by: 'Creator A', group: 'creator-a-two' }])); rejects('two uploads from one creator cannot be two groups', '2026-11-20', 'two origin groups');
+put('a.md', community({}, [A, { ...B, by: 'Creator A', group: 'creator-a' }])); rejects('two uploads from one creator count as one group', '2026-11-20', 'two independent origin groups');
+for (const [label, variant] of [['youtu.be', 'https://youtu.be/AAAAAAAAAAA'], ['shorts', 'https://www.youtube.com/shorts/AAAAAAAAAAA'], ['mobile', 'https://m.youtube.com/watch?v=AAAAAAAAAAA&feature=share'], ['embed', 'https://www.youtube-nocookie.com/embed/AAAAAAAAAAA'], ['live', 'https://youtube.com/live/AAAAAAAAAAA']]) {
+  put('a.md', community({}, [A, { ...B, url: variant }])); rejects(`a ${label} link to the same upload is refused as a second source`, '2026-11-20', 'same upload');
+}
+put('a.md', community({}, [A, { ...A, url: 'https://youtu.be/AAAAAAAAAAA', at: '3:00' }])); rejects('a URL variant of one upload never adds a second origin, even with matching creator and group', '2026-11-20', 'two independent origin groups');
+put('a.md', community({}, [A, { ...A, url: 'https://youtu.be/AAAAAAAAAAA?t=754' }, B])); rejects('the same upload at the same location listed twice is refused', '2026-11-20', 'same location');
+put('a.md', community({}, [A, B, { ...A, url: yt('AAAAAAAAAAA', '&t=600'), at: '10:00', by: 'Creator A2' }])); rejects('one upload cannot name a second creator', '2026-11-20', 'different creator or group');
+// Long playthroughs: two creators, each cited at two timestamps of one upload
+{
+  const A1 = { url: yt('AAAAAAAAAAA', '&t=120s'), by: 'Creator A', group: 'creator-a', at: '2:00' };
+  const B1 = { url: yt('BBBBBBBBBBB', '&t=150'), by: 'Creator B', group: 'creator-b', at: '2:30' };
+  const A2 = { url: `https://youtu.be/AAAAAAAAAAA?t=600`, by: 'creator a', group: 'creator-a', at: '10:00' };
+  const B2 = { url: yt('BBBBBBBBBBB', '&t=10m30s'), by: 'Creator B', group: 'creator-b', at: '10:30' };
+  put('a.md', community({}, [A1, B1, A2, B2]).replace('1. Fixture crane step. {src:1,2}', '1. Fixture crane step. {src:3,4}'));
+  builds('two creators with two timestamp locations each are accepted', '2026-11-20');
+  const pg = out('missions/zz-fixture-dock-job/index.html');
+  expect('repeated uploads still count as two independent origins', pg.includes('by 2 independent creators or publishers'));
+  expect('each timestamp is shown beside its claim and in the source list', /Fixture crane step\.<sup class="cite">\[<a href="#source-3">3<\/a>, <a href="#source-4">4<\/a>\]/.test(pg) && pg.includes('by Creator B · evidence at 10:30 · origin group creator-b'));
+  const craneRec = JSON.parse(out('search.json')).find((e) => e.url === '/missions/zz-fixture-dock-job/#crane-step');
+  expect('the step search record keeps that step\'s exact timestamps', JSON.stringify(craneRec?.evidence?.map((e) => e.at)) === '["10:00","10:30"]', JSON.stringify(craneRec?.evidence));
+  expect('llms-full.txt keeps both locations of one upload', out('llms-full.txt').includes('[1] https://www.youtube.com/watch?v=AAAAAAAAAAA&t=120s (by Creator A · evidence at 2:00') && out('llms-full.txt').includes('[3] https://youtu.be/AAAAAAAAAAA?t=600 (by creator a · evidence at 10:00'));
+}
+put('a.md', community({}, [DEFAULT_SOURCES[0], { ...DEFAULT_SOURCES[1], url: 'https://www.ign.com/wikis/a?utm_source=x#top' }])); rejects('one article with tracking parameters is the same page', '2026-11-20', 'same upload or page');
+put('a.md', community({}, [{ ...DEFAULT_SOURCES[0], group: 'upstream-x' }, { ...DEFAULT_SOURCES[1], group: 'upstream-x' }])); rejects('reports from one upstream source on different sites are one group', '2026-11-20', 'two independent origin groups');
+put('a.md', community({}, [{ ...A, at: 'Intro' }, B])); rejects('a video source needs a timestamp', '2026-11-20', 'timestamp');
+put('a.md', community({}, [{ ...A, at: '12:35' }, B])); rejects('a video link t= that disagrees with "at" is refused', '2026-11-20', 'does not match');
+put('a.md', community({}, [{ url: DEFAULT_SOURCES[0].url, by: 'IGN', at: 'One' }, DEFAULT_SOURCES[1]])); rejects('a source without a group is refused', '2026-11-20', 'needs "group:"');
+put('a.md', community({ independentSources: '3' })); rejects('a stated independent count that disagrees with the records is refused', '2026-11-20', 'independentSources');
+put('a.md', community({ independentSources: '2' })); builds('a stated count that matches the records is accepted', '2026-11-20');
+
+// Search excerpts carry only their own citations
+const C = { url: 'https://www.polygon.com/guide/c', by: 'Polygon', group: 'polygon', at: 'Harbor section' };
+put('a.md', community({}, [...DEFAULT_SOURCES, C]).replace('Fixture dock start text. {src:1,2}', 'Fixture dock start text. {src:1,2}\n\n1. Fixture later step. {src:2,3}').replace('## Reach the crane {#crane-step}', '## Getting there\n\n{nav} See [story progression](/progression/).\n\n## Reach the crane {#crane-step}'));
+builds('community guide with a third source, a later step and a navigation-only section builds', '2026-11-20');
+{
+  const idx = JSON.parse(out('search.json'));
+  const start = idx.find((e) => e.url === '/missions/zz-fixture-dock-job/#how-to-start');
+  expect('a section record carries only the sources cited in its excerpt', start?.sourceScope === 'cited' && start.sources.length === 2 && !start.sources.includes(C.url), JSON.stringify(start?.sources));
+  expect('search evidence keeps creator, group and location', start?.evidence?.[0]?.by === 'IGN' && start.evidence[0].group === 'ign' && start.evidence[0].at === 'Dock section');
+  expect('a navigation-only section gets no search record', !idx.some((e) => e.url === '/missions/zz-fixture-dock-job/#getting-there'));
+  const pg = out('missions/zz-fixture-dock-job/index.html');
+  expect('the page lists each source with creator, location and group', pg.includes('<li id="source-3"><a href="https://www.polygon.com/guide/c" rel="noopener">Source 3</a> <span class="source-meta">by Polygon · evidence at Harbor section · origin group polygon</span></li>') && pg.includes('<p class="nav-note">See <a href="/progression/">story progression</a>.</p>'));
+  expect('llms-full.txt lists the same source fields', out('llms-full.txt').includes('[3] https://www.polygon.com/guide/c (by Polygon · evidence at Harbor section · origin group polygon)'));
+}
+put('a.md', community().replace('Fixture crane step. {src:1,2}', 'Fixture crane step. {src:1,9}')); rejects('citation of a missing source refused', '2026-11-20', '{src:9}');
+put('a.md', community({ sourcePlatforms: 'PS5, PC' })); rejects('unknown platform in sourcePlatforms refused', '2026-11-20', 'sourcePlatforms');
+put('a.md', community({ answer: 'x'.repeat(301) })); rejects('a mission answer longer than 300 characters refused', '2026-11-20', '"answer"');
+clearMissions();
 
 // 4. Valid guides keep their labels everywhere
 put('a.md', community()); put('b.md', tested());
@@ -127,6 +253,15 @@ if (r.ok) {
   const page = out('missions/zz-fixture-dock-job/index.html');
   expect('community page shows the untested notice and review line', page.includes('Not tested by us yet.') && page.includes('Source check was automated') && page.includes('Community-sourced</span>') && !/Tested on /.test(page));
   expect('guide has the public corrections link with its warning', page.includes('issues/new?title=Correction') && page.includes('leave out game codes'));
+  expect('community step shows citation links next to the claim', /Fixture crane step\.<sup class="cite">\[<a href="#source-1">1<\/a>, <a href="#source-2">2<\/a>\]<\/sup>/.test(page) && page.includes('<li id="source-2">') && page.includes('<ol><li id="source-1">'));
+  expect('a pinned heading id is used', page.includes('<h2 id="crane-step">Reach the crane</h2>'));
+  expect('community page states its evidence scope without a tested claim', page.includes('class="scope"') && page.includes('Built from retail gameplay by 2 independent creators or publishers, as declared under Sources. Not tested by this site.') && page.includes('No named author.'));
+  const bankPage = out('missions/zz-fixture-bank-run/index.html');
+  expect('tested page states platform, date and untested platforms', bankPage.includes('Tested by this site on PS5 on Nov 20, 2026.') && bankPage.includes('Other platforms</dt><dd>Not tested by us.'));
+  const crumbs = ldOf(page, 'BreadcrumbList').itemListElement.map((x) => x.item);
+  expect('mission breadcrumb is Home / Missions / guide in both page and JSON-LD', crumbs.length === 3 && crumbs[1].endsWith('/missions/') && crumbs[2].endsWith('/missions/zz-fixture-dock-job/') && /<nav class="crumbs"[^>]*><a href="\/">Home<\/a> <span aria-hidden="true">\/<\/span> <a href="\/missions\/">Missions<\/a>/.test(page));
+  expect('mission Article names its hub and claims no first-publication date it lacks', ldOf(page, 'Article').isPartOf?.url.endsWith('/missions/') && !('datePublished' in ldOf(page, 'Article')));
+  expect('mission pages link to the neighbouring guide and the full list', page.includes('Next guide in the list</span> <a href="/missions/zz-fixture-bank-run/">') && bankPage.includes('Previous guide in the list</span> <a href="/missions/zz-fixture-dock-job/">') && page.includes('href="/missions/#mission-guides"'));
   const hub = out('missions/index.html');
   expect('hub lists tested and community guides apart', hub.includes('1 verified walkthrough') && hub.includes('id="community-guides"') && hub.indexOf('zz-fixture-bank-run') < hub.indexOf('id="community-guides"') && hub.indexOf('zz-fixture-dock-job') > hub.indexOf('id="community-guides"'));
   const index = JSON.parse(out('search.json'));
@@ -137,11 +272,14 @@ if (r.ok) {
   expect('step and FAQ records carry the parent mission and its aliases', dock.filter((e) => e.url.includes('#')).every((e) => e.parent === 'FIXTURE Dock Job Walkthrough' && e.parentAliases?.includes('harbor job')));
   const bank = index.filter((e) => e.url.startsWith('/missions/zz-fixture-bank-run/'));
   expect('every record from a tested guide keeps its tested label and date', bank.length >= 3 && bank.every((e) => e.status === 'tested' && /^Tested on PS5/.test(e.label) && e.date === '2026-11-20' && Array.isArray(e.sources)));
+  const crane = index.find((e) => e.url === '/missions/zz-fixture-dock-job/#crane-step');
+  expect('a step record carries the sources that step cites, and its excerpt has no citation numbers', crane?.sourceScope === 'cited' && crane.sources.length === 2 && !/\[1/.test(crane.a));
+  expect('llms-full.txt numbers mission sources to match the page citations', out('llms-full.txt').includes('[1] https://www.ign.com/wikis/a') && out('llms-full.txt').includes('Fixture crane step.[1, 2]'));
   const steps = index.filter((e) => e.q === 'How to start' && e.parent);
   expect('both "How to start" steps carry their mission name and label', steps.length === 2 && new Set(steps.map((e) => e.parent)).size === 2 && steps.every((e) => e.label));
   const full = out('llms-full.txt');
   expect('AI exports disclose that the source check was automated', /automated check, no human review/.test(full) && /automated check, no human review/.test(out('llms.txt')));
-  expect('llms-full.txt keeps the untested status and citations', /Status: Community-sourced, not tested by this site\. Sources checked/.test(full) && full.includes('- https://www.ign.com/wikis/a') && /Status: Tested on PS5/.test(full));
+  expect('llms-full.txt keeps the untested status and citations', /Status: Community-sourced, not tested by this site\. Sources checked/.test(full) && full.includes('[1] https://www.ign.com/wikis/a') && /Status: Tested on PS5/.test(full));
   expect('llms.txt marks each mission with its status', /\[Community-sourced, not tested by this site/.test(out('llms.txt')));
   expect('feed lists the guides with status', out('feed.xml').includes('zz-fixture-dock-job') && /Community-sourced, not tested/.test(out('feed.xml')));
 
@@ -152,11 +290,20 @@ if (r.ok) {
   const top = (query) => { const phrase = normalize(query); const qw = [...new Set(words(phrase))]; return entries.map((e) => ({ e, s: score(e, phrase, qw) })).filter((m) => m.s > 0).sort((a, b) => b.s - a.s).map((m) => m.e.url); };
   expect('"dock job how to start" opens that mission\'s step first', top('dock job how to start')[0] === '/missions/zz-fixture-dock-job/#how-to-start', top('dock job how to start').slice(0, 3).join(' '));
   expect('"how to start bank run" opens the other mission\'s step first', top('how to start bank run')[0] === '/missions/zz-fixture-bank-run/#how-to-start', top('how to start bank run').slice(0, 3).join(' '));
-  expect('alias "harbor job reach the crane" finds the step', top('harbor job reach the crane')[0] === '/missions/zz-fixture-dock-job/#reach-the-crane', top('harbor job reach the crane').slice(0, 3).join(' '));
+  expect('alias "harbor job reach the crane" finds the step', top('harbor job reach the crane')[0] === '/missions/zz-fixture-dock-job/#crane-step', top('harbor job reach the crane').slice(0, 3).join(' '));
   expect('a mission name alone opens the mission page first', top('dock job')[0] === '/missions/zz-fixture-dock-job/', top('dock job').slice(0, 3).join(' '));
-  expect('"dock job reach crane" (small words left out) finds the step', top('dock job reach crane')[0] === '/missions/zz-fixture-dock-job/#reach-the-crane', top('dock job reach crane').slice(0, 3).join(' '));
+  expect('"dock job reach crane" (small words left out) finds the step', top('dock job reach crane')[0] === '/missions/zz-fixture-dock-job/#crane-step', top('dock job reach crane').slice(0, 3).join(' '));
   expect('"open the vault" still finds its step', top('open the vault')[0] === '/missions/zz-fixture-bank-run/#open-the-vault', top('open the vault').slice(0, 3).join(' '));
 }
+
+// 4b. Search engine verification tags: home page only, escaped, absent when not configured
+clearMissions(); setSite(gateOn); run('build.mjs', '2026-11-20');
+expect('the Bing verification tag from site.json is in the home page head only', baseSite.bingSiteVerification === '89E68620B4EACCF4D49881B96998005A' && out('index.html').includes('<meta name="msvalidate.01" content="89E68620B4EACCF4D49881B96998005A">') && out('index.html').indexOf('msvalidate.01') < out('index.html').indexOf('</head>') && !out('missions/index.html').includes('msvalidate'));
+setSite({ ...gateOn, bingSiteVerification: 'a"><script>x</script>' }); run('build.mjs', '2026-11-20');
+expect('the Bing verification value is escaped', out('index.html').includes('content="a&quot;&gt;&lt;script&gt;x&lt;/script&gt;"') && !out('index.html').includes('<script>x</script>'));
+setSite({ ...gateOn, bingSiteVerification: '' }); run('build.mjs', '2026-11-20');
+expect('no Bing tag when the setting is empty', !out('index.html').includes('msvalidate'));
+setSite(gateOn);
 
 // 5. Ads stay off unless IDs and both confirmations are present
 clearMissions(); put('b.md', tested({ ads: 'yes' }));

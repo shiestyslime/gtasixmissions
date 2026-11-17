@@ -119,9 +119,20 @@
           }
           results.append(item);
         }
-        results.hidden = matches.length === 0;
+        // No match: offer the two pages that help most when a mission guide is missing.
+        if (!matches.length) {
+          for (const [href, text] of [['/missions/#mission-guides', 'Browse every published mission guide'], ['/progression/', 'Find out what unlocks the next mission']]) {
+            const item = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = href;
+            link.textContent = text;
+            item.append(link);
+            results.append(item);
+          }
+        }
+        results.hidden = false;
         status.textContent = matches.length ? `${matches.length} ${matches.length === 1 ? 'result' : 'results'} shown.`
-          : 'No matching answer. Try the mission name, a few words from the objective, or one of the guide links.';
+          : 'No matching answer. Try the mission name or a few words from the objective, or use a link below.';
       } catch {
         if (currentRevision !== revision) return;
         status.textContent = 'Search is temporarily unavailable. You can still browse the guide links.';

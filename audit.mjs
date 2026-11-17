@@ -18,6 +18,7 @@ const built = fs.existsSync('dist') ? fs.readdirSync('dist', { recursive: true }
 const trackers = ['googletagmanager.com', 'google-analytics.com', 'plausible.io', 'cloudflareinsights.com', 'umami', 'posthog'].filter((t) => built.includes(t));
 line(trackers.length ? 'ACTIVE' : 'MISSING', 'On-site analytics', trackers.length ? `found: ${trackers.join(', ')}` : built ? 'no analytics script in the built pages. Visits and clicks are not measured on-site' : 'run the build first to scan pages');
 line(site.googleSiteVerification ? 'PREPARED' : 'MISSING', 'Google Search Console', site.googleSiteVerification ? 'verification tag is in the home page. Account state, sitemap and indexing cannot be checked from here' : 'no verification tag');
+line(site.bingSiteVerification ? 'PREPARED' : 'MISSING', 'Bing Webmaster Tools', site.bingSiteVerification ? 'verification tag is in the home page. Whether Bing has verified the site, read the sitemap or indexed anything cannot be checked from here' : 'no verification tag');
 line(site.indexNowKey ? 'PREPARED' : 'MISSING', 'IndexNow (Bing)', site.indexNowKey ? 'key file is built. An accepted submission is not proof of indexing' : 'no key');
 
 console.log('\nAds');

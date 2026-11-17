@@ -15,48 +15,29 @@ Open http://127.0.0.1:4173. The check verifies titles, internal links and anchor
 ## Publish a verified mission
 
 1. Play the retail game. Record the mission and on-screen objective, the steps that worked, the success cue, and any reproduced recovery steps. Record the console, test date, and build if shown. Keep recordings and sensitive source notes out of the repo.
-2. Add `content/missions/<slug>.md`. Start with this private draft format and replace each example value with verified information.
-
-   ```text
-   ---
-   title: GTA 6 Actual Mission Name Walkthrough
-   slug: missions/actual-mission-name
-   status: draft
-   description: A concise summary of the specific objective and the recovery steps the guide covers.
-   answer: Put the first useful action here.
-   updated: YYYY-MM-DD
-   testedPlatform: PS5
-   testedDate: YYYY-MM-DD
-   testedBuild: Build shown in the game, if available
-   aliases: Alternate mission spelling | Another name players use
-   order: 10
-   ---
-
-   ## How to start
-
-   State the tested prerequisite and start point.
-
-   ## Actual on-screen objective
-
-   Give the next action, the landmark, and what success looks like.
-
-   ### If the checkpoint is stuck
-
-   Explain a verified recovery and when to use it.
-   ```
-
-3. Keep the public slug and headings stable once linked. Use distinct H2 or H3 headings for steps so search can jump directly to the right text. Keep story outcomes out of public titles, headings, aliases and search excerpts. Include only fields you verified. `testedBuild`, pipe-separated `aliases`, and numeric `order` are optional. The builder sorts by `order` and shows the tested platform, date and optional build.
+2. Copy `templates/tested-mission.md` to `content/missions/<slug>.md` and replace every example value with verified information. Leave `status: draft` until review.
+3. Guide format, for both tiers:
+   - `answer` is one direct action of 300 characters or fewer. The build refuses longer answers.
+   - Use H2 or H3 headings for each step so search can jump to it. Pin a step's URL with `{#id}` at the end of the heading, for example `## Open the garage {#open-the-garage}`. Keep pinned ids when you reword a heading.
+   - Add "Before you start" and "If the objective does not advance" only when you have evidence for them.
+   - `published` is the first day the guide went public. Set it once and never change it. Leave it out if you do not know it; the page then claims no first-publication date.
+   - `updated` moves on every substantive edit. The mission hub's date, its structured data and its sitemap entry follow the newest listed guide automatically. If you remove or unpublish a guide, set `updated` on `content/missions.md` as well.
+   - Keep story outcomes out of titles, headings, aliases and answers. `testedBuild`, pipe-separated `aliases` and numeric `order` (story order when known) are optional.
 4. Review every claim and mark the ready guide `status: published`. The builder omits every mission without that status from pages, the sitemap and search. Keep sensitive drafts local if the repository is public.
 5. Rebuild and run the check. On a phone-sized view, search the objective from home and follow the result. With JavaScript disabled, browse links from `/missions/` and check the target. Confirm the intended URL appears in the sitemap and that no draft appears there or in `search.json`.
+
+Each mission page shows a scope box (evidence, platform, game version or source check, publisher), a Home / Missions / guide breadcrumb, numbered sources, and links to the neighbouring guides in the list.
 
 ## Release confirmation (needed for every mission guide)
 
 No mission guide of either kind builds until both are true:
 
-1. The build time has reached `missionPublishAfter` in `site.json`. This is the first official unlock on a platform we cover, with its official page in `missionPublishAfterSource`. Today it is the US PlayStation Store time for PS5 only; it makes no claim about other platforms or regions. If the setting is absent, `launchDate` is used. `launchDate` itself only switches the pre-launch and post-launch wording.
+1. The build time has reached `missionPublishAfter` in `site.json`. This is the earliest verified regional retail unlock on a platform we cover, with its official page in `missionPublishAfterSource`. Today it is 2026-11-18T11:00:00Z, midnight on November 19 in New Zealand, from the New Zealand PlayStation Store listing for PS5. It is the start of an earliest regional publication window, not a worldwide unlock: most regions, including the US (05:00 UTC on November 19 on PS5), unlock later. If the setting is absent, `launchDate` is used. `launchDate` itself only switches the pre-launch and post-launch wording; player-facing unlock times live in the guides. The value may be at most 24 hours before `launchDate`.
+
+   This replaces the earlier US-only gate (2026-11-19T05:00:00Z), which held back legitimate New Zealand retail sources for 18 hours.
 2. An editor has recorded the retail release in `site.json` under `communityGuides`: `releaseConfirmedOn` (the day you confirmed it, from launch day to today) and `releaseSource` (an https page on Rockstar, PlayStation or Xbox that shows the game is out).
 
-A date written inside a guide never opens this gate. A tested guide needs the two fields above. A community guide also needs `communityGuides.enabled: true`.
+A date written inside a guide never opens this gate. Reaching the window does not prove that any source shows the released game, and a source dated before a given US time is not automatically a leak. Judge each source by its own platform and region: it may be used only if that region had actually released when it was recorded, and only if it shows real retail gameplay. A tested guide needs the two fields above. A community guide also needs `communityGuides.enabled: true`.
 
 Every guide's `updated` date must be a real calendar date and not later than the build day. The same holds for `testedDate` and `checkedDate`, which also cannot be earlier than launch day.
 
@@ -71,15 +52,33 @@ Use this tier when nobody on the team has played the mission yet. It never carri
   status: community
   checkedDate: YYYY-MM-DD
   sourceBasis: retail-gameplay
-  independentSources: 2
   sourceReview: automated
   ```
 
   - `checkedDate` is a real date, from launch day to today.
   - `sourceBasis: retail-gameplay` states that every linked source shows or says it played the released game. Pre-release previews, leaks and datamines do not qualify.
-  - `independentSources` counts sources with their own first-hand play. Two reports that repeat or cite each other count as one. It cannot exceed the number of different source sites linked.
+  - The build counts independent sources from the source records (see below). Leave `independentSources` out. If you write it, it must match the count.
   - `sourceReview` is `owner`, `approved-tester` or `automated`. The page shows which one. Never write a person's name here and never claim a review that did not happen.
-- Write the steps in your own words. Link the sources under `## Sources`. Two pages on one site count as one site.
+- Copy `templates/community-mission.md`. The build refuses its placeholder links until you replace them.
+- Public-source workflow, at launch:
+  1. Find gameplay of the released retail game: a creator's own full playthrough video or an outlet's guide that says it played the launch version. Previews, trailers, leaks and datamines never count.
+     Check the source's platform and region had actually released when it was recorded. A date alone proves neither the release nor the gameplay.
+  2. Watch the gameplay or read a first-hand written account yourself. A video title, description or thumbnail alone never supports a step.
+  3. Write each step in your own short sentences. Never copy a guide, transcript or caption, and never download, clip or re-upload footage.
+  4. List each source once under `## Sources`, in this form:
+
+     ```text
+     - [What the source shows](https://www.youtube.com/watch?v=VIDEO_ID&t=754s) | by: Creator or publisher | group: creator-a | at: 12:34
+     ```
+
+     - `by` is the public creator or publisher. `at` is where the evidence is: a timestamp for a video, the section name for an article. If a video link has `t=`, it must match `at`.
+     - `group` is the origin. Sources share a group when they share a creator or publisher, or when one copies, embeds, cites or summarizes the other. Different groups must be genuinely independent.
+     - Two independent YouTube creators are two groups, even on the same site. Two uploads by one creator are one group.
+     - For a long playthrough, list the same upload again for each evidence location (source 1 at 2:00, source 3 at 10:00), with the same `by` and `group`. It still counts as one origin. The build treats youtu.be, shorts, live, embed and mobile links to one video as the same upload, refuses one upload that names a different creator or group, and refuses the same upload at the same location twice.
+     - The build checks these declarations for consistency. It cannot check that the footage shows what you say or that the groups are truly independent. That is your review, shown by `sourceReview`.
+  5. Cite at least two groups beside the quick answer and every paragraph, list step, table row and note: `{src:1,2}`. The build refuses any of them without that. A paragraph that only links to other pages on this site may start with `{nav} ` instead. Search results and `llms-full.txt` carry only the sources cited in each excerpt.
+  6. Set `sourcePlatforms` (comma-separated: `PS5`, `Xbox Series X|S`) only to platforms the sources show. Leave it out if they do not say.
+  7. If sources disagree, say "Reports differ" or leave the step out.
 - The page shows a "Community-sourced" label and a "Not tested by us yet" notice. The mission hub lists these guides apart from tested ones.
 - To upgrade a guide after real play, switch it to `status: published`, add the tested fields, and rewrite any step your notes do not support. Keep the slug.
 
@@ -110,7 +109,7 @@ For general guides, edit `content/*.md`. Keep the current slug and headings that
 
 The Pages workflow builds and checks pushes to `main`, on its six-hour schedule, or when run manually. It publishes `dist/`. After a push it also runs `node indexnow.mjs`, which tells Bing and other IndexNow search engines about guides whose source file changed in that push. A removed guide is submitted so engines drop it. The mission hub and home page are added only when a mission changed, and the home page when a guide's `updated` date changed. Unchanged pages are never resubmitted. Only HTTP 200 or 202 counts as accepted; anything else is logged as FAILED. An accepted submission is not proof of indexing. The key is `indexNowKey` in `site.json`.
 
-`/feed.xml` is an Atom feed of guide updates, built from each guide's `updated` date. The corrections link on each guide comes from `correctionsUrl` in `site.json`. Test a branch or local copy first. Use the last known good build or revert the relevant commit if a release fails. `baseUrl` in `site.json` supplies canonicals and sitemap URLs.
+`/feed.xml` is an Atom feed of guide updates, built from each guide's `updated` date. The corrections link on each guide comes from `correctionsUrl` in `site.json`. Test a branch or local copy first. Use the last known good build or revert the relevant commit if a release fails. `baseUrl` in `site.json` supplies canonicals and sitemap URLs. `googleSiteVerification` and `bingSiteVerification` add the Google Search Console and Bing Webmaster Tools verification tags to the home page only. A tag in the page is not proof that either account has verified the site.
 
 Launch-aware editorial blocks switch on a rebuild using the `launchDate` in `site.json`. Players should check their own region and platform using `/release-date/`. `/news/` is a secondary footer feed, marked `noindex` and left out of the sitemap. The build refreshes it from configured feeds unless `NO_FETCH=1`. Walkthroughs require a manual test and edit.
 

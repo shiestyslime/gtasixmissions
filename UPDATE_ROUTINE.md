@@ -17,15 +17,18 @@ Add newly verified GTA 6 facts to `content/*.md`, so each guide answers its ques
 6. When a `{unknown}` item becomes known, replace it. Do not leave both.
 7. Remove "we will add at launch" lists once the real content is on the page.
 8. Keep the page format: front matter, `answer` line, sections, `## FAQ`, `## Sources`.
-9. Change `updated:` to today's date on every page you edit. Do not change it on pages you did not edit. Never write a future date. The build refuses it.
+9. Change `updated:` to today's date on every page you edit. Do not change it on pages you did not edit. Never write a future date. The build refuses it. Never change an existing `published:` date. When you remove or unpublish a mission guide, also set `updated:` on `content/missions.md`.
 10. Do not edit `site.json`, `build.mjs`, `check.mjs`, `assets/` or `.github/`.
 12. Community-sourced mission guides (`status: community`, see README):
     - The switch decides, not the calendar. Create one only if `site.json` has `communityGuides.enabled: true`. You may not change that setting. If it is off, skip this work and say so in the report.
     - A source qualifies only if it shows or states first-hand play of the released retail game: its own footage or screenshots of the release build, or a named outlet stating it played the launch version. A publish date after launch does not prove this. Previews, leaks, datamines, trailers and speculation never qualify.
     - Every step needs at least two qualifying sources that are independent. Sources are not independent if one cites, embeds, summarizes or copies the other, if they share an owner or network, or if they repeat the same wording or the same mistake. Two reports that repeat each other count as one.
-    - Set `independentSources` to the true count. If you cannot reach two for a step, leave the step out. If you cannot reach two for the mission, do not publish the guide.
+    - Record each source once as `- [What it shows](url) | by: creator or publisher | group: origin-id | at: timestamp or section` (README). One creator, or reports copied from one original, is one group. The build counts groups; leave `independentSources` out. If you cannot cite two groups for a step, leave the step out. If you cannot reach two for the mission, do not publish the guide.
+    - Judge release by the source's own platform and region, not by a fixed date. Use a source only if its region had released when it was recorded and it shows real retail gameplay. Watch or read it yourself; titles and descriptions alone never support a step.
     - Set `sourceReview: automated` unless the owner or an approved tester reviewed the sources in this run and said so. Never write a person's name. Never claim a review that did not happen.
     - Write in your own short sentences. Never copy or closely paraphrase a guide, transcript, caption or description. If sources disagree, say that reports differ or leave the step out.
+    - Start from `templates/community-mission.md`. Cite two independent groups beside the answer and every paragraph, list step, table row and FAQ answer with `{src:1,2}`. Put exact video timestamps in `at:` and the link. The build refuses uncited community text.
+    - Keep `answer` to the first action, 300 characters or fewer. Pin step URLs with `{#id}` and keep them when rewording. Set `published:` to the day the guide first goes public.
     - Never add tested fields or the word "tested" about our own work. Never edit a `status: published` guide from public sources.
     - A creator's video may be credited with the `::: video` line: their own upload, at most two per page, a neutral spoiler-free label, no pre-release or cutscene-only videos. Never download, re-upload or clip footage.
     - Keep story outcomes out of titles, headings, descriptions, answers and aliases. If a mission name itself spoils the story, use a neutral public title.

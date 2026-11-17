@@ -4,6 +4,7 @@ import path from 'node:path';
 const files = [];
 (function walk(d) { for (const f of fs.readdirSync(d)) { const p = path.join(d, f); fs.statSync(p).isDirectory() ? walk(p) : p.endsWith('.html') && files.push(p); } })('dist');
 let problems = 0;
+const articleDates = new Map();
 const fail = (...a) => { problems++; console.log('PROBLEM', ...a); };
 function checkTarget(url, source, currentFile) {
   const [route, fragment] = url.split('#');
@@ -18,7 +19,18 @@ for (const f of files) {
   const ids = [...h.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
   if (new Set(ids).size !== ids.length) fail('duplicate HTML ids', f);
   const visible = h.replace(/<script.*?<\/script>/gs, '');
-  if (/\{(confirmed|reported|unknown)\}|\*\*|\]\(|^:::/m.test(visible)) fail('raw markup left in page', f);
+  if (/\{(confirmed|reported|unknown|src:[^}]*)\}|\*\*|\]\(|^:::/m.test(visible)) fail('raw markup left in page', f);
+  // Structured data must agree with the page: breadcrumb ends at the canonical URL, dates are in order.
+  const canonical = (h.match(/<link rel="canonical" href="([^"]+)"/) || [])[1];
+  for (const m of h.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)) {
+    let data; try { data = JSON.parse(m[1]); } catch { continue; }
+    if (data['@type'] === 'BreadcrumbList' && data.itemListElement.at(-1)?.item !== canonical) fail('breadcrumb does not end at the canonical URL', f);
+    if (data['@type'] === 'Article') {
+      if (data.datePublished && data.datePublished > data.dateModified) fail('datePublished is later than dateModified', f);
+      if (!h.includes(`datetime="${data.dateModified}"`) && !/Tested <time|Sources checked <time/.test(h)) fail('Article dateModified is not the date shown on the page', f);
+      if (canonical) articleDates.set(canonical, data.dateModified);
+    }
+  }
   if (!/<title>.+<\/title>/.test(h) || !/name="description" content=".{50,}"/.test(h)) fail('missing title or description', f);
   if ((h.match(/<h1/g) || []).length !== 1) fail('page needs exactly one h1', f);
   if (h.includes('Community-sourced</span>') && /Tested on |Tested <time/.test(visible)) fail('community guide carries a tested label', f);
@@ -35,6 +47,12 @@ if (fs.existsSync('dist/search.json')) {
 }
 for (const f of ['search.json', 'llms.txt', 'llms-full.txt', 'sitemap.xml', 'feed.xml']) {
   if (fs.existsSync(path.join('dist', f)) && /FIXTURE|zz-fixture/.test(fs.readFileSync(path.join('dist', f), 'utf8'))) fail('test fixture content in', f);
+}
+if (fs.existsSync('dist/sitemap.xml')) {
+  // Sitemap lastmod must equal the page's own dateModified, so search engines can trust it.
+  for (const m of fs.readFileSync('dist/sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)<\/loc><lastmod>([^<]+)<\/lastmod>/g)) {
+    if (articleDates.has(m[1]) && articleDates.get(m[1]) !== m[2]) fail('sitemap lastmod differs from the page dateModified', m[1]);
+  }
 }
 if (fs.existsSync('dist/feed.xml')) {
   const feed = fs.readFileSync('dist/feed.xml', 'utf8');
