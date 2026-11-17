@@ -53,7 +53,7 @@ Open http://127.0.0.1:4173. The check verifies titles, internal links and anchor
 
 No mission guide of either kind builds until both are true:
 
-1. The build time is past `launchDate` in `site.json`.
+1. The build time has reached `missionPublishAfter` in `site.json`. This is the first official unlock on a platform we cover, with its official page in `missionPublishAfterSource`. Today it is the US PlayStation Store time for PS5 only; it makes no claim about other platforms or regions. If the setting is absent, `launchDate` is used. `launchDate` itself only switches the pre-launch and post-launch wording.
 2. An editor has recorded the retail release in `site.json` under `communityGuides`: `releaseConfirmedOn` (the day you confirmed it, from launch day to today) and `releaseSource` (an https page on Rockstar, PlayStation or Xbox that shows the game is out).
 
 A date written inside a guide never opens this gate. A tested guide needs the two fields above. A community guide also needs `communityGuides.enabled: true`.

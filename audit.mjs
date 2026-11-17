@@ -45,6 +45,8 @@ console.log('\nContent');
 line('INFO', 'General guides', String(guides.length));
 line('INFO', 'Tested mission guides', String(missions.filter((m) => status(m) === 'published').length));
 line('INFO', 'Community-sourced mission guides', String(missions.filter((m) => status(m) === 'community').length));
+line('INFO', 'Earliest mission publication time', `${site.missionPublishAfter || `${site.launchDate} (launchDate, no separate setting)`}. Passing it publishes nothing without the release confirmation`);
+line(site.communityGuides?.releaseConfirmedOn ? 'RECORDED' : 'MISSING', 'Release confirmation', site.communityGuides?.releaseConfirmedOn ? `confirmed on ${site.communityGuides.releaseConfirmedOn}` : 'no mission guide of either kind can build until an editor records it in site.json');
 line(site.communityGuides?.enabled === true ? 'ON' : 'OFF', 'Community guide switch', site.communityGuides?.enabled === true ? `release confirmed on ${site.communityGuides.releaseConfirmedOn}` : 'no community guide can be built until an editor confirms the release in site.json');
 
 console.log(`\nRevenue sources active: ${active}.`);

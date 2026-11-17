@@ -9,27 +9,43 @@ const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(ROOT, 'dist');
 const site = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.json'), 'utf8'));
 const BASE = site.baseUrl.replace(/\/$/, '');
-const NOW = process.env.BUILD_DATE ? new Date(process.env.BUILD_DATE + 'T12:00:00Z') : new Date();
+// BUILD_DATE simulates a day (noon UTC) or, when it includes a time, an exact moment. For tests and previews.
+const NOW = process.env.BUILD_DATE ? new Date(/T/.test(process.env.BUILD_DATE) ? process.env.BUILD_DATE : process.env.BUILD_DATE + 'T12:00:00Z') : new Date();
+if (Number.isNaN(NOW.getTime())) throw new Error('BUILD_DATE is not a valid date');
 // This switches editorial copy after the rolling launch, not a user's store countdown.
 const LAUNCHED = NOW >= new Date(site.launchDate);
 // Ads need IDs AND two explicit confirmations. Entering IDs alone never turns ads on.
 const adReady = Boolean(site.adsenseClient && site.adsenseSlot && site.adsEnabled === true && site.adsConsentConfirmed === true);
 const isRealDate = (d) => /^\d{4}-\d{2}-\d{2}$/.test(d || '') && !Number.isNaN(Date.parse(`${d}T00:00:00Z`)) && new Date(`${d}T00:00:00Z`).toISOString().slice(0, 10) === d;
 const BUILD_DAY = new Date(NOW.getTime() + 14 * 36e5).toISOString().slice(0, 10); // latest calendar day anywhere at build time
-const LAUNCH_DAY = new Date(new Date(site.launchDate).getTime() - 24 * 36e5).toISOString().slice(0, 10); // earliest local day the game is out
+// launchDate switches the editorial pre-launch and post-launch wording. It is not the mission gate.
+// missionPublishAfter is the earliest moment a mission guide may build: the first official unlock on a
+// platform we cover, with its official source. Without it the gate falls back to launchDate.
+// Reaching this time publishes nothing by itself. releaseGate() below still needs recorded release evidence.
+const officialUrl = (value) => { try { const u = new URL(value); return u.protocol === 'https:' && OFFICIAL_DOMAINS.has(domainOf(u.hostname)); } catch { return false; } };
+function missionPublishTime() {
+  if (site.missionPublishAfter === undefined) return new Date(site.launchDate);
+  const value = site.missionPublishAfter;
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$/.test(value) || Number.isNaN(Date.parse(value)) || !isRealDate(value.slice(0, 10))) throw new Error('site.json missionPublishAfter must be a full timestamp with a time zone, such as 2026-11-19T05:00:00Z');
+  const time = new Date(value);
+  if (time < new Date(new Date(site.launchDate).getTime() - 24 * 36e5)) throw new Error('site.json missionPublishAfter cannot be more than 24 hours before launchDate');
+  if (!officialUrl(site.missionPublishAfterSource)) throw new Error('site.json missionPublishAfterSource must be an https link to Rockstar, PlayStation or Xbox that shows the unlock time');
+  return time;
+}
 const domainOf = (host) => host.toLowerCase().replace(/:\d+$/, '').split('.').slice(-2).join('.');
 const PLACEHOLDER_DOMAINS = new Set(['example.com', 'example.org', 'example.net', 'localhost']);
 const OFFICIAL_DOMAINS = new Set(['rockstargames.com', 'playstation.com', 'xbox.com']);
+const MISSION_AFTER = missionPublishTime();
+const MISSIONS_OPEN = NOW >= MISSION_AFTER;
+const LAUNCH_DAY = new Date(MISSION_AFTER.getTime() - 12 * 36e5).toISOString().slice(0, 10); // earliest local calendar day anywhere at that moment
 const REVIEW_LABELS = { owner: 'Source check reviewed by the site owner.', 'approved-tester': 'Source check reviewed by an approved tester.', automated: 'Source check was automated. No person has reviewed it yet.' };
-// No mission guide of either tier builds until launchDate has passed AND an editor has recorded an official
-// confirmation of the retail release in site.json. A date inside a guide is never enough on its own.
+// No mission guide of either tier builds until the mission publication time has passed AND an editor has recorded
+// an official confirmation of the retail release in site.json. A date, in a guide or in settings, is never enough on its own.
 function releaseGate(file) {
   const gate = site.communityGuides || {};
-  if (!LAUNCHED) throw new Error(`${file}: mission guides cannot be built before launchDate`);
+  if (!MISSIONS_OPEN) throw new Error(`${file}: mission guides cannot be built before the mission publication time (site.json missionPublishAfter, or launchDate when that is absent)`);
   if (!isRealDate(gate.releaseConfirmedOn) || gate.releaseConfirmedOn > BUILD_DAY || gate.releaseConfirmedOn < LAUNCH_DAY) throw new Error(`${file}: site.json communityGuides.releaseConfirmedOn must be a real date from launch day to today`);
-  let host = '';
-  try { const u = new URL(gate.releaseSource); if (u.protocol === 'https:') host = u.hostname; } catch { /* handled below */ }
-  if (!OFFICIAL_DOMAINS.has(domainOf(host))) throw new Error(`${file}: site.json communityGuides.releaseSource must be an https link to Rockstar, PlayStation or Xbox`);
+  if (!officialUrl(gate.releaseSource)) throw new Error(`${file}: site.json communityGuides.releaseSource must be an https link to Rockstar, PlayStation or Xbox`);
 }
 // Community guides also need their own switch.
 function communityGate(file) {

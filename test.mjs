@@ -52,7 +52,7 @@ put('a.md', community());
 rejects('community guide refused while the switch is off', '2026-11-20', 'switched off');
 setSite(gateOn);
 put('a.md', community({ updated: '2026-11-16', checkedDate: '2026-11-16' }));
-rejects('community guide refused before launch even with the switch on', '2026-11-16', 'before launchDate');
+rejects('community guide refused before launch even with the switch on', '2026-11-16', 'before the mission publication time');
 put('a.md', community());
 setSite({ communityGuides: { ...gateOn.communityGuides, releaseSource: 'https://www.ign.com/x' } });
 rejects('release confirmation must cite an official site', '2026-11-20', 'releaseSource');
@@ -77,10 +77,45 @@ clearMissions();
 put('b.md', tested({ testedDate: '2026-12-25' })); rejects('tested date in the future refused', '2026-11-20', 'testedDate');
 put('b.md', tested({ testedDate: '2026-11-01' })); rejects('tested date before launch refused', '2026-11-20', 'testedDate');
 put('b.md', tested({ updated: '2099-12-31' })); rejects('tested guide with a future updated date refused', '2026-11-20', '"updated"');
-put('b.md', tested({ updated: '2026-11-18', testedDate: '2026-11-18' })); rejects('tested guide refused before launch time', '2026-11-18', 'before launchDate');
+put('b.md', tested({ updated: '2026-11-18', testedDate: '2026-11-18' })); rejects('tested guide refused before launch time', '2026-11-18', 'before the mission publication time');
 setSite({}); put('b.md', tested()); rejects('tested guide refused until the release is confirmed in site.json', '2026-11-20', 'releaseConfirmedOn');
 setSite({ communityGuides: { enabled: false, releaseConfirmedOn: '2026-11-19', releaseSource: 'https://www.rockstargames.com/VI' } });
 r = run('build.mjs', '2026-11-20'); expect('tested guide builds with a confirmed release even while community guides are off', r.ok, r.out);
+setSite(gateOn);
+
+// 3b. Mission publication time: exact boundaries, evidence still required, safe fallback, bad settings refused
+const builds = (name, date) => { const b = run('build.mjs', date); expect(name, b.ok, b.out); };
+clearMissions();
+const launchNight = { updated: '2026-11-18', testedDate: '2026-11-18' }; // local US date on launch night
+expect('site.json sets a mission publication time earlier than launchDate', Date.parse(baseSite.missionPublishAfter) < Date.parse(baseSite.launchDate), `${baseSite.missionPublishAfter} ${baseSite.launchDate}`);
+setSite(gateOn); put('b.md', tested(launchNight));
+rejects('tested guide refused one second before the publication time', '2026-11-19T04:59:59Z', 'before the mission publication time');
+builds('tested guide with release evidence builds at the publication time', '2026-11-19T05:00:00Z');
+expect('editorial wording is still pre-launch at that moment', /pre-launch mode/.test(run('build.mjs', '2026-11-19T05:00:00Z').out));
+builds('tested guide with release evidence builds after the publication time', '2026-11-19T05:00:01Z');
+setSite({}); rejects('tested guide refused at the publication time without release evidence', '2026-11-19T05:00:00Z', 'releaseConfirmedOn');
+setSite({ communityGuides: { enabled: true, releaseConfirmedOn: '', releaseSource: '' } }); rejects('reaching the time does not publish even with the community switch on', '2026-11-19T05:00:00Z', 'releaseConfirmedOn');
+clearMissions(); put('a.md', community({ updated: '2026-11-18', checkedDate: '2026-11-18' }));
+setSite(gateOn); rejects('community guide refused one second before the publication time', '2026-11-19T04:59:59Z', 'before the mission publication time');
+builds('community guide with switch and evidence builds at the publication time', '2026-11-19T05:00:00Z');
+setSite({ communityGuides: { ...gateOn.communityGuides, enabled: false } }); rejects('community guide refused at the publication time while its switch is off', '2026-11-19T05:00:00Z', 'switched off');
+clearMissions(); put('b.md', tested(launchNight));
+const noSetting = { ...gateOn, missionPublishAfter: undefined, missionPublishAfterSource: undefined };
+setSite(noSetting); rejects('without the setting the gate falls back to launchDate (05:00 refused)', '2026-11-19T05:00:00Z', 'before the mission publication time');
+rejects('fallback refuses one second before launchDate', '2026-11-19T10:59:59Z', 'before the mission publication time');
+builds('fallback accepts at launchDate with release evidence', '2026-11-19T11:00:00Z');
+clearMissions();
+for (const [label, patch, needle] of [
+  ['a word', { missionPublishAfter: 'soon' }, 'missionPublishAfter must be'],
+  ['a date without a time', { missionPublishAfter: '2026-11-19' }, 'missionPublishAfter must be'],
+  ['a time without a zone', { missionPublishAfter: '2026-11-19T05:00:00' }, 'missionPublishAfter must be'],
+  ['an impossible date', { missionPublishAfter: '2026-02-30T05:00:00Z' }, 'missionPublishAfter must be'],
+  ['an empty value', { missionPublishAfter: '' }, 'missionPublishAfter must be'],
+  ['a time far before launch', { missionPublishAfter: '2020-01-01T00:00:00Z' }, '24 hours before launchDate'],
+  ['a missing source', { missionPublishAfterSource: undefined }, 'missionPublishAfterSource'],
+  ['an unofficial source', { missionPublishAfterSource: 'https://www.ign.com/x' }, 'missionPublishAfterSource'],
+  ['a non-https source', { missionPublishAfterSource: 'http://store.playstation.com/x' }, 'missionPublishAfterSource'],
+]) { setSite({ ...gateOn, ...patch }); rejects(`mission publication setting refused: ${label}`, '2026-11-20', needle); }
 setSite(gateOn);
 
 // 4. Valid guides keep their labels everywhere
