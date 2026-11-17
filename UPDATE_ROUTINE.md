@@ -17,7 +17,7 @@ Add newly verified GTA 6 facts to `content/*.md`, so each guide answers its ques
 6. When a `{unknown}` item becomes known, replace it. Do not leave both.
 7. Remove "we will add at launch" lists once the real content is on the page.
 8. Keep the page format: front matter, `answer` line, sections, `## FAQ`, `## Sources`.
-9. Change `updated:` to today's date on every page you edit. Do not change it on pages you did not edit.
+9. Change `updated:` to today's date on every page you edit. Do not change it on pages you did not edit. Never write a future date. The build refuses it.
 10. Do not edit `site.json`, `build.mjs`, `check.mjs`, `assets/` or `.github/`.
 12. Community-sourced mission guides (`status: community`, see README):
     - The switch decides, not the calendar. Create one only if `site.json` has `communityGuides.enabled: true`. You may not change that setting. If it is off, skip this work and say so in the report.

@@ -49,11 +49,22 @@ Open http://127.0.0.1:4173. The check verifies titles, internal links and anchor
 4. Review every claim and mark the ready guide `status: published`. The builder omits every mission without that status from pages, the sitemap and search. Keep sensitive drafts local if the repository is public.
 5. Rebuild and run the check. On a phone-sized view, search the objective from home and follow the result. With JavaScript disabled, browse links from `/missions/` and check the target. Confirm the intended URL appears in the sitemap and that no draft appears there or in `search.json`.
 
+## Release confirmation (needed for every mission guide)
+
+No mission guide of either kind builds until both are true:
+
+1. The build time is past `launchDate` in `site.json`.
+2. An editor has recorded the retail release in `site.json` under `communityGuides`: `releaseConfirmedOn` (the day you confirmed it, from launch day to today) and `releaseSource` (an https page on Rockstar, PlayStation or Xbox that shows the game is out).
+
+A date written inside a guide never opens this gate. A tested guide needs the two fields above. A community guide also needs `communityGuides.enabled: true`.
+
+Every guide's `updated` date must be a real calendar date and not later than the build day. The same holds for `testedDate` and `checkedDate`, which also cannot be earlier than launch day.
+
 ## Publish a community-sourced mission guide
 
 Use this tier when nobody on the team has played the mission yet. It never carries a tested label.
 
-- **The switch.** No community guide builds until an editor confirms the retail release. In `site.json`, set `communityGuides.enabled` to `true`, `releaseConfirmedOn` to the day you confirmed it, and `releaseSource` to an https page on Rockstar, PlayStation or Xbox that shows the game is out. The launch date passing is not enough, and the daily task may not change this setting.
+- **The switch.** Community guides need the release confirmation described under "Release confirmation" below, and also `communityGuides.enabled: true` in `site.json`. The daily task may not change either setting.
 - Same file location and format as above, with these fields. Leave out `testedPlatform`, `testedDate` and `testedBuild`.
 
   ```text
@@ -97,7 +108,7 @@ For general guides, edit `content/*.md`. Keep the current slug and headings that
 
 ## Deployment and updates
 
-The Pages workflow builds and checks pushes to `main`, on its six-hour schedule, or when run manually. It publishes `dist/`. After a push it also runs `node indexnow.mjs`, which tells Bing and other IndexNow search engines about guides whose source file changed in that push. Unchanged pages are never resubmitted. An accepted submission is not proof of indexing. The key is `indexNowKey` in `site.json`.
+The Pages workflow builds and checks pushes to `main`, on its six-hour schedule, or when run manually. It publishes `dist/`. After a push it also runs `node indexnow.mjs`, which tells Bing and other IndexNow search engines about guides whose source file changed in that push. A removed guide is submitted so engines drop it. The mission hub and home page are added only when a mission changed, and the home page when a guide's `updated` date changed. Unchanged pages are never resubmitted. Only HTTP 200 or 202 counts as accepted; anything else is logged as FAILED. An accepted submission is not proof of indexing. The key is `indexNowKey` in `site.json`.
 
 `/feed.xml` is an Atom feed of guide updates, built from each guide's `updated` date. The corrections link on each guide comes from `correctionsUrl` in `site.json`. Test a branch or local copy first. Use the last known good build or revert the relevant commit if a release fails. `baseUrl` in `site.json` supplies canonicals and sitemap URLs.
 

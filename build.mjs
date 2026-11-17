@@ -21,15 +21,20 @@ const domainOf = (host) => host.toLowerCase().replace(/:\d+$/, '').split('.').sl
 const PLACEHOLDER_DOMAINS = new Set(['example.com', 'example.org', 'example.net', 'localhost']);
 const OFFICIAL_DOMAINS = new Set(['rockstargames.com', 'playstation.com', 'xbox.com']);
 const REVIEW_LABELS = { owner: 'Source check reviewed by the site owner.', 'approved-tester': 'Source check reviewed by an approved tester.', automated: 'Source check was automated. No person has reviewed it yet.' };
-// Community guides stay off until an editor confirms the retail release with an official source in site.json.
-function communityGate(file) {
+// No mission guide of either tier builds until launchDate has passed AND an editor has recorded an official
+// confirmation of the retail release in site.json. A date inside a guide is never enough on its own.
+function releaseGate(file) {
   const gate = site.communityGuides || {};
-  if (gate.enabled !== true) throw new Error(`${file}: community guides are switched off (site.json communityGuides.enabled)`);
-  if (!LAUNCHED) throw new Error(`${file}: community guides cannot be built before launchDate`);
+  if (!LAUNCHED) throw new Error(`${file}: mission guides cannot be built before launchDate`);
   if (!isRealDate(gate.releaseConfirmedOn) || gate.releaseConfirmedOn > BUILD_DAY || gate.releaseConfirmedOn < LAUNCH_DAY) throw new Error(`${file}: site.json communityGuides.releaseConfirmedOn must be a real date from launch day to today`);
   let host = '';
   try { const u = new URL(gate.releaseSource); if (u.protocol === 'https:') host = u.hostname; } catch { /* handled below */ }
   if (!OFFICIAL_DOMAINS.has(domainOf(host))) throw new Error(`${file}: site.json communityGuides.releaseSource must be an https link to Rockstar, PlayStation or Xbox`);
+}
+// Community guides also need their own switch.
+function communityGate(file) {
+  if ((site.communityGuides || {}).enabled !== true) throw new Error(`${file}: community guides are switched off (site.json communityGuides.enabled)`);
+  releaseGate(file);
 }
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -118,7 +123,8 @@ function loadPage(file, isMission = false) {
   for (const key of required) if (!meta[key]) throw new Error(`${file}: missing "${key}"`);
   const routeSlug = isMission ? /^missions\/[a-z0-9]+(?:-[a-z0-9]+)*$/ : /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
   if (!routeSlug.test(meta.slug)) throw new Error(`${file}: invalid page slug`);
-  if (!isRealDate(meta.updated)) throw new Error(`${file}: "updated" is not a real calendar date`);
+  if (!isRealDate(meta.updated) || meta.updated > BUILD_DAY) throw new Error(`${file}: "updated" must be a real calendar date, not later than today`);
+  if (tested) releaseGate(file);
   if (tested && (!isRealDate(meta.testedDate) || meta.testedDate > BUILD_DAY || meta.testedDate < LAUNCH_DAY)) throw new Error(`${file}: testedDate must be a real date from launch day to today`);
   if (community) {
     communityGate(file);
@@ -342,7 +348,7 @@ const storageCheck = `<form class="storage-check" data-storage-check hidden>
 <output name="shortfall" data-storage-result role="status"></output>
 </fieldset></form>`;
 
-const statusLabel = (p) => p.tested ? `Tested on ${p.testedPlatform}, ${fmtDate(p.testedDate)}` : p.community ? `Community-sourced, not tested by this site. Sources checked ${fmtDate(p.checkedDate)}` : '';
+const statusLabel = (p) => p.tested ? `Tested on ${p.testedPlatform}, ${fmtDate(p.testedDate)}` : p.community ? `Community-sourced, not tested by this site. Sources checked ${fmtDate(p.checkedDate)} (${p.sourceReview === 'automated' ? 'automated check, no human review' : p.sourceReview === 'owner' ? 'source check reviewed by the site owner' : 'source check reviewed by an approved tester'})` : '';
 function missionIndex() {
   const tested = missions.filter((mission) => mission.tested);
   const community = missions.filter((mission) => mission.community);
@@ -454,7 +460,8 @@ const searchAliases = {
 
 const pageAliases = (p) => (p.aliases ? p.aliases.split('|').map((alias) => alias.trim()).filter(Boolean) : []);
 // Search and AI exports keep the tested/untested distinction, the date and the citations.
-const missionFields = (p) => (p.isMission ? { status: p.tested ? 'tested' : 'community', label: statusLabel(p), date: p.tested ? p.testedDate : p.checkedDate } : {});
+const missionFields = (p) => (p.isMission ? { status: p.tested ? 'tested' : 'community', label: statusLabel(p), date: p.tested ? p.testedDate : p.checkedDate, ...(p.community ? { review: p.sourceReview } : {}), sources: p.sourceLinks } : {});
+const parentFields = (p) => (p.isMission ? { parent: p.h1 || p.title, parentAliases: pageAliases(p) } : {});
 function sectionResults(page) {
   const parts = page.html.split(/<h[23] id="([^"]+)">(.*?)<\/h[23]>/);
   const results = [];
@@ -462,7 +469,7 @@ function sectionResults(page) {
     const [id, heading, body] = parts.slice(i, i + 3);
     const url = `${page.url}#${id}`;
     const summary = stripTags((body.match(/<(?:p|ol|ul)>[\s\S]*?<\/(?:p|ol|ul)>/) || [body])[0]);
-    if (summary) results.push({ q: stripTags(heading), a: summary.slice(0, 220), url, kind: page.isMission ? 'objective' : 'support', aliases: searchAliases[url] || [], ...(page.isMission ? { parent: page.h1 || page.title, parentAliases: pageAliases(page), ...missionFields(page) } : {}) });
+    if (summary) results.push({ q: stripTags(heading), a: summary.slice(0, 220), url, kind: page.isMission ? 'objective' : 'support', aliases: searchAliases[url] || [], ...parentFields(page), ...missionFields(page) });
   }
   return results;
 }
@@ -479,9 +486,9 @@ write('404.html', layout({ title: `Page not found | ${site.name}`, description: 
 for (const f of fs.readdirSync(path.join(ROOT, 'assets'))) fs.copyFileSync(path.join(ROOT, 'assets', f), path.join(OUT, f));
 const searchable = [...guides, ...missions.filter((page) => !page.nav)];
 write('search.json', JSON.stringify([
-  ...searchable.map((p) => ({ q: p.h1 || p.title, a: stripTags(inline(p.answer)), url: p.url, aliases: [...(searchAliases[p.url] || []), ...pageAliases(p)], ...missionFields(p), ...(p.isMission ? { sources: p.sourceLinks } : {}) })),
+  ...searchable.map((p) => ({ q: p.h1 || p.title, a: stripTags(inline(p.answer)), url: p.url, aliases: [...(searchAliases[p.url] || []), ...pageAliases(p)], ...missionFields(p) })),
   ...searchable.filter((p) => p.isMission || p.slug === 'launch-help').flatMap(sectionResults),
-  ...searchable.flatMap((p) => p.faq.map((f) => ({ q: f.q, a: f.text.slice(0, 220), url: `${p.url}#${f.id}` }))),
+  ...searchable.flatMap((p) => p.faq.map((f) => ({ q: f.q, a: f.text.slice(0, 220), url: `${p.url}#${f.id}`, ...parentFields(p), ...missionFields(p) }))),
 ]));
 
 const latest = pages.map((p) => p.updated).sort().pop();

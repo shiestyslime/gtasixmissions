@@ -42,7 +42,7 @@ if (fs.existsSync('dist/feed.xml')) {
 }
 if (fs.existsSync('dist/search.json')) {
   for (const result of JSON.parse(fs.readFileSync('dist/search.json', 'utf8'))) {
-    if (result.url?.startsWith('/missions/') && result.url !== '/missions/' && !result.url.startsWith('/missions/#') && !(result.label && result.status && result.date)) fail('mission search record lost its tested or untested label', result.url);
+    if (result.url?.startsWith('/missions/') && result.url !== '/missions/' && !result.url.startsWith('/missions/#') && !(result.label && result.status && result.date && Array.isArray(result.sources) && (result.status !== 'community' || (result.review && result.sources.length >= 2)))) fail('mission search record lost its label, date, review state or sources', result.url);
   }
 }
 console.log(`${files.length} pages checked, ${problems} problem(s)`);

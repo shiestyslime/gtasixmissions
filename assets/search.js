@@ -54,6 +54,8 @@
     if (entry.phrases.includes(phrase)) return 1000 + objectiveBonus;
     const compact = queryWords.join(' ');
     if (compact && entry.phrases.some((candidate) => words(candidate).join(' ') === compact)) return 900 + objectiveBonus;
+    // The same phrase with small words such as "the" left out, in order.
+    if (queryWords.length > 1 && entry.phrases.some((candidate) => ` ${words(candidate).join(' ')} `.includes(` ${compact} `))) return 850 + objectiveBonus;
     if (entry.phrases.some((candidate) => ` ${candidate} `.includes(` ${phrase} `))) return 800 + objectiveBonus;
     if (!queryWords.length) return 0;
 
