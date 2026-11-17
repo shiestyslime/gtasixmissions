@@ -57,3 +57,16 @@ New FAQ entry: when the pre-order bonus ends (editions-price).
 Not verified, left unchanged: Rockstar's installation requirements and regional release times pages (both timed out), Rockstar Newswire posts since November 10 (page did not render), day-one patch, review embargo date and time, review scores.
 
 Build and check: `node build.mjs` built 14 pages, `node check.mjs` reported 0 problems.
+
+## 2026-11-17
+
+Pre-launch run. The game is not out until November 19, 2026, so no mission guide work was done.
+
+Pages changed: release-date, reviews.
+
+Facts added:
+
+- {reported} A PS5 update, version 1.002, began rolling out to some players on November 13. Vice puts it at about 1 GB, citing a PlayStation size-tracking account. Rockstar has published no patch notes (release-date, new FAQ "Is there a GTA 6 day-one patch?"). Source: Vice. https://www.vice.com/en/article/gta-6-day-one-patch-ps5-version-1002/
+- Rechecked on November 17: no reviews are published yet (reviews). The US PlayStation Store still lists $79.99 and $99.99 and 05:00 UTC on November 19, 2026 (release-date "delayed again" FAQ). Sources: US PlayStation Store listing, PlayStation GTA VI support page.
+
+Not verified, left unchanged: review embargo time (only unofficial reports), Xbox update size (single uncorroborated report), Rockstar Newswire posts since November 10 (page did not render).

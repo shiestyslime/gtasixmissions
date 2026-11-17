@@ -5,12 +5,12 @@ slug: reviews
 order: 9
 description: GTA 6 review scores from Metacritic and OpenCritic, the reported review embargo date, and how earlier Rockstar games scored.
 answer: {unknown} No GTA 6 reviews are published yet. {reported} The review embargo is expected to lift on **November 18, 2026**, one day before launch.
-updated: 2026-11-15
+updated: 2026-11-17
 ---
 
 ## Are GTA 6 reviews out?
 
-{unknown} Not yet. As of November 15, 2026, no outlet has published a review, and Metacritic and OpenCritic show no score.
+{unknown} Not yet. As of November 17, 2026, no outlet has published a review, and Metacritic and OpenCritic show no score.
 
 > Any GTA 6 review score you see before the embargo lifts is a leak, a prediction or a fake. We add scores here only after they appear on the outlet's own site.
 

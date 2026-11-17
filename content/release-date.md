@@ -6,7 +6,7 @@ order: 1
 description: Check the GTA 6 release date, U.S. PS5 unlock, Xbox Cloud Gaming start, supported platforms and storage requirement.
 answer: {confirmed} GTA 6 launches on **November 19, 2026** for PS5 and Xbox Series X|S. The U.S. PlayStation Store lists **9 p.m. Pacific on November 18**. Xbox Cloud Gaming has a separate start time.
 answer_postlaunch: {confirmed} GTA 6 released on **November 19, 2026** on PS5 and Xbox Series X|S. Xbox One players can stream through Xbox Cloud Gaming in supported markets.
-updated: 2026-11-16
+updated: 2026-11-17
 ---
 
 ## When does GTA 6 come out?
@@ -74,7 +74,7 @@ Rockstar lists midnight local time on November 19 for the native releases. PlayS
 ::: prelaunch
 ### Is GTA 6 delayed again?
 
-Rockstar's official release date is still November 19, 2026 as of November 16. The US PlayStation Store and Xbox Store both still list that date.
+Rockstar's official release date is still November 19, 2026 as of November 17. The US PlayStation Store and Xbox Store both still list that date.
 :::
 ::: postlaunch
 ### Is GTA 6 out now?
@@ -102,6 +102,10 @@ PS4 has no announced version. Xbox One can stream GTA 6 through Xbox Cloud Gamin
 
 PSSR upscaling and ray-traced shadows. Rockstar's frame rate target is 30 fps.
 
+### Is there a GTA 6 day-one patch?
+
+{reported} Vice reported on November 13 that a PS5 update, version 1.002, began reaching some players before launch. Vice put its size at about 1 GB, based on a PlayStation size-tracking account. Rockstar has not published patch notes or called it a day-one patch.
+
 ### How big is the GTA 6 download?
 
 Rockstar's guidance is up to 212 GB of available space depending on the device. Your game page shows the storage needed on your console.
@@ -117,4 +121,5 @@ Rockstar's guidance is up to 212 GB of available space depending on the device. 
 - [Rockstar's preload, frame rate and console features announcement](https://www.rockstargames.com/newswire/article/89834o94713o21/pre-load-grand-theft-auto-vi-now)
 - [Rockstar's boxed code and editions guide](https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions)
 - [Rockstar's May 2026 release announcement](https://www.rockstargames.com/newswire/article/258aa538o412ok/grand-theft-auto-vi-is-now-coming-may-26-2026)
+- [Vice: GTA 6 PS5 update 1.002 reported at about 1 GB](https://www.vice.com/en/article/gta-6-day-one-patch-ps5-version-1002/)
 - [Rockstar's November 2026 release announcement](https://www.rockstargames.com/newswire/article/ak3ak31a49a221/grand-theft-auto-vi-is-now-set-to-launch-november-19-2026)
