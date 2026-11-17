@@ -39,6 +39,23 @@ const PLATFORMS = new Set(['PS5', 'Xbox Series X|S']);
 const MISSION_AFTER = missionPublishTime();
 const MISSIONS_OPEN = NOW >= MISSION_AFTER;
 const LAUNCH_DAY = new Date(MISSION_AFTER.getTime() - 12 * 36e5).toISOString().slice(0, 10); // earliest local calendar day anywhere at that moment
+// Verified PS5 unlock times by PlayStation Store region. The release-date table and the region picker both come from this list.
+// Each time is the store listing's own release time. PlayStation describes a rolling midnight launch, so each must be midnight
+// in the listed zone. The earliest must equal missionPublishAfter, so the two settings cannot drift apart.
+const UNLOCKS = (site.ps5Unlocks || []).map((u, i) => {
+  const where = `site.json ps5Unlocks[${i}]`;
+  if (!/^[a-z]{2}$/.test(u.id || '') || !u.region) throw new Error(`${where}: needs a two-letter "id" and a "region" name`);
+  if (typeof u.time !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(u.time) || !isRealDate(u.time.slice(0, 10)) || Number.isNaN(Date.parse(u.time))) throw new Error(`${where}: "time" must be a UTC timestamp such as 2026-11-19T05:00:00Z`);
+  if (typeof u.zone !== 'string' || !u.zone.trim()) throw new Error(`${where}: "zone" must be a time zone name such as Europe/London`);
+  let local;
+  try { local = new Intl.DateTimeFormat('en-US', { timeZone: u.zone, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date(u.time)); } catch { throw new Error(`${where}: "zone" must be a time zone name such as Europe/London`); }
+  if (local !== '00:00') throw new Error(`${where}: ${u.time} is ${local} in ${u.zone}, not midnight. Check the store listing and the zone`);
+  if (!officialUrl(u.source) || new URL(u.source).hostname !== 'store.playstation.com') throw new Error(`${where}: "source" must be the https PlayStation Store listing that shows this time`);
+  if (!isRealDate(u.checked) || u.checked > BUILD_DAY) throw new Error(`${where}: "checked" must be the real date you read the listing, not later than today`);
+  return u;
+});
+if (new Set(UNLOCKS.map((u) => u.id)).size !== UNLOCKS.length) throw new Error('site.json ps5Unlocks: each id must be different');
+if (UNLOCKS.length && site.missionPublishAfter !== undefined && Date.parse(UNLOCKS.map((u) => u.time).sort()[0]) !== MISSION_AFTER.getTime()) throw new Error('site.json: missionPublishAfter must equal the earliest time in ps5Unlocks');
 const REVIEW_LABELS = { owner: 'Source check reviewed by the site owner.', 'approved-tester': 'Source check reviewed by an approved tester.', automated: 'Source check was automated. No person has reviewed it yet.' };
 // No mission guide of either tier builds until the mission publication time has passed AND an editor has recorded
 // an official confirmation of the retail release in site.json. A date, in a guide or in settings, is never enough on its own.
@@ -59,7 +76,8 @@ const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-
 const unent = (s) => s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0?39;|&apos;|&#8217;|&#x2019;/g, "'").replace(/&#8216;/g, "'").replace(/&#822[01];/g, '"').replace(/&#8211;/g, '-').replace(/&amp;/g, '&');
 const stripTags = (h) => unent(h.replace(/<\/(?:p|h[23]|li|tr)>/g, ' ').replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
 const NO_CITES = /<sup class="cite">[\s\S]*?<\/sup>/g; // search excerpts leave out citation numbers; the record carries the links
-const TAGS = { confirmed: 'Confirmed', reported: 'Reported', unknown: 'Not yet known' };
+const TAGS = { confirmed: 'Confirmed', unknown: 'Not yet known' };
+const PRESS_CONTEXT = 'Includes pre-release press coverage; gameplay details are not yet verified by this site.';
 
 // ---------- tiny markdown ----------
 function link(text, url) {
@@ -76,7 +94,8 @@ function link(text, url) {
 const cite = (nums) => `<sup class="cite">[${nums.split(',').map((n) => `<a href="#source-${Number(n)}">${Number(n)}</a>`).join(', ')}]</sup>`;
 function inline(s) {
   return esc(s)
-    .replace(/\{(confirmed|reported|unknown)\}/g, (_, t) => `<span class="tag tag-${t}">${TAGS[t]}</span>`)
+    .replace(/\{reported\} ?/g, '')
+    .replace(/\{(confirmed|unknown)\}/g, (_, t) => `<span class="tag tag-${t}">${TAGS[t]}</span>`)
     .replace(/ ?\{src:(\d+(?:, ?\d+)*)\}/g, (_, nums) => cite(nums.replace(/ /g, '')))
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, t, u) => link(t, unent(u)));
@@ -210,6 +229,18 @@ function evidenceUnits(file, body) {
   return units;
 }
 
+// The static unlock table: every fact visible without JavaScript.
+const zoned = (iso, zone) => new Intl.DateTimeFormat('en-US', { timeZone: zone, weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: zone === 'UTC' ? 'short' : 'long' }).format(new Date(iso));
+const unlockTable = `<div class="table-wrap" data-unlock-table><table><thead><tr><th>PlayStation Store region</th><th>Listed unlock</th><th>Local time there</th><th>Source</th></tr></thead><tbody>${UNLOCKS.map((u) => `<tr><td>${esc(u.region)}</td><td><time datetime="${u.time}">${esc(zoned(u.time, 'UTC'))}</time></td><td>${esc(zoned(u.time, u.zone))}</td><td><a href="${esc(u.source)}" rel="noopener">${esc(u.region)} store listing</a>, checked ${new Date(`${u.checked}T12:00:00Z`).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })}</td></tr>`).join('')}</tbody></table></div>`;
+// The region picker. It never reads the reader's location; it only converts a listed time into the reader's own clock.
+const unlockPicker = `<form class="unlock-check" data-unlock-check hidden>
+<fieldset><legend>See your PS5 unlock time</legend>
+<p>Choose the PlayStation Store region of the account that owns or redeemed this copy. Your store region comes from that account, not from where you are.</p>
+<label for="unlock-region">PlayStation Store region</label>
+<select id="unlock-region" name="region"><option value="">Choose a store region</option>${UNLOCKS.map((u) => `<option value="${u.id}" data-time="${u.time}" data-source="${esc(u.source)}">${esc(u.region)}</option>`).join('')}</select>
+<output data-unlock-result role="status"></output>
+</fieldset></form>`;
+
 // ---------- load content ----------
 function loadPage(file, isMission = false) {
   const raw = fs.readFileSync(file, 'utf8');
@@ -277,14 +308,14 @@ function loadPage(file, isMission = false) {
     const html = md(rest.join('\n'));
     return { q: q.trim(), id: `faq-${slugify(q)}`, html, text: stripTags(html) };
   });
-  const html = md(body);
+  const html = md(body).replace('<p>[ps5-unlock-times]</p>', unlockTable);
   const toc = [...html.matchAll(/<h2 id="([^"]+)">(.*?)<\/h2>/g)].map((x) => ({ id: x[1], text: stripTags(x[2]) }));
   let n = 0;
   // Mission sources are a numbered list built from the records, so page, search and AI exports show the same fields.
   const sourcesHtml = !sources ? '' : isMission ? `<ol>${sourceRecords.map((r) => `<li id="source-${r.n}">${r.label ? link(inline(r.label), r.url) : link(esc(r.url), r.url)}${sourceMeta(r) ? ` <span class="source-meta">${esc(sourceMeta(r))}</span>` : ''}</li>`).join('')}</ol>`
     : md(sources).replace(/<li>/g, () => `<li id="source-${++n}">`);
   if (community) meta.independentSources = String(independentGroups);
-  return { ...meta, isMission, tested, community, sourceLinks, sourceItems, sourceRecords, order: Number(meta.order || 99), html, toc, faq, sourcesHtml, plain: stripTags(html).replace('[storage-check]', '').trim(), url: `/${meta.slug}/` };
+  return { ...meta, hasPressCoverage: !isMission && /\{reported\}/.test(raw), isMission, tested, community, sourceLinks, sourceItems, sourceRecords, order: Number(meta.order || 99), html, toc, faq, sourcesHtml, plain: stripTags(html).replace('[storage-check]', '').trim(), url: `/${meta.slug}/` };
 }
 function readPages(dir, isMission = false) {
   const folder = path.join(ROOT, 'content', dir);
@@ -469,6 +500,7 @@ const launchJumps = [
   { label: 'Game missing or locked', url: '/launch-help/#game-missing-or-locked' },
   { label: 'Not enough space', url: '/launch-help/#not-enough-space' },
   { label: 'Play on Xbox One', url: '/launch-help/#xbox-one-cloud-gaming' },
+  { label: 'Offline play or servers down', url: '/launch-help/#offline-play-and-service-status' },
 ];
 const quickJumps = (links, label) => `<nav class="quick-jumps" aria-label="${label}"><ul>${links.map((item) => `<li><a href="${item.url}">${item.label}</a></li>`).join('')}</ul></nav>`;
 const storageCheck = `<form class="storage-check" data-storage-check hidden>
@@ -500,7 +532,7 @@ function scopePanel(p) {
   const rows = p.tested
     ? [['Evidence', `Tested by this site on ${esc(p.testedPlatform)} on ${fmtDate(p.testedDate)}.`], ['Game version', p.testedBuild ? esc(p.testedBuild) : 'Not recorded'], ['Other platforms', 'Not tested by us. Steps may differ.']]
     : [['Evidence', `Built from retail gameplay by ${p.independentSources} independent creators or publishers, as declared under Sources. Not tested by this site.`], ['Platforms in sources', p.sourcePlatforms ? esc(p.sourcePlatforms.split(',').map((x) => x.trim()).join(', ')) : 'Not stated'], ['Sources checked', `${fmtDate(p.checkedDate)}. ${REVIEW_LABELS[p.sourceReview]}`]];
-  rows.push(['Published by', `${esc(site.name)}. No named author.`]);
+  rows.push(['Published by', esc(site.name)]);
   return `<dl class="scope" aria-label="Guide scope">${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>`;
 }
 
@@ -533,18 +565,19 @@ function renderPage(p) {
   const body = `${pageHero(crumbs, p.h1 || p.title, `<p class="meta"><span class="pill">${phaseLabel}</span> ${freshness} · <a href="/about/#how-we-label-facts">How we label facts</a></p>`)}
 <div class="wrap article-grid">
 <article>
+${p.hasPressCoverage ? `<p class="meta">${PRESS_CONTEXT} <a href="#sources">Sources</a>.</p>` : ''}
 <div class="answer"><span class="answer-label">Quick answer</span><p>${inline(p.answer)}</p></div>
 ${p.isMission ? scopePanel(p) : ''}
 ${communityNote}
 ${launchHelp ? quickJumps(launchJumps, 'Jump to a launch problem') : ''}
 ${missionHub ? `${searchUi}${missionIndex()}` : ''}
-${launchHelp ? content.replace('<p>[storage-check]</p>', storageCheck) : content}
+${launchHelp ? content.replace('<p>[storage-check]</p>', storageCheck) : content.replace('<div class="table-wrap" data-unlock-table>', `${unlockPicker}<div class="table-wrap" data-unlock-table>`)}
 ${faqHtml}
 ${p.sourcesHtml ? `<section class="sources"><h2 id="sources">Sources</h2>${p.sourcesHtml}</section>` : ''}
 ${reportLink(p)}
 ${missionNav}
 </article>
-<aside class="side">${toc}<div class="legend"><strong>Fact labels</strong><p><span class="tag tag-confirmed">Confirmed</span> Official publisher or platform source</p><p><span class="tag tag-reported">Reported</span> Press previews</p><p><span class="tag tag-unknown">Not yet known</span> Not announced</p></div></aside>
+<aside class="side">${toc}<div class="legend"><strong>Fact labels</strong><p><span class="tag tag-confirmed">Confirmed</span> Official publisher or platform source</p><p><span class="tag tag-unknown">Not yet known</span> Not announced</p></div></aside>
 </div>
 <section class="wrap related"><h2>Keep reading</h2><div class="cards">${related.map(card).join('')}</div></section>`;
   const jsonld = [
@@ -552,9 +585,9 @@ ${missionNav}
     { '@context': 'https://schema.org', '@type': 'Article', headline: p.h1 || p.title, description: p.description, ...(p.published ? { datePublished: p.published } : {}), dateModified: p.updated, mainEntityOfPage: BASE + p.url, author: org, publisher: org, about: { '@type': 'VideoGame', name: 'Grand Theft Auto VI' }, ...(p.isMission && hubPage ? { isPartOf: { '@type': 'CollectionPage', name: hubPage.title, url: BASE + hubPage.url } } : {}) },
     { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ name: 'Home', url: '/' }, ...(Array.isArray(crumbs) ? crumbs.slice(0, -1) : []).map((c) => ({ name: c.label, url: c.url })), { name: Array.isArray(crumbs) ? crumbs.at(-1) : crumbs, url: p.url }].map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: BASE + c.url })) },
   ];
-  if (p.faq.length) jsonld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: p.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.text } })) });
+  if (p.faq.length) jsonld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: p.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: `${p.hasPressCoverage ? PRESS_CONTEXT + ' ' : ''}${f.text}` } })) });
   const full = `${p.title} | ${site.name}`;
-  const scripts = `${missionHub || p.faq.length ? searchScript : ''}${launchHelp ? '<script defer src="/storage.js"></script>' : ''}${hasVideo ? '<script defer src="/video.js"></script>' : ''}`;
+  const scripts = `${missionHub || p.faq.length ? searchScript : ''}${launchHelp ? '<script defer src="/storage.js"></script>' : ''}${hasVideo ? '<script defer src="/video.js"></script>' : ''}${p.html.includes('data-unlock-table') ? '<script defer src="/unlock.js"></script>' : ''}`;
   return layout({ title: full.length <= 65 ? full : p.title, description: p.description, url: p.url, body, jsonld, scripts, ads });
 }
 
@@ -600,7 +633,7 @@ const searchAliases = {
   '/progression/': ['what to do next', 'next available mission', 'mission not starting', 'story unlock'],
   '/money-making/': ['how to get money', 'earn cash', 'make money', 'how to sell stolen goods'],
   '/editions-price/': ['buy gta 6', 'standard vs ultimate', 'which edition should i buy', 'price', 'physical disc or code'],
-  '/release-date/': ['when can i play', 'what time does it unlock', 'launch time', 'united states pacific release time', 'release time ps5'],
+  '/release-date/': ['when can i play', 'what time does it unlock', 'launch time', 'united states pacific release time', 'release time ps5', 'uk release time', 'australia release time', 'new zealand release time', 'unlock time in my time zone'],
   '/launch-help/#not-enough-space': ['not enough storage', 'storage full', 'free space', 'file size', 'download size', 'how many gb', 'need an ssd', 'storage calculator'],
   '/launch-help/#boxed-code-not-working': ['voucher not working', 'can’t redeem code'],
   '/launch-help/#code-missing-or-unreadable': ['missing code', 'code not in box', 'no code', 'damaged voucher'],
@@ -610,9 +643,13 @@ const searchAliases = {
   '/launch-help/#missing-after-redemption': ['game not in library', 'already owned', 'download not showing'],
   '/launch-help/#installed-but-locked': ['game locked', 'padlock', 'lock icon', 'restore licenses'],
   '/launch-help/#xbox-one-cloud-gaming': ['can i play on xbox one', 'xbox one', 'cloud gaming', 'game pass', 'cloud playtime'],
+  '/launch-help/#is-it-down-check-the-official-status-pages': ['servers down', 'is psn down', 'is gta 6 down', 'server status'],
+  '/launch-help/#can-you-play-gta-6-offline-on-ps5': ['play offline', 'no internet', 'without internet', 'offline mode', 'console sharing and offline play', 'primary ps5'],
+  '/launch-help/#who-to-contact': ['which support', 'contact rockstar', 'contact playstation', 'mission bug', 'checkpoint bug'],
 };
 
 const pageAliases = (p) => (p.aliases ? p.aliases.split('|').map((alias) => alias.trim()).filter(Boolean) : []);
+const pressFields = (p) => p.hasPressCoverage ? { context: PRESS_CONTEXT } : {};
 // Search and AI exports keep the tested/untested distinction, the date and the citations.
 const missionFields = (p) => (p.isMission ? { status: p.tested ? 'tested' : 'community', label: statusLabel(p), date: p.tested ? p.testedDate : p.checkedDate, ...(p.community ? { review: p.sourceReview } : {}), platform: p.tested ? p.testedPlatform : p.sourcePlatforms || '', sources: p.sourceLinks } : {});
 // A mission search record carries only the sources cited inside its own excerpt (sourceScope "cited").
@@ -653,9 +690,9 @@ write('404.html', layout({ title: `Page not found | ${site.name}`, description: 
 for (const f of fs.readdirSync(path.join(ROOT, 'assets'))) fs.copyFileSync(path.join(ROOT, 'assets', f), path.join(OUT, f));
 const searchable = [...guides, ...missions.filter((page) => !page.nav)];
 write('search.json', JSON.stringify([
-  ...searchable.map((p) => ({ q: p.h1 || p.title, a: stripTags(inline(p.answer).replace(NO_CITES, '')), url: p.url, aliases: [...(searchAliases[p.url] || []), ...pageAliases(p)], ...missionFields(p), ...sourcesFor(p, inline(p.answer)) })),
+  ...searchable.map((p) => ({ q: p.h1 || p.title, a: stripTags(inline(p.answer).replace(NO_CITES, '')), url: p.url, aliases: [...(searchAliases[p.url] || []), ...pageAliases(p)], ...pressFields(p), ...missionFields(p), ...sourcesFor(p, inline(p.answer)) })),
   ...searchable.filter((p) => p.isMission || p.slug === 'launch-help').flatMap(sectionResults),
-  ...searchable.flatMap((p) => p.faq.map((f) => { const block = p.isMission ? firstBlock(f.html) : f.html; return { q: f.q, a: stripTags(block.replace(NO_CITES, '')).slice(0, 220), url: `${p.url}#${f.id}`, ...parentFields(p), ...missionFields(p), ...sourcesFor(p, block) }; }).filter((record) => !unsupported(record))),
+  ...searchable.flatMap((p) => p.faq.map((f) => { const block = p.isMission ? firstBlock(f.html) : f.html; return { q: f.q, a: stripTags(block.replace(NO_CITES, '')).slice(0, 220), url: `${p.url}#${f.id}`, ...pressFields(p), ...parentFields(p), ...missionFields(p), ...sourcesFor(p, block) }; }).filter((record) => !unsupported(record))),
 ]));
 
 const latest = pages.map((p) => p.updated).sort().pop();
@@ -671,18 +708,18 @@ write('robots.txt', `User-agent: *\nAllow: /\n\n${bots.map((b) => `User-agent: $
 const plainAnswer = (p) => stripTags(inline(p.answer).replace(NO_CITES, '')).replace(/^(Confirmed|Reported|Not yet known) /, '');
 write('llms.txt', `# ${site.name}
 
-> ${site.description} Facts are labeled Confirmed (official publisher or platform source), Reported (press previews or reliable outlets) or Not yet known. Last updated ${latest}.
+> ${site.description} Confirmed means an official publisher or platform source; Not yet known means not announced. Pages that include unverified pre-release coverage say so separately. Last updated ${latest}.
 
 ## Guides
 
-${searchable.map((p) => `- [${p.title}](${BASE}${p.url}): ${p.isMission ? `[${statusLabel(p)}] ` : ''}${plainAnswer(p)}`).join('\n')}
+${searchable.map((p) => `- [${p.title}](${BASE}${p.url}): ${p.hasPressCoverage ? `[${PRESS_CONTEXT}] ` : ''}${p.isMission ? `[${statusLabel(p)}] ` : ''}${plainAnswer(p)}`).join('\n')}
 
 ## Optional
 
 - [Full text of all guides](${BASE}/llms-full.txt)
 - [About, sources and disclosure](${BASE}/about/)
 `);
-write('llms-full.txt', searchable.map((p) => `# ${p.title}\nURL: ${BASE}${p.url}\n${p.published ? `First published: ${p.published}\n` : ''}Last updated: ${p.updated}\n${p.isMission ? `Status: ${statusLabel(p)}\n${p.community && p.sourcePlatforms ? `Platforms in sources: ${p.sourcePlatforms}\n` : ''}${p.tested && p.testedBuild ? `Game version tested: ${p.testedBuild}\n` : ''}` : ''}\nQuick answer: ${stripTags(inline(p.answer))}\n\n${p.plain}\n\n${p.faq.map((f) => `Q: ${f.q}\nA: ${f.text}`).join('\n\n')}${p.sourceLinks.length ? `\n\nSources:\n${(p.isMission ? p.sourceRecords.map((r) => `[${r.n}] ${r.url}${sourceMeta(r) ? ` (${sourceMeta(r)})` : ''}`) : p.sourceLinks.map((link) => `- ${link}`)).join('\n')}` : ''}`).join('\n\n---\n\n') + '\n');
+write('llms-full.txt', searchable.map((p) => `# ${p.title}\nURL: ${BASE}${p.url}\n${p.published ? `First published: ${p.published}\n` : ''}Last updated: ${p.updated}\n${p.isMission ? `Status: ${statusLabel(p)}\n${p.community && p.sourcePlatforms ? `Platforms in sources: ${p.sourcePlatforms}\n` : ''}${p.tested && p.testedBuild ? `Game version tested: ${p.testedBuild}\n` : ''}` : ''}\n${p.hasPressCoverage ? `Source context: ${PRESS_CONTEXT}\n` : ''}Quick answer: ${stripTags(inline(p.answer))}\n\n${p.plain}\n\n${p.faq.map((f) => `Q: ${f.q}\nA: ${f.text}`).join('\n\n')}${p.sourceLinks.length ? `\n\nSources:\n${(p.isMission ? p.sourceRecords.map((r) => `[${r.n}] ${r.url}${sourceMeta(r) ? ` (${sourceMeta(r)})` : ''}`) : p.sourceLinks.map((link) => `- ${link}`)).join('\n')}` : ''}`).join('\n\n---\n\n') + '\n');
 const feedPages = recentlyUpdated().slice(0, 30);
 write('feed.xml', `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">

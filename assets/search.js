@@ -105,7 +105,7 @@
           link.href = entry.url;
           link.textContent = entry.q;
           item.append(link);
-          const context = [typeof entry.parent === 'string' ? entry.parent : '', typeof entry.label === 'string' ? entry.label : ''].filter(Boolean).join(' · ');
+          const context = [typeof entry.parent === 'string' ? entry.parent : '', typeof entry.label === 'string' ? entry.label : '', typeof entry.context === 'string' ? entry.context : ''].filter(Boolean).join(' · ');
           if (context) {
             const meta = document.createElement('span');
             meta.className = 'result-meta';

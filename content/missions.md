@@ -30,6 +30,8 @@ Follow [story progression](/progression/) for help finding the next mission. Use
 
 {reported} In a preview for The Guardian, Rockstar showed a robbery with advance scouting and a choice of ways to deal with security. Individual mission triggers, choices and outcomes need to be tested in the released game.
 
+For the official premise and who Jason and Lucia work with, read the [official story setup (light spoilers)](/characters/#story-setup). Mission guides here keep story outcomes out of titles, headings and search results.
+
 ## How long is the story?
 
 {reported} Rockstar North's Rob Nelson said his own run took about 80 hours and included optional goals. Rockstar has published no campaign length or total mission count.

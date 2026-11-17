@@ -10,6 +10,40 @@
   "launchDate": "2026-11-19T11:00:00Z",
   "missionPublishAfter": "2026-11-18T11:00:00Z",
   "missionPublishAfterSource": "https://store.playstation.com/en-nz/product/EP1004-PPSA38500_00-GTAVISTANDARD001",
+  "ps5Unlocks": [
+    {
+      "id": "nz",
+      "region": "New Zealand",
+      "time": "2026-11-18T11:00:00Z",
+      "zone": "Pacific/Auckland",
+      "source": "https://store.playstation.com/en-nz/product/EP1004-PPSA38500_00-GTAVISTANDARD001",
+      "checked": "2026-11-17"
+    },
+    {
+      "id": "au",
+      "region": "Australia",
+      "time": "2026-11-18T13:00:00Z",
+      "zone": "Australia/Sydney",
+      "source": "https://store.playstation.com/en-au/product/EP1004-PPSA38500_00-GTAVISTANDARD001",
+      "checked": "2026-11-17"
+    },
+    {
+      "id": "uk",
+      "region": "United Kingdom",
+      "time": "2026-11-19T00:00:00Z",
+      "zone": "Europe/London",
+      "source": "https://store.playstation.com/en-gb/product/EP1004-PPSA01547_00-GTAVISTANDARD001",
+      "checked": "2026-11-17"
+    },
+    {
+      "id": "us",
+      "region": "United States",
+      "time": "2026-11-19T05:00:00Z",
+      "zone": "America/New_York",
+      "source": "https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-GTAVISTANDARD001",
+      "checked": "2026-11-17"
+    }
+  ],
   "contactEmail": "",
   "correctionsUrl": "https://github.com/shiestyslime/gtasixmissions/issues/new",
   "communityGuides": {

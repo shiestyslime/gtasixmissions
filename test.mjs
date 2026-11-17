@@ -255,7 +255,7 @@ if (r.ok) {
   expect('guide has the public corrections link with its warning', page.includes('issues/new?title=Correction') && page.includes('leave out game codes'));
   expect('community step shows citation links next to the claim', /Fixture crane step\.<sup class="cite">\[<a href="#source-1">1<\/a>, <a href="#source-2">2<\/a>\]<\/sup>/.test(page) && page.includes('<li id="source-2">') && page.includes('<ol><li id="source-1">'));
   expect('a pinned heading id is used', page.includes('<h2 id="crane-step">Reach the crane</h2>'));
-  expect('community page states its evidence scope without a tested claim', page.includes('class="scope"') && page.includes('Built from retail gameplay by 2 independent creators or publishers, as declared under Sources. Not tested by this site.') && page.includes('No named author.'));
+  expect('community page states its evidence scope without a tested claim', page.includes('class="scope"') && page.includes('Built from retail gameplay by 2 independent creators or publishers, as declared under Sources. Not tested by this site.') && page.includes('<dt>Published by</dt><dd>GTA Six Missions</dd>') && !page.includes('No named author'));
   const bankPage = out('missions/zz-fixture-bank-run/index.html');
   expect('tested page states platform, date and untested platforms', bankPage.includes('Tested by this site on PS5 on Nov 20, 2026.') && bankPage.includes('Other platforms</dt><dd>Not tested by us.'));
   const crumbs = ldOf(page, 'BreadcrumbList').itemListElement.map((x) => x.item);
@@ -304,6 +304,69 @@ expect('the Bing verification value is escaped', out('index.html').includes('con
 setSite({ ...gateOn, bingSiteVerification: '' }); run('build.mjs', '2026-11-20');
 expect('no Bing tag when the setting is empty', !out('index.html').includes('msvalidate'));
 setSite(gateOn);
+
+// 4c. PS5 unlock times by PlayStation Store region: one list in site.json drives the table and the picker
+clearMissions(); setSite(gateOn); r = run('build.mjs', '2026-11-17');
+expect('real content builds with the unlock list', r.ok, r.out);
+{
+  const rd = out('release-date/index.html');
+  const row = (region) => (rd.match(new RegExp(`<tr><td>${region}</td>.*?</tr>`)) || [''])[0];
+  expect('the no-JavaScript table shows every verified store with its UTC time, local midnight and listing', baseSite.ps5Unlocks.length === 4 && baseSite.ps5Unlocks.every((u) => row(u.region).includes(`datetime="${u.time}"`) && row(u.region).includes(`href="${u.source}"`)));
+  expect('New Zealand row: 11:00 UTC on Nov 18 is midnight New Zealand Daylight Time', row('New Zealand').includes('Wed, Nov 18, 11:00 AM UTC') && row('New Zealand').includes('Thu, Nov 19, 12:00 AM New Zealand Daylight Time'), row('New Zealand'));
+  expect('United States row: 05:00 UTC is midnight Eastern', row('United States').includes('Thu, Nov 19, 5:00 AM UTC') && row('United States').includes('12:00 AM Eastern Standard Time'), row('United States'));
+  expect('Australia and UK rows use their own zones', row('Australia').includes('12:00 AM Australian Eastern Daylight Time') && row('United Kingdom').includes('12:00 AM Greenwich Mean Time'));
+  expect('the region picker is hidden until its script runs, offers only verified stores, and starts unselected', /<form class="unlock-check" data-unlock-check hidden>/.test(rd) && (rd.match(/<option value="[a-z]{2}"/g) || []).length === 4 && rd.includes('<option value="">Choose a store region</option>') && rd.includes('src="/unlock.js"'));
+  expect('the picker never asks for location', !/geolocation|navigator\.language|timeZone\b.*guess/i.test(fs.readFileSync(path.join(tmp, 'assets/unlock.js'), 'utf8')) && /not from where you are/.test(rd));
+  expect('only the release date page loads the picker', !out('launch-help/index.html').includes('unlock.js') && !out('index.html').includes('unlock.js'));
+  expect('Xbox times are kept separate from the PS5 table', rd.includes('These are PS5 times only') && rd.includes('1 a.m. Eastern on November 19'));
+}
+const unlocks = baseSite.ps5Unlocks;
+const withUnlock = (i, patch) => unlocks.map((u, j) => (j === i ? { ...u, ...patch } : u));
+for (const [label, list, needle] of [
+  ['a time that is not midnight in its zone', withUnlock(3, { time: '2026-11-19T06:00:00Z' }), 'not midnight'],
+  ['a date without a time', withUnlock(3, { time: '2026-11-19' }), 'UTC timestamp'],
+  ['an impossible date', withUnlock(3, { time: '2026-02-30T05:00:00Z' }), 'UTC timestamp'],
+  ['an unknown time zone', withUnlock(3, { zone: 'Mars/Olympus' }), 'time zone name'],
+  ['a missing time zone', withUnlock(3, { zone: undefined }), 'time zone name'],
+  ['an empty time zone', withUnlock(3, { zone: '' }), 'time zone name'],
+  ['a source that is not a PlayStation Store listing', withUnlock(3, { source: 'https://www.playstation.com/en-us/support/games/gta-vi-support/' }), 'PlayStation Store listing'],
+  ['an unofficial source', withUnlock(3, { source: 'https://www.gta6everything.com/unlock-times' }), 'PlayStation Store listing'],
+  ['a checked date in the future', withUnlock(3, { checked: '2026-12-01' }), '"checked"'],
+  ['a duplicate region id', withUnlock(3, { id: 'nz' }), 'each id'],
+  ['an earliest time that disagrees with missionPublishAfter', unlocks.filter((u) => u.id !== 'nz'), 'earliest time in ps5Unlocks'],
+]) { setSite({ ...gateOn, ps5Unlocks: list }); rejects(`unlock list refused: ${label}`, '2026-11-17', needle); }
+setSite(gateOn);
+{
+  const sb = {}; sb.globalThis = sb; vm.runInNewContext(fs.readFileSync(path.join(tmp, 'assets/unlock.js'), 'utf8'), sb);
+  const { describe } = sb.__unlock;
+  const before = new Date('2026-11-17T12:00:00Z');
+  const us = describe('United States', '2026-11-19T05:00:00Z', before, 'America/Los_Angeles');
+  expect('picker: the US store time shows as 9 p.m. Pacific on Nov 18 for a Los Angeles reader', us?.includes('Wednesday, November 18, 2026 at 9:00 PM Pacific Standard Time') && us.includes('time zone: America/Los_Angeles') && !us.includes('passed'), us);
+  const nz = describe('New Zealand', '2026-11-18T11:00:00Z', before, 'Europe/London');
+  expect('picker: the NZ store time shows as 11 a.m. GMT on Nov 18 for a London reader', nz?.includes('Wednesday, November 18, 2026 at 11:00 AM Greenwich Mean Time'), nz);
+  expect('picker: a time already reached says so', /already passed/.test(describe('United Kingdom', '2026-11-19T00:00:00Z', new Date('2026-11-19T00:00:00Z'), 'UTC')));
+  expect('picker: a bad or missing time gives no result instead of a wrong one', describe('X', '2026-11-19', before, 'UTC') === null && describe('X', 'soon', before, 'UTC') === null && describe('X', undefined, before, 'UTC') === null && describe('X', '2026-02-30T05:00:00Z', before, 'UTC') === null);
+}
+
+// 4d. Offline play, service status and story setup
+{
+  const lh = out('launch-help/index.html');
+  expect('launch help explains PS5 offline play with the real setting path', lh.includes('id="offline-play-and-service-status"') && lh.includes('Settings → Users and Accounts → Other → Console Sharing and Offline Play') && lh.includes('offline play enabled'));
+  expect('launch help links the three official status pages and shows no live status', ['https://status.playstation.com/', 'https://support.xbox.com/en-US/xbox-live-status', 'https://support.rockstargames.com/servicestatus'].every((u) => lh.includes(`href="${u}"`)) && !/all services (are )?(operational|up and running)|status-badge/i.test(lh));
+  expect('Xbox offline play is left as not yet known', /Can you play offline on Xbox\?<\/h3>\s*<p><span class="tag tag-unknown">/.test(lh));
+  expect('home and launch help jump to the offline and status section', out('index.html').includes('href="/launch-help/#offline-play-and-service-status"') && lh.includes('href="/launch-help/#offline-play-and-service-status"'));
+  const idx = JSON.parse(out('search.json'));
+  expect('search finds the offline and contact sections', ['#can-you-play-gta-6-offline-on-ps5', '#who-to-contact', '#is-it-down-check-the-official-status-pages'].every((h) => idx.some((e) => e.url === `/launch-help/${h}`)));
+  expect('offline aliases survive on a real search record', ['play offline', 'no internet', 'without internet'].every((q) => idx.some((e) => e.url === '/launch-help/#can-you-play-gta-6-offline-on-ps5' && e.aliases.includes(q))));
+  expect('outage aliases survive on a real search record', ['servers down', 'is psn down', 'is gta 6 down', 'server status'].every((q) => idx.some((e) => e.url === '/launch-help/#is-it-down-check-the-official-status-pages' && e.aliases.includes(q))));
+  const ch = out('characters/index.html');
+  const setup = ch.indexOf('id="story-setup"');
+  expect('the spoiler note comes before any story setup detail', setup > 0 && ch.indexOf('Spoiler note:', setup) > setup && ch.indexOf('Spoiler note:', setup) < ch.indexOf('goes wrong', setup));
+  expect('the shakedown detail is inside the warned story section', ch.indexOf('shakedowns') > ch.indexOf('Spoiler note:', setup));
+  expect('Brian gives Jason rent-free housing for shakedowns; no rent wording remains', ch.includes('rent-free') && ch.includes('shakedowns') && !/rents from/.test(ch));
+  expect('story setup stays out of search results and the page answer', !idx.some((e) => /goes wrong|Penitentiary|conspiracy/.test(`${e.q} ${e.a}`)));
+  expect('the mission hub labels spoilers before the click', /href="\/characters\/#story-setup">[^<]*light spoilers/.test(out('missions/index.html')));
+}
 
 // 5. Ads stay off unless IDs and both confirmations are present
 clearMissions(); put('b.md', tested({ ads: 'yes' }));

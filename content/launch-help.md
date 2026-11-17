@@ -3,9 +3,9 @@ title: GTA 6 Won’t Install or Launch? Storage, Code and Xbox One Fixes
 nav: Launch help
 slug: launch-help
 order: 3
-description: Fix GTA 6 storage errors, boxed codes that fail to redeem, missing or locked downloads, and Xbox One cloud access. Find the next step for PS5 or Xbox.
-answer: Check [free space on the install drive](/launch-help/#not-enough-space), [which account redeemed the boxed code](/launch-help/#boxed-code-not-working), or [when your copy unlocks](/launch-help/#game-missing-or-locked). Xbox One plays through [cloud streaming](/launch-help/#xbox-one-cloud-gaming).
-updated: 2026-11-16
+description: Fix GTA 6 storage errors, boxed codes, missing or locked downloads and Xbox One cloud access. Check offline play on PS5 and official server status.
+answer: Check [free space on the install drive](/launch-help/#not-enough-space), [which account redeemed the boxed code](/launch-help/#boxed-code-not-working), or [when your copy unlocks](/launch-help/#game-missing-or-locked). Xbox One plays through [cloud streaming](/launch-help/#xbox-one-cloud-gaming). For offline play or a possible outage, see [offline play and service status](/launch-help/#offline-play-and-service-status).
+updated: 2026-11-17
 ---
 
 ## Not enough space
@@ -73,6 +73,38 @@ If the game is installed but will not start on a second console or account, Play
 2. Buy GTA 6 separately. Use eligible Game Pass cloud access or purchased cloud playtime in supported markets. Check your console store for local availability and price.
 3. Use the Xbox Cloud Gaming option on your console. A native install compatibility message on Xbox One is expected. Streaming from your own console with Remote Play is a separate feature.
 
+## Offline play and service status
+
+### Can you play GTA 6 offline on PS5?
+
+{confirmed} Yes, on your main PS5. The U.S. PlayStation Store listing marks GTA VI as **offline play enabled**. It says you can play on the main PS5 linked to your account through the **Console Sharing and Offline Play** setting.
+
+1. PlayStation turns this setting on for the first PS5 you sign in on.
+2. On that PS5, go to **Settings → Users and Accounts → Other → Console Sharing and Offline Play** and select **Enable** if it is off.
+3. Only one PS5 can have it on for your account at a time. To move it to another PS5, disable it on the previous console first, then enable it on the new one. On any other PS5, sign in with the account that owns the game.
+
+You still need an internet connection to redeem a boxed code, download or preload the game, and get updates. The listing says online features need a PlayStation account. {unknown} Rockstar has not said which GTA VI features need a connection.
+
+### Can you play offline on Xbox?
+
+{unknown} We have not found a Rockstar or Xbox statement on offline play for GTA VI on Xbox Series X|S. Xbox Cloud Gaming streams the game, so it always needs a connection.
+
+### Is it down? Check the official status pages
+
+Open the official page for the service you use. This site does not show a live status, because a copy can be out of date.
+
+- [PlayStation Network service status](https://status.playstation.com/): account management, gaming and social features, and PlayStation Store.
+- [Xbox status](https://support.xbox.com/en-US/xbox-live-status): account and profile, store and subscriptions, and cloud gaming.
+- [Rockstar Games service status](https://support.rockstargames.com/servicestatus): Rockstar sign-in and online services. On November 17 it listed GTA Online and shared Rockstar services, with no separate GTA VI entry.
+
+### Who to contact
+
+Match your problem to the right team before you wait in a queue.
+
+1. **The game will not buy, redeem, download, install or start, or your account is the problem.** On PS5, PlayStation Support handles your account, codes, downloads, installs, game launch issues, refunds and suspensions. On Xbox, use [Xbox support](https://support.xbox.com/). Check the status pages above first.
+2. **The game runs but crashes, a patch fails, or something looks like a bug.** Rockstar Support handles gameplay issues, patches and bugs.
+3. **You are stuck on a mission or a checkpoint will not advance.** [Search the mission guides](/missions/) for the objective on screen. Report a bug to Rockstar Support if the game itself is broken.
+
 Already playing? [Find a mission or objective](/missions/).
 
 ## Sources
@@ -88,3 +120,9 @@ Already playing? [Find a mission or objective](/missions/).
 - [PlayStation GTA 6 code-in-box support](https://www.playstation.com/en-us/support/games/gta-vi-code/)
 - [Microsoft download code instructions](https://support.microsoft.com/en-us/accounts-billing/redeem-a-gift-card-or-code-to-your-microsoft-account)
 - [Xbox Wire GTA 6 cloud launch](https://news.xbox.com/en-us/2026/11/10/grand-theft-auto-6-comes-to-xbox-cloud-gaming-november-19/)
+- [U.S. PlayStation Store GTA VI listing: offline play and online features](https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-GTAVISTANDARD001)
+- [PlayStation: turn on Console Sharing and Offline Play on PS5](https://www.playstation.com/en-us/support/account/ps5-console-sharing-offline-play/)
+- [PlayStation GTA VI support: which team handles which problem](https://www.playstation.com/en-us/support/games/gta-vi-support/)
+- [PlayStation Network service status](https://status.playstation.com/)
+- [Xbox status](https://support.xbox.com/en-US/xbox-live-status)
+- [Rockstar Games service status](https://support.rockstargames.com/servicestatus)

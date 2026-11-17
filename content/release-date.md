@@ -3,8 +3,8 @@ title: GTA 6 Release Date, PS5 and Xbox Unlock Times, and Storage
 nav: Release date
 slug: release-date
 order: 1
-description: Check the GTA 6 release date, U.S. PS5 unlock, Xbox Cloud Gaming start, supported platforms and storage requirement.
-answer: {confirmed} GTA 6 launches on **November 19, 2026** for PS5 and Xbox Series X|S. The U.S. PlayStation Store lists **9 p.m. Pacific on November 18**. Xbox Cloud Gaming has a separate start time.
+description: Check the GTA 6 release date, PS5 unlock times for the US, UK, Australia and New Zealand stores, Xbox Cloud Gaming start, platforms and storage.
+answer: {confirmed} GTA 6 launches on **November 19, 2026** for PS5 and Xbox Series X|S. PS5 unlocks at midnight country by country, starting in New Zealand. The U.S. PlayStation Store lists **9 p.m. Pacific on November 18**. Xbox Cloud Gaming has a separate start time.
 answer_postlaunch: {confirmed} GTA 6 released on **November 19, 2026** on PS5 and Xbox Series X|S. Xbox One players can stream through Xbox Cloud Gaming in supported markets.
 updated: 2026-11-17
 ---
@@ -18,9 +18,19 @@ updated: 2026-11-17
 {confirmed} GTA 6 released on November 19, 2026 on PS5 and Xbox Series X|S. These were the announced launch times for each way to play.
 :::
 
-- **PS5.** PlayStation describes a rolling midnight release by country. The [U.S. PlayStation Store](https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-GTAVISTANDARD001/) lists 05:00 UTC on November 19. That is midnight Eastern or **9 p.m. Pacific on November 18**. Check the countdown in your own console store for your account's unlock.
+- **PS5.** PlayStation describes a rolling midnight release by country, starting at midnight in New Zealand. The [U.S. PlayStation Store](https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-GTAVISTANDARD001/) lists 05:00 UTC on November 19. That is midnight Eastern or **9 p.m. Pacific on November 18**. See [PS5 unlock time by store region](/release-date/#ps5-unlock-time-by-store-region) for other stores we checked.
 - **Xbox Series X|S downloads.** Rockstar lists midnight local time on November 19. Check your Microsoft Store or console countdown for the exact time. The U.S. PlayStation Store time applies to its PS5 listing.
 - **Xbox Cloud Gaming.** Xbox lists a separate start at **1 a.m. Eastern on November 19** (10 p.m. Pacific on November 18) in supported markets. This includes Xbox One and Xbox Series X|S. See [Xbox Cloud Gaming setup](/launch-help/#xbox-one-cloud-gaming).
+
+## PS5 unlock time by store region
+
+{confirmed} Use the PlayStation Store region of the account that owns or redeemed this copy to check your PS5 unlock. We read these times from each store's own GTA VI listing. They cover only these four stores.
+
+[ps5-unlock-times]
+
+- The U.S. and Australia span several time zones, but each store lists one time. "Local time there" shows the zone where that time is midnight. Elsewhere in the country the clock reads earlier.
+- For any other store region, check the countdown on your console or in your store. We have not verified those times.
+- These are PS5 times only. Xbox Series X|S downloads and Xbox Cloud Gaming have their own times, listed above.
 
 ## How the date changed
 
@@ -69,7 +79,7 @@ Start with [free ways to clear room on your console](/launch-help/#not-enough-sp
 
 ### What time does GTA 6 unlock?
 
-Rockstar lists midnight local time on November 19 for the native releases. PlayStation describes its launch by country, and the U.S. PlayStation Store lists 05:00 UTC on November 19. That is midnight Eastern or 9 p.m. Pacific on November 18. Xbox Cloud Gaming lists 1 a.m. Eastern on November 19.
+Rockstar lists midnight local time on November 19 for the native releases. On PS5 the launch rolls through each country's midnight, starting in New Zealand at 11:00 UTC on November 18. The U.S. PlayStation Store lists 05:00 UTC on November 19, which is midnight Eastern or 9 p.m. Pacific on November 18. The [store region table](/release-date/#ps5-unlock-time-by-store-region) has the U.K., Australia and New Zealand. Xbox Cloud Gaming lists 1 a.m. Eastern on November 19.
 
 ::: prelaunch
 ### Is GTA 6 delayed again?
@@ -116,6 +126,9 @@ Rockstar's guidance is up to 212 GB of available space depending on the device. 
 - [Rockstar's regional preload and release schedule](https://support.rockstargames.com/articles/29jV3Cv2cCgvwM1XgtMO5o/grand-theft-auto-vi-regional-pre-load-and-release-times-on-playstation-5-and-xbox-series-x-or-s)
 - [PlayStation's country-by-country launch and PS5 features](https://blog.playstation.com/2026/11/10/pre-load-grand-theft-auto-vi-on-ps5-starting-today/)
 - [U.S. PlayStation Store release listing](https://store.playstation.com/en-us/product/EP1004-PPSA01547_00-GTAVISTANDARD001/)
+- [U.K. PlayStation Store release listing](https://store.playstation.com/en-gb/product/EP1004-PPSA01547_00-GTAVISTANDARD001)
+- [Australian PlayStation Store release listing](https://store.playstation.com/en-au/product/EP1004-PPSA38500_00-GTAVISTANDARD001)
+- [New Zealand PlayStation Store release listing](https://store.playstation.com/en-nz/product/EP1004-PPSA38500_00-GTAVISTANDARD001)
 - [Xbox Cloud Gaming launch announcement](https://news.xbox.com/en-us/2026/11/10/grand-theft-auto-6-comes-to-xbox-cloud-gaming-november-19/)
 - [Rockstar's GTA VI installation requirements](https://support.rockstargames.com/articles/M6h7B5fJZMwG1dnzQkt4Z/grand-theft-auto-vi-installation-requirements)
 - [Rockstar's preload, frame rate and console features announcement](https://www.rockstargames.com/newswire/article/89834o94713o21/pre-load-grand-theft-auto-vi-now)
