@@ -12,6 +12,8 @@ updated: 2026-11-18
 
 ## Choose a preset {#choose-a-preset}
 
+Prefer a quick demonstration? [Watch our 18-second minimap explainer](/minimap-video/) with an original animated diagram and a text transcript.
+
 | What you want | Pick this during setup |
 |---|---|
 | A map that stays visible while you learn the streets | **Always On** |

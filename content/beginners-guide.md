@@ -28,6 +28,8 @@ updated: 2026-11-18
 2. Update your console.
 3. Choose your edition. The Standard Edition is the full game. See [price and editions](/editions-price/).
 
+Before you start a new mission, [make a separate save](/save-game/). This gives you a place to return to if you want to try the mission again.
+
 ## Your first hours
 
 At the **Navigation Experience** screen, pick **Always On** if you want the map visible throughout your first drive. If you want it to fade when you’re exploring, choose a dynamic preset. See [all three minimap settings and how to change them](/navigation-settings/).

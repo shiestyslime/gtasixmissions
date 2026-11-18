@@ -1,5 +1,5 @@
 ---
-title: GTA 6 Unwanted Attention Walkthrough
+title: GTA 6 Unwanted Attention (Go See Cal) – Find the Phoenix
 slug: missions/unwanted-attention
 status: community
 description: Find Cal's map marker, identify the Phoenix at the Hamlet impound and see which objective unlocks the Pay 'n' Spray during Unwanted Attention.

@@ -61,6 +61,10 @@ The inspiration column is our reading of Rockstar's descriptions. Rockstar does 
 
 **What does skipping cost?** Both guides found a **$100 in-game surcharge** for skipping the trip, on top of the fare. If cash is tight, take the normal ride. [Hear DayOne explain the ride and skip options at 11:49](https://www.youtube.com/watch?v=c9meSdlHhYM&t=709s). {src:3,4,5}
 
+## How do I take a train? {#take-a-train}
+
+At a station, check the map on the platform for the train network. Wait for a train and walk aboard when it arrives. Digital Foundry’s John Linneman found that the game took the fare automatically. [Jump to his station visit at 19:26](https://www.youtube.com/watch?v=qsBU0bcpONA&t=1166s). {src:6}
+
 ## Interactive map and collectibles
 
 Look up [opening mission landmarks](/missions/) or [read the indoor minimap](/navigation-settings/#indoor-map). The following locations still need checking for our map:
@@ -94,3 +98,4 @@ Rockstar has not stated a size. Comparisons before launch are estimates.
 - [PowerPyx’s launch guide to taxis and the ride skip](https://www.powerpyx.com/gta-6-how-to-fast-travel/)
 - [VGC’s in-game RydeMe walkthrough](https://www.videogameschronicle.com/guide/gta-6-fast-travel-explained-how-to-fast-travel-in-gta-6/)
 - [DayOne’s review and paid taxi skip discussion at 11:49](https://www.youtube.com/watch?v=c9meSdlHhYM&t=709s)
+- [Digital Foundry’s station and train-fare example at 19:26](https://www.youtube.com/watch?v=qsBU0bcpONA&t=1166s)

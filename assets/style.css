@@ -221,6 +221,11 @@ main > .wrap:last-child { padding-bottom: 56px; }
 .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .video figcaption { padding: 12px 16px; font-size: 15px; color: var(--muted); }
 .video figcaption b { display: block; color: var(--ink); font-size: 1rem; }
+/* A dedicated watch page keeps its native player ahead of supporting text. */
+.watch-page { display: block; max-width: 780px; }
+.watch-video { margin: 0 0 28px; }
+.watch-video video { display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto; background: #101527; border-radius: 14px; box-shadow: var(--shadow); }
+.watch-video figcaption { max-width: 560px; margin: 12px auto 0; color: var(--muted); font-size: 15px; text-align: center; }
 .community-note { border-left-color: var(--orange); }
 .mission-list h2 + p { color: var(--muted); margin-top: -4px; }
 
@@ -237,6 +242,13 @@ main > .wrap:last-child { padding-bottom: 56px; }
 .sources li:target { background: var(--surface-2); border-radius: 6px; }
 .mission-nav ul { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 8px; }
 .mission-nav span { display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+/* Step links appear only when scripting works; manual copying remains available if clipboard access fails. */
+[data-mission-steps] > h2:first-of-type { margin-top: 0.4em; }
+.step-share { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; margin: -0.4em 0 0.6em; font-size: 14px; color: var(--muted); }
+.step-share button { min-height: 44px; padding: 6px 0; border: 0; background: none; color: var(--link); font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.step-share button[aria-disabled="true"] { cursor: wait; }
+.step-share input { width: 100%; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); background: var(--surface); font: inherit; }
+.step-share input[hidden] { display: none; }
 .source-meta { display: block; color: var(--muted); font-size: 14px; }
 .nav-note { color: var(--muted); }
 /* PS5 unlock picker, reusing the storage helper's look */

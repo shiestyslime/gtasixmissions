@@ -282,6 +282,19 @@ function loadPage(file, isMission = false) {
   }
   // "published" is the first public date. It is optional, never derived from "updated", and must not move later.
   if (meta.published !== undefined && (!isRealDate(meta.published) || meta.published > meta.updated || meta.published > BUILD_DAY || (isMission && meta.published < LAUNCH_DAY))) throw new Error(`${file}: "published" must be a real date, not later than "updated" or today${isMission ? ', and not before launch day' : ''}`);
+  // A local watch page records the clip's original publication date, never the rebuild time.
+  let watchVideo = null;
+  const videoKeys = ['videoFile', 'videoPoster', 'videoSeconds', 'videoWidth', 'videoHeight', 'videoUploadDate', 'videoCreator', 'videoCaption'];
+  if (videoKeys.some((key) => meta[key] !== undefined)) {
+    for (const key of videoKeys) if (!meta[key]) throw new Error(`${file}: watch video missing "${key}"`);
+    if (isMission) throw new Error(`${file}: use a dedicated general page for a local watch video`);
+    for (const [key, pattern] of [['videoFile', /^[a-z0-9]+(?:-[a-z0-9]+)*\.mp4$/], ['videoPoster', /^[a-z0-9]+(?:-[a-z0-9]+)*\.(?:jpg|jpeg|png|webp)$/]]) {
+      if (!pattern.test(meta[key]) || !fs.existsSync(path.join(ROOT, 'assets', meta[key]))) throw new Error(`${file}: "${key}" must name an existing local video asset`);
+    }
+    for (const key of ['videoSeconds', 'videoWidth', 'videoHeight']) if (!/^[1-9]\d*$/.test(meta[key])) throw new Error(`${file}: "${key}" must be a positive whole number`);
+    if (!isRealDate(meta.videoUploadDate) || meta.videoUploadDate > meta.updated || meta.videoUploadDate > BUILD_DAY) throw new Error(`${file}: "videoUploadDate" must be a real date, not later than "updated" or today`);
+    watchVideo = { file: meta.videoFile, poster: meta.videoPoster, seconds: Number(meta.videoSeconds), width: Number(meta.videoWidth), height: Number(meta.videoHeight), uploaded: meta.videoUploadDate, creator: meta.videoCreator, caption: meta.videoCaption };
+  }
   if (community && meta.sourcePlatforms !== undefined && !meta.sourcePlatforms.split(',').every((x) => PLATFORMS.has(x.trim()))) throw new Error(`${file}: "sourcePlatforms" lists only platforms the sources show, separated by commas: ${[...PLATFORMS].join(', ')}`);
   if (isMission && stripTags(inline(meta.answer)).length > 300) throw new Error(`${file}: keep "answer" to one direct action of 300 characters or fewer`);
   if (LAUNCHED && meta.answer_postlaunch) meta.answer = meta.answer_postlaunch;
@@ -318,13 +331,14 @@ function loadPage(file, isMission = false) {
     return { q: q.trim(), id: `faq-${slugify(q)}`, html, text: stripTags(html) };
   });
   const html = md(body).replace('<p>[ps5-unlock-times]</p>', unlockTable);
+  if (watchVideo && !html.includes('id="transcript"')) throw new Error(`${file}: a local watch video needs a visible "transcript" section`);
   const toc = [...html.matchAll(/<h2 id="([^"]+)">(.*?)<\/h2>/g)].map((x) => ({ id: x[1], text: stripTags(x[2]) }));
   let n = 0;
   // Mission sources are a numbered list built from the records, so page, search and AI exports show the same fields.
   const sourcesHtml = !sources ? '' : isMission ? `<ol>${sourceRecords.map((r) => `<li id="source-${r.n}">${r.label ? link(inline(r.label), r.url) : link(esc(r.url), r.url)}${sourceMeta(r) ? ` <span class="source-meta">${esc(sourceMeta(r))}</span>` : ''}</li>`).join('')}</ol>`
     : md(sources).replace(/<li>/g, () => `<li id="source-${++n}">`);
   if (community) meta.independentSources = String(independentGroups);
-  return { ...meta, hasPressCoverage: !isMission && /\{reported\}/.test(raw), isMission, tested, community, sourceLinks, sourceItems, sourceRecords, order: Number(meta.order || 99), html, toc, faq, sourcesHtml, plain: stripTags(html).replace('[storage-check]', '').trim(), url: `/${meta.slug}/` };
+  return { ...meta, watchVideo, hasPressCoverage: !isMission && /\{reported\}/.test(raw), isMission, tested, community, sourceLinks, sourceItems, sourceRecords, order: Number(meta.order || 99), html, toc, faq, sourcesHtml, plain: stripTags(html).replace('[storage-check]', '').trim(), url: `/${meta.slug}/` };
 }
 function readPages(dir, isMission = false) {
   const folder = path.join(ROOT, 'content', dir);
@@ -435,7 +449,7 @@ function adSlot(name) {
   if (adReady) return `<div class="ad" aria-label="Advertisement"><ins class="adsbygoogle" style="display:block" data-ad-client="${esc(site.adsenseClient)}" data-ad-slot="${esc(site.adsenseSlot)}" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(window.adsbygoogle=window.adsbygoogle||[]).push({});</script></div>`;
   return site.adPlaceholders ? `<div class="ad ad-placeholder" aria-hidden="true">Ad slot: ${esc(name)}</div>` : '';
 }
-function layout({ title, description, url, body, jsonld = [], ogType = 'article', scripts = '', index = true, ads = false }) {
+function layout({ title, description, url, body, jsonld = [], ogType = 'article', scripts = '', index = true, ads = false, socialImage = '/og.png', socialWidth = 1200, socialHeight = 630 }) {
   const canonical = BASE + url;
   return `<!doctype html>
 <html lang="${site.language}">
@@ -450,11 +464,11 @@ function layout({ title, description, url, body, jsonld = [], ogType = 'article'
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${canonical}">
-<meta property="og:image" content="${BASE}/og.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image" content="${BASE}${socialImage}">
+<meta property="og:image:width" content="${socialWidth}">
+<meta property="og:image:height" content="${socialHeight}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="${BASE}/og.png">
+<meta name="twitter:image" content="${BASE}${socialImage}">
 <meta name="robots" content="${index ? 'index, follow, max-snippet:-1, max-image-preview:large' : 'noindex, follow'}">
 <meta name="theme-color" content="#170b30">
 ${url === '/' && /^ca-pub-\d{16}$/.test(site.adsenseClient) ? `<meta name="google-adsense-account" content="${esc(site.adsenseClient)}">` : ''}
@@ -553,6 +567,7 @@ function reportLink(p) {
   return `<p class="report"><a href="${esc(href)}" rel="nofollow noopener">Report a problem with this guide</a>. This opens a public form on GitHub and needs a free GitHub account. Anyone can read what you post, so leave out game codes, account names and personal details.</p>`;
 }
 function renderPage(p) {
+  const video = p.watchVideo;
   const related = p.isMission ? ['missions', 'progression', 'launch-help'].map((slug) => pages.find((page) => page.slug === slug)).filter(Boolean)
     : nav.map(({ url }) => guides.find((guide) => guide.url === url)).filter((item) => item.slug !== p.slug).slice(0, 3);
   const hubPage = pages.find((page) => page.slug === 'missions');
@@ -569,25 +584,26 @@ function renderPage(p) {
   const content = ads ? p.html.slice(0, adPosition) + adSlot('in-article') + p.html.slice(adPosition) : p.html;
   const launchHelp = p.slug === 'launch-help';
   const missionHub = p.slug === 'missions';
-  const phaseLabel = p.tested ? `Tested on ${esc(p.testedPlatform)}` : p.community ? 'Community-sourced' : missionHub && missions.length ? 'Mission index' : LAUNCHED || missions.length ? 'Launch guide' : 'Pre-launch info';
+  const phaseLabel = video ? 'Original video' : p.tested ? `Tested on ${esc(p.testedPlatform)}` : p.community ? 'Community-sourced' : missionHub && missions.length ? 'Mission index' : LAUNCHED || missions.length ? 'Launch guide' : 'Pre-launch info';
   const toc = p.toc.length > 2 ? `<nav class="toc" aria-label="On this page"><strong>On this page</strong><ul>${p.toc.map((t) => `<li><a href="#${t.id}">${esc(t.text)}</a></li>`).join('')}${p.faq.length ? '<li><a href="#faq">FAQ</a></li>' : ''}</ul></nav>` : '';
   const freshness = p.community ? `Sources checked <time datetime="${p.checkedDate}">${fmtDate(p.checkedDate)}</time>` : p.isMission ? `Tested <time datetime="${p.testedDate}">${fmtDate(p.testedDate)}</time>${p.testedBuild ? ` · Build ${esc(p.testedBuild)}` : ''}` : `Updated <time datetime="${p.updated}">${fmtDate(p.updated)}</time>`;
   const body = `${pageHero(crumbs, p.h1 || p.title, `<p class="meta"><span class="pill">${phaseLabel}</span> ${freshness} · <a href="/about/#how-we-label-facts">How we label facts</a></p>`)}
-<div class="wrap article-grid">
+<div class="wrap article-grid${video ? ' watch-page' : ''}">
 <article>
+${video ? `<figure class="watch-video"><video id="watch-video" controls playsinline preload="metadata" width="${video.width}" height="${video.height}" poster="/${video.poster}" aria-label="${esc(p.title)}" aria-describedby="video-description"><source src="/${video.file}" type="video/mp4"><p><a href="/${video.file}">Download the video</a> or <a href="#transcript">read the transcript</a>.</p></video><figcaption id="video-description">${esc(video.caption)} <a href="#transcript">Transcript and visual description</a>.</figcaption></figure>` : ''}
 ${p.hasPressCoverage ? `<p class="meta">${PRESS_CONTEXT} <a href="#sources">Sources</a>.</p>` : ''}
 <div class="answer"><span class="answer-label">Quick answer</span><p>${inline(p.answer)}</p></div>
 ${p.isMission ? scopePanel(p) : ''}
 ${communityNote}
 ${launchHelp ? quickJumps(launchJumps, 'Jump to a launch problem') : ''}
 ${missionHub ? `${searchUi}${missionIndex()}` : ''}
-${launchHelp ? content.replace('<p>[storage-check]</p>', storageCheck) : content.replace('<div class="table-wrap" data-unlock-table>', `${unlockPicker}<div class="table-wrap" data-unlock-table>`)}
+${p.isMission ? `<div data-mission-steps>${content}</div>` : launchHelp ? content.replace('<p>[storage-check]</p>', storageCheck) : content.replace('<div class="table-wrap" data-unlock-table>', `${unlockPicker}<div class="table-wrap" data-unlock-table>`)}
 ${faqHtml}
 ${p.sourcesHtml ? `<section class="sources"><h2 id="sources">Sources</h2>${p.sourcesHtml}</section>` : ''}
 ${reportLink(p)}
 ${missionNav}
 </article>
-<aside class="side">${toc}<div class="legend"><strong>Fact labels</strong><p><span class="tag tag-confirmed">Confirmed</span> Official publisher or platform source</p><p><span class="tag tag-unknown">Not yet known</span> Not announced</p></div></aside>
+${video ? '' : `<aside class="side">${toc}<div class="legend"><strong>Fact labels</strong><p><span class="tag tag-confirmed">Confirmed</span> Official publisher or platform source</p><p><span class="tag tag-unknown">Not yet known</span> Not announced</p></div></aside>`}
 </div>
 <section class="wrap related"><h2>Keep reading</h2><div class="cards">${related.map(card).join('')}</div></section>`;
   const jsonld = [
@@ -595,10 +611,11 @@ ${missionNav}
     { '@context': 'https://schema.org', '@type': 'Article', headline: p.h1 || p.title, description: p.description, ...(p.published ? { datePublished: p.published } : {}), dateModified: p.updated, mainEntityOfPage: BASE + p.url, author: org, publisher: org, about: { '@type': 'VideoGame', name: 'Grand Theft Auto VI' }, ...(p.isMission && hubPage ? { isPartOf: { '@type': 'CollectionPage', name: hubPage.title, url: BASE + hubPage.url } } : {}) },
     { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ name: 'Home', url: '/' }, ...(Array.isArray(crumbs) ? crumbs.slice(0, -1) : []).map((c) => ({ name: c.label, url: c.url })), { name: Array.isArray(crumbs) ? crumbs.at(-1) : crumbs, url: p.url }].map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: BASE + c.url })) },
   ];
+  if (video) jsonld.push({ '@context': 'https://schema.org', '@type': 'VideoObject', '@id': `${BASE}${p.url}#video`, name: p.title, description: p.description, thumbnailUrl: [`${BASE}/${video.poster}`], uploadDate: video.uploaded, duration: `PT${video.seconds}S`, contentUrl: `${BASE}/${video.file}`, url: BASE + p.url, mainEntityOfPage: { '@type': 'WebPage', '@id': BASE + p.url }, creator: { '@type': 'Organization', name: video.creator }, inLanguage: site.language, width: video.width, height: video.height });
   if (p.faq.length) jsonld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: p.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: `${p.hasPressCoverage ? PRESS_CONTEXT + ' ' : ''}${f.text}` } })) });
   const full = `${p.title} | ${site.name}`;
-  const scripts = `${missionHub || p.faq.length ? searchScript : ''}${launchHelp ? '<script defer src="/storage.js"></script>' : ''}${hasVideo ? '<script defer src="/video.js"></script>' : ''}${p.html.includes('data-unlock-table') ? '<script defer src="/unlock.js"></script>' : ''}`;
-  return layout({ title: full.length <= 65 ? full : p.title, description: p.description, url: p.url, body, jsonld, scripts, ads });
+  const scripts = `${missionHub || p.faq.length ? searchScript : ''}${launchHelp ? '<script defer src="/storage.js"></script>' : ''}${hasVideo ? '<script defer src="/video.js"></script>' : ''}${p.html.includes('data-unlock-table') ? '<script defer src="/unlock.js"></script>' : ''}${p.isMission ? '<script defer src="/mission-share.js"></script>' : ''}`;
+  return layout({ title: full.length <= 65 ? full : p.title, description: p.description, url: p.url, body, jsonld, scripts, ads, ...(video ? { socialImage: `/${video.poster}`, socialWidth: video.width, socialHeight: video.height } : {}) });
 }
 
 // Guides people can read, newest change first. About and privacy are left out.
@@ -651,7 +668,16 @@ ${spoilers.length ? `<section class="faq"><details><summary>Headlines marked as 
 
 const searchAliases = {
   '/missions/#checkpoint-or-replay': ['retry checkpoint', 'manual save', 'replay mission', 'restart checkpoint', 'replay a completed mission'],
+  '/progression/#no-mission-showing': ['no missions appearing', 'no new missions', 'explore the area', 'no mission marker'],
+  '/save-game/#save-greyed-out': ['save greyed out', 'save grayed out', 'cant save during mission'],
+  '/save-game/#load-an-older-save': ['reload old save', 'lost autosave', 'load game'],
+  '/missions/lab-fees/#lab-door-code': ['lab fees first code', 'shop keypad code'],
+  '/missions/lab-fees/#lockup-code': ['second code', 'Brians lockup keypad', 'rent mission second door'],
+  '/missions/unwanted-attention/#find-the-phoenix': ['impound mission', 'which car in the impound'],
+  '/missions/just-a-scratch/#look-at-joey': ['look at joey', 'how to greet joey'],
   '/navigation-settings/#change-the-minimap': ['mini map', 'route line', 'missing GPS route', 'turn on the map'],
+  '/map-locations/#take-a-train': ['ride a train', 'train fare', 'train station'],
+  '/missions/buck-me/#open-buckme': ['BuckMe app', 'bank setup on phone', 'banking tutorial'],
   '/map-locations/#fast-travel': ['fast travel', 'call a taxi', 'Paradise Taxi', 'RydeMe', 'skip the ride'],
   '/money-making/#early-cash-stash': ['where to store cash', 'bedroom floorboards', 'bank account', 'cash stash'],
   '/navigation-settings/#auto-drive': ['auto drive', 'automatic driving', 'cinematic driving controls'],
@@ -725,9 +751,9 @@ write('search.json', JSON.stringify([
 
 const latest = pages.map((p) => p.updated).sort().pop();
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 <url><loc>${BASE}/</loc><lastmod>${latest}</lastmod></url>
-${pages.map((p) => `<url><loc>${BASE}${p.url}</loc><lastmod>${p.updated}</lastmod></url>`).join('\n')}
+${pages.map((p) => `<url><loc>${BASE}${p.url}</loc><lastmod>${p.updated}</lastmod>${p.watchVideo ? `<video:video><video:thumbnail_loc>${BASE}/${p.watchVideo.poster}</video:thumbnail_loc><video:title>${esc(p.title)}</video:title><video:description>${esc(p.description)}</video:description><video:content_loc>${BASE}/${p.watchVideo.file}</video:content_loc><video:duration>${p.watchVideo.seconds}</video:duration><video:publication_date>${p.watchVideo.uploaded}</video:publication_date></video:video>` : ''}</url>`).join('\n')}
 </urlset>
 `);
 // Search and AI crawlers are explicitly welcome.

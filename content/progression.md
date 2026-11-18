@@ -14,6 +14,14 @@ updated: 2026-11-18
 
 In plain terms: play missions, earn extra money in the open world, then return to the story.
 
+## No new mission showing on the map? {#no-mission-showing}
+
+**Check the map legend.** PowerPyx identifies main-story starts as pink markers with black letters. A map label can differ from the title that appears when the mission actually starts. Early on, for example, **Go See Cal** starts **Unwanted Attention**. [Look up the objective in the mission index](/missions/). {src:7,8}
+
+**Check the in-game time.** If a contact or marker tells you to return later, look at the clock on your phone. Some missions are available only at a particular time. VGC describes using sleep at Jason’s house to advance time. {src:9}
+
+**If you’re waiting on a call**, continue with available activities. PowerPyx found that some contacts in optional quest lines call back after other tasks or more story progress. The timing depends on the contact. {src:7}
+
 ## The progression loop
 
 1. Play the available story missions.
@@ -82,3 +90,6 @@ Rockstar has not announced an online mode or its date.
 - [VGTimes: GTA 6 Extended Look breakdown](https://vgtimes.com/articles/165665-gta-6-an-extended-look-breakdown.html)
 - [PowerPyx’s Prologue guide and next mission](https://www.powerpyx.com/gta-6-prologue-walkthrough/)
 - [VGC’s Gone Fishing guide](https://www.videogameschronicle.com/guide/gta-6-gone-fishing-mission-walkthrough/)
+- [PowerPyx’s guide to mission markers and contact follow-ups (full story spoilers)](https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/)
+- [PowerPyx’s Go See Cal map and mission guide](https://www.powerpyx.com/gta-6-unwanted-attention-go-see-cal-walkthrough/)
+- [VGC on mission times and the in-game clock](https://www.videogameschronicle.com/guide/gta-6-beginners-guide-6-tips-you-need-to-know-before-starting-gta-6/)

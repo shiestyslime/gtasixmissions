@@ -48,6 +48,31 @@ const rejects = (name, date, needle) => { const r = run('build.mjs', date); expe
 let r = run('build.mjs'); expect('production content builds today', r.ok, r.out);
 r = run('check.mjs'); expect('production content passes the checker', r.ok, r.out);
 
+// The original minimap clip has a dedicated, indexable watch page without third-party playback.
+const watchHtml = out('minimap-video/index.html');
+const watchLd = [...watchHtml.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)].map((m) => JSON.parse(m[1])).find((d) => d['@type'] === 'VideoObject');
+const watchTag = watchHtml.match(/<video\b[^>]*>/)?.[0] || '';
+expect('watch page puts one native player before the answer and transcript', (watchHtml.match(/<video\b/g) || []).length === 1 && watchHtml.indexOf('<video ') < watchHtml.indexOf('<div class="answer">') && watchHtml.indexOf('<video ') < watchHtml.indexOf('<h2 id="transcript">'));
+expect('watch player has controls and accessible text without autoplay or third-party loading', /\bcontrols\b/.test(watchTag) && /\bplaysinline\b/.test(watchTag) && /aria-label="[^"]+"/.test(watchTag) && /aria-describedby="video-description"/.test(watchTag) && watchHtml.includes('id="video-description"') && !/\bautoplay\b|\bloop\b/.test(watchTag) && !/<iframe|src="\/video.js"/.test(watchHtml));
+expect('watch page identifies the silent original diagram and includes all four timed instructions', watchHtml.includes('Original diagram, not game footage') && watchHtml.includes('no spoken audio or music') && ['0:00–0:04', '0:04–0:08.5', '0:08.5–0:13.75', '0:13.75–0:18'].every((time) => watchHtml.includes(time)));
+expect('video metadata matches the actual clip size, length, creator and first public date', watchLd?.duration === 'PT18S' && watchLd?.width === 1080 && watchLd?.height === 1920 && watchLd?.uploadDate === '2026-11-18' && watchLd?.creator?.name === 'Wasted Loop' && !watchLd?.interactionStatistic);
+expect('video and thumbnail metadata point at the actual native-player assets', watchLd?.contentUrl === 'https://gtasixmissions.com/minimap-settings-explainer.mp4' && watchHtml.includes('<source src="/minimap-settings-explainer.mp4" type="video/mp4">') && watchLd?.thumbnailUrl?.[0] === 'https://gtasixmissions.com/minimap-settings-poster.jpg' && watchTag.includes('poster="/minimap-settings-poster.jpg"'));
+expect('video assets are copied byte-for-byte into the public build', ['minimap-settings-explainer.mp4', 'minimap-settings-poster.jpg'].every((file) => fs.readFileSync(path.join(tmp, 'dist', file)).equals(fs.readFileSync(path.join(tmp, 'assets', file)))));
+expect('watch page is self-canonical and indexable with its own actual-frame social preview', watchHtml.includes('<link rel="canonical" href="https://gtasixmissions.com/minimap-video/">') && watchHtml.includes('content="index, follow,') && watchHtml.includes('<meta property="og:image" content="https://gtasixmissions.com/minimap-settings-poster.jpg">'));
+const watchSitemap = out('sitemap.xml').match(/<url><loc>https:\/\/gtasixmissions.com\/minimap-video\/[\s\S]*?<\/url>/)?.[0] || '';
+expect('sitemap contains the watch page and its video file, thumbnail and duration', watchSitemap.includes('<video:content_loc>https://gtasixmissions.com/minimap-settings-explainer.mp4</video:content_loc>') && watchSitemap.includes('<video:thumbnail_loc>https://gtasixmissions.com/minimap-settings-poster.jpg</video:thumbnail_loc>') && watchSitemap.includes('<video:duration>18</video:duration>'));
+expect('settings guide links to the watch page and site search can find it', out('navigation-settings/index.html').includes('href="/minimap-video/"') && JSON.parse(out('search.json')).some((record) => record.url === '/minimap-video/'));
+expect('watch page keeps working without scripts and links back to the menu steps', watchHtml.includes('href="#transcript"') && watchHtml.includes('href="/navigation-settings/#change-the-minimap"') && !/src="\/video.js"|data-video=/.test(watchHtml));
+const labWatchHtml = out('lab-fees-video/index.html');
+const labWatchLd = [...labWatchHtml.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)].map((m) => JSON.parse(m[1])).find((d) => d['@type'] === 'VideoObject');
+expect('Lab Fees uses the same primary native watch player', (labWatchHtml.match(/<video\b/g) || []).length === 1 && labWatchHtml.indexOf('<video ') < labWatchHtml.indexOf('<div class="answer">') && labWatchHtml.includes('<source src="/lab-fees-door-codes.mp4" type="video/mp4">'));
+expect('Lab Fees video has its own accurate asset metadata', labWatchLd?.contentUrl === 'https://gtasixmissions.com/lab-fees-door-codes.mp4' && labWatchLd?.thumbnailUrl?.[0] === 'https://gtasixmissions.com/lab-fees-door-codes-poster.jpg' && labWatchLd?.duration === 'PT18S' && labWatchLd?.uploadDate === '2026-11-18' && labWatchLd?.width === 1080 && labWatchLd?.height === 1920 && labWatchLd?.creator?.name === 'Wasted Loop');
+expect('Lab Fees transcript describes all scenes and the non-speech sound', ['0:00–0:03', '0:03–0:07.75', '0:07.75–0:12.5', '0:12.5–0:18', 'Short keypad tones', 'no spoken dialogue', 'not recordings'].every((text) => labWatchHtml.includes(text)));
+expect('Lab Fees watch page preserves community-source context and links to the steps', labWatchHtml.includes('steps have not been tested by us') && labWatchHtml.includes('href="/missions/lab-fees/#lab-door-code"') && labWatchHtml.includes('href="/missions/lab-fees/#lockup-code"') && out('missions/lab-fees/index.html').includes('href="/lab-fees-video/"'));
+expect('Lab Fees video assets are copied without changes', ['lab-fees-door-codes.mp4', 'lab-fees-door-codes-poster.jpg'].every((file) => fs.readFileSync(path.join(tmp, 'dist', file)).equals(fs.readFileSync(path.join(tmp, 'assets', file)))));
+expect('Lab Fees watch page is discoverable in search and the video sitemap', JSON.parse(out('search.json')).some((record) => record.url === '/lab-fees-video/') && out('sitemap.xml').includes('<loc>https://gtasixmissions.com/lab-fees-video/</loc>') && out('sitemap.xml').includes('<video:content_loc>https://gtasixmissions.com/lab-fees-door-codes.mp4</video:content_loc>'));
+expect('watch pages never load mission-only step sharing', [watchHtml, labWatchHtml].every((html) => !/src="\/mission-share.js"|data-mission-steps/.test(html)));
+
 // Keep production missions, release switches and editorial dates out of simulated cases.
 // Production content and its real dates were checked above; publication-date fixtures are added below.
 clearMissions();
@@ -55,7 +80,7 @@ setSite({});
 const guideFiles = fs.readdirSync(path.join(tmp, 'content')).filter((f) => f.endsWith('.md'));
 for (const f of guideFiles) {
   const file = path.join(tmp, 'content', f);
-  fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/^---\n([\s\S]*?)\n---/, (_, meta) => `---\n${meta.replace(/^updated: .*$/m, 'updated: 2026-11-15').replace(/^published: .*\n?/m, '')}\n---`));
+  fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/^---\n([\s\S]*?)\n---/, (_, meta) => `---\n${meta.replace(/^updated: .*$/m, 'updated: 2026-11-15').replace(/^videoUploadDate: .*$/m, 'videoUploadDate: 2026-11-15').replace(/^published: .*\n?/m, '')}\n---`));
 }
 // These answers exercise the hub's state change without depending on editorial wording.
 const hubFile = path.join(tmp, 'content/missions.md');
@@ -66,6 +91,27 @@ const guideText = fs.readFileSync(guideFile, 'utf8');
 fs.writeFileSync(guideFile, guideText.replace('updated: 2026-11-15', 'updated: 2099-12-31')); rejects('general guide with a future updated date refused', '2026-11-20', '"updated"');
 fs.writeFileSync(guideFile, guideText.replace('updated: 2026-11-15', 'updated: 2026-02-30')); rejects('general guide with an impossible updated date refused', '2026-11-20', '"updated"');
 fs.writeFileSync(guideFile, guideText);
+
+// Watch metadata must survive rebuilds, and incomplete or inaccessible media fails the build.
+const watchFile = path.join(tmp, 'content/minimap-video.md');
+const watchText = fs.readFileSync(watchFile, 'utf8');
+fs.writeFileSync(watchFile, watchText.replace('updated: 2026-11-15', 'updated: 2026-11-20'));
+r = run('build.mjs', '2026-11-20');
+expect('editing a watch page does not reset the original video upload date', r.ok && out('minimap-video/index.html').includes('"uploadDate":"2026-11-15"'), r.out);
+for (const [name, from, to, needle] of [
+  ['missing local MP4', 'videoFile: minimap-settings-explainer.mp4', 'videoFile: missing-clip.mp4', '"videoFile"'],
+  ['path traversal', 'videoFile: minimap-settings-explainer.mp4', 'videoFile: ../minimap-settings-explainer.mp4', '"videoFile"'],
+  ['missing poster', 'videoPoster: minimap-settings-poster.jpg', 'videoPoster: missing-poster.jpg', '"videoPoster"'],
+  ['zero duration', 'videoSeconds: 18', 'videoSeconds: 0', '"videoSeconds"'],
+  ['impossible upload date', 'videoUploadDate: 2026-11-15', 'videoUploadDate: 2026-02-30', '"videoUploadDate"'],
+  ['future upload date', 'videoUploadDate: 2026-11-15', 'videoUploadDate: 2099-12-31', '"videoUploadDate"'],
+  ['missing creator', 'videoCreator: Wasted Loop\n', '', '"videoCreator"'],
+  ['missing transcript', '{#transcript}', '{#other-text}', '"transcript"'],
+]) {
+  fs.writeFileSync(watchFile, watchText.replace(from, to));
+  rejects(`watch page refuses ${name}`, '2026-11-20', needle);
+}
+fs.writeFileSync(watchFile, watchText);
 
 // 2. Community gate
 put('a.md', community());
@@ -458,6 +504,71 @@ for (const supportUrl of [
   rejects('invalid or non-profile support URL is refused', '2026-11-20', 'site.json supportUrl');
 }
 setSite(gateOn);
+
+// 5c. Mission-step sharing: native controls, exact anchors and a selectable fallback.
+clearMissions(); put('a.md', community()); setSite(gateOn);
+r = run('build.mjs', '2026-11-20');
+const sharePage = out('missions/zz-fixture-dock-job/index.html');
+expect('mission steps stay static and get the share script, with FAQ outside its scope', r.ok && sharePage.includes('<div data-mission-steps><h2 id="how-to-start">') && sharePage.includes('Fixture crane step.') && sharePage.includes('src="/mission-share.js"') && sharePage.includes('</div>\n<section class="faq">') && !sharePage.includes('Copy link to this step'), r.out);
+expect('step sharing is absent from the hub, general guides and watch page', ['missions/index.html', 'launch-help/index.html', 'minimap-video/index.html'].every((file) => !/data-mission-steps|src="\/mission-share.js"/.test(out(file))));
+{
+  // A small DOM fixture exercises the actual browser script without adding a runtime dependency.
+  class Element {
+    constructor(tag, text = '') { this.tagName = tag.toUpperCase(); this.textContent = text; this.children = []; this.dataset = {}; this.attrs = {}; this.events = {}; this.id = ''; this.className = ''; }
+    append(...nodes) { for (const node of nodes) { node.parent = this; this.children.push(node); } }
+    get nextElementSibling() { return this.parent?.children[this.parent.children.indexOf(this) + 1] || null; }
+    after(node) { node.parent = this.parent; this.parent.children.splice(this.parent.children.indexOf(this) + 1, 0, node); }
+    matches(selector) { return selector.split(',').some((part) => { const s = part.trim(); return s.startsWith('.') ? this.className.split(' ').includes(s.slice(1)) : s === 'figure[data-video]' ? this.tagName === 'FIGURE' && this.dataset.video !== undefined : /^h[23]\[id\]$/.test(s) ? this.tagName === s.slice(0, 2).toUpperCase() && Boolean(this.id) : this.tagName === s.toUpperCase(); }); }
+    querySelectorAll(selector) { return this.children.flatMap((child) => [...(child.matches(selector) ? [child] : []), ...child.querySelectorAll(selector)]); }
+    querySelector(selector) { return this.querySelectorAll(selector)[0] || null; }
+    setAttribute(name, value) { this.attrs[name] = value; }
+    addEventListener(name, fn) { this.events[name] = fn; }
+    focus() { this.focused = true; }
+    select() { this.selected = true; }
+    setSelectionRange(start, end) { this.selectionStart = start; this.selectionEnd = end; }
+  }
+  const heading = (tag, id, text) => Object.assign(new Element(tag, text), { id });
+  const script = fs.readFileSync(path.join(tmp, 'assets/mission-share.js'), 'utf8');
+  const fixture = (clipboard, canonical = 'https://gtasixmissions.com/missions/zz-fixture-dock-job/') => {
+    const root = new Element('div');
+    const first = heading('h2', 'crane-step', 'Reach the crane');
+    const sub = heading('h3', 'if-stuck', 'If the crane stops');
+    const video = new Element('figure'); video.dataset.video = 'AAAAAAAAAAA';
+    const nav = new Element('p', 'Back to the mission list'); nav.className = 'nav-note';
+    root.append(first, new Element('p', 'The objective instructions remain.'), sub, new Element('ol', 'Try the recovery step.'), heading('h2', 'watch', 'Watch gameplay'), new Element('p', 'Video introduction'), video, heading('h2', 'more-links', 'More guides'), nav, heading('h2', 'empty', 'Empty section'));
+    const document = { querySelectorAll: (s) => s === '[data-mission-steps]' ? [root] : [], querySelector: (s) => s === 'link[rel="canonical"]' && canonical ? { href: canonical } : null, createElement: (tag) => new Element(tag) };
+    const context = { document, navigator: clipboard ? { clipboard } : {}, location: { href: 'https://gtasixmissions.com/missions/zz-fixture-dock-job/?tracking=discard#old' }, URL };
+    vm.runInNewContext(script, context);
+    return { root, first, context, controls: first.nextElementSibling, buttons: root.querySelectorAll('button') };
+  };
+  const copied = [];
+  const success = fixture({ writeText: async (value) => copied.push(value) });
+  expect('one native keyboard button per playable H2/H3, excluding video, navigation-only and empty sections', success.buttons.length === 2 && success.buttons.every((button) => button.tagName === 'BUTTON' && button.type === 'button') && success.first.textContent === 'Reach the crane');
+  const [button, status, manual] = success.controls.children;
+  expect('copy controls have distinct step names and announced feedback', button.attrs['aria-label'] === 'Copy link to this step: Reach the crane' && status.attrs.role === 'status' && status.attrs['aria-live'] === 'polite' && button.attrs['aria-describedby'] === status.id && manual.hidden);
+  await button.events.click();
+  expect('clipboard success writes the canonical URL and exact objective anchor', copied[0] === 'https://gtasixmissions.com/missions/zz-fixture-dock-job/#crane-step' && status.textContent === 'Link copied.' && manual.hidden && !button.disabled);
+  let finishCopy;
+  let requests = 0;
+  const pending = fixture({ writeText: () => { requests++; return new Promise((resolve) => { finishCopy = resolve; }); } });
+  const pendingButton = pending.buttons[0];
+  const firstCopy = pendingButton.events.click();
+  await pendingButton.events.click();
+  expect('copying preserves native keyboard focusability and ignores repeated activation', !pendingButton.disabled && pendingButton.attrs['aria-disabled'] === 'true' && requests === 1);
+  finishCopy(); await firstCopy;
+  expect('the copy action becomes available again without replacing its button', pendingButton.attrs['aria-disabled'] === 'false' && pending.buttons[0] === pendingButton);
+  vm.runInNewContext(script, success.context);
+  expect('running the enhancement again does not duplicate controls', success.root.querySelectorAll('button').length === 2);
+  for (const [label, clipboard] of [['denied', { writeText: async () => { throw new Error('Denied'); } }], ['unavailable', undefined]]) {
+    const fallback = fixture(clipboard, null);
+    const [b, message, input] = fallback.controls.children;
+    await b.events.click();
+    expect(`clipboard ${label} exposes and selects the exact link for keyboard or touch copying`, !input.hidden && input.readOnly && input.value === 'https://gtasixmissions.com/missions/zz-fixture-dock-job/#crane-step' && input.focused && input.selected && input.selectionStart === 0 && input.selectionEnd === input.value.length && /keyboard|touch/.test(message.textContent) && !/copied/i.test(message.textContent) && !b.disabled);
+    fallback.context.navigator.clipboard = { writeText: async () => {} };
+    await b.events.click();
+    expect('a successful retry hides the manual fallback', input.hidden && message.textContent === 'Link copied.');
+  }
+}
 
 // 6. IndexNow submits only what a push changed, and reports failures as failures
 fs.copyFileSync(path.join(ROOT, 'indexnow.mjs'), path.join(tmp, 'indexnow.mjs'));

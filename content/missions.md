@@ -3,7 +3,7 @@ title: GTA 6 Mission Walkthroughs and Objective Help
 nav: Missions
 slug: missions
 order: 5
-description: Find GTA 6 mission objectives, tested checkpoint fixes and what to do next. Guides are added as they are verified in the released game.
+description: Find the objective on your screen, look up early mission codes and see how to retry a checkpoint. Each walkthrough links its gameplay sources.
 answer: No mission guides are published here yet. Guides appear only after the retail release is confirmed and the steps are checked. Check launch help if you are trying to install, redeem or open GTA 6.
 answer_missions: Search the mission name or the objective on your screen, or pick a mission from the list. Each guide says whether we tested it ourselves or built it from public gameplay sources.
 updated: 2026-11-18
@@ -28,7 +28,7 @@ Follow [story progression](/progression/) for help finding the next mission. Use
 
 **Still in the mission?** GamesRadar’s reviewer describes manually retrying the most recent checkpoint during a mission. Use this when you want another attempt at the current section. {src:5}
 
-**Already finished the mission?** PowerPyx’s launch guide says it found no option to replay a completed mission from a list. If you want to revisit a chapter later, its advice is to keep a separate manual save before moving on. Keep your current progress in its own slot. {src:6}
+**Already finished the mission?** PowerPyx’s launch guide says it found no option to replay a completed mission from a list. If you want to revisit a chapter later, its advice is to keep a separate manual save before moving on. Keep your current progress in its own slot. [Here’s where to find Save Game on PS5 and Xbox](/save-game/). {src:6}
 
 If you can see the objective but have lost the route line, [check your minimap and GPS settings](/navigation-settings/#change-the-minimap).
 
