@@ -42,7 +42,7 @@ r = run('check.mjs'); expect('production content passes the checker', r.ok, r.ou
 // The cases below simulate fixed dates. Give the copied general guides an early "updated" date so that
 // a simulated day in the past does not trip the no-future-date rule on real content.
 const guideFiles = fs.readdirSync(path.join(tmp, 'content')).filter((f) => f.endsWith('.md'));
-for (const f of guideFiles) { const file = path.join(tmp, 'content', f); fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/^updated: .*$/m, 'updated: 2026-11-15')); }
+for (const f of guideFiles) { const file = path.join(tmp, 'content', f); fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/^updated: .*$/m, 'updated: 2026-11-15').replace(/^published: .*$/m, 'published: 2026-11-15')); }
 r = run('build.mjs', '2026-11-16'); expect('general guides build on a simulated pre-launch day', r.ok, r.out);
 const guideFile = path.join(tmp, 'content/launch-help.md');
 const guideText = fs.readFileSync(guideFile, 'utf8');
@@ -373,6 +373,7 @@ clearMissions(); put('b.md', tested({ ads: 'yes' }));
 const adIds = { adsenseClient: 'ca-pub-0000000000000000', adsenseSlot: '0000000000' };
 setSite({ ...gateOn, ...adIds }); run('build.mjs', '2026-11-20');
 expect('IDs alone do not turn ads on', !out('missions/zz-fixture-bank-run/index.html').includes('adsbygoogle') && !fs.existsSync(path.join(tmp, 'dist/ads.txt')));
+expect('the homepage can verify the publisher for review while ad requests stay off', out('index.html').includes(`<meta name="google-adsense-account" content="${adIds.adsenseClient}">`) && !out('index.html').includes('adsbygoogle.js'));
 setSite({ ...gateOn, ...adIds, adsEnabled: true }); run('build.mjs', '2026-11-20');
 expect('IDs plus one confirmation still leave ads off', !out('missions/zz-fixture-bank-run/index.html').includes('adsbygoogle'));
 setSite({ ...gateOn, ...adIds, adsEnabled: true, adsConsentConfirmed: true }); run('build.mjs', '2026-11-20');

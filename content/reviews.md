@@ -1,9 +1,9 @@
 ---
-title: GTA 6 Reviews: Scores, Embargo Date and What Critics Say
+title: GTA 6 Reviews: Scores, Gameplay Videos and What Critics Disagree On
 nav: Reviews
 slug: reviews
 order: 9
-description: GTA 6 review scores from Metacritic and OpenCritic, outlet scores with links, when the review embargo lifted, and how earlier Rockstar games scored.
+description: Compare GTA 6 review scores, watch two critics’ video reviews and see where reviewers disagree on the opening missions, performance and campaign length.
 answer: {reported} GTA 6 reviews are out. On November 18, 2026, Metacritic showed **99** for the PS5 version and OpenCritic showed a **99** Top Critic Average, with 99% of critics recommending it.
 updated: 2026-11-18
 ---
@@ -21,10 +21,10 @@ updated: 2026-11-18
 
 ## GTA 6 review scores
 
-| Source | Score | Reviews counted | Status |
-|---|---|---|---|
-| [Metacritic](https://www.metacritic.com/game/grand-theft-auto-vi/) (PS5) | 99 | 147 | {reported} |
-| [OpenCritic](https://opencritic.com/game/15398/grand-theft-auto-vi) | 99 Top Critic Average, 99% recommend | 81 | {reported} |
+| Source | Score | Reviews counted on Nov 18 |
+|---|---|---|
+| [Metacritic](https://www.metacritic.com/game/grand-theft-auto-vi/) (PS5) | 99 | 147 |
+| [OpenCritic](https://opencritic.com/game/15398/grand-theft-auto-vi) | 99 Top Critic Average, 99% recommend | 81 |
 
 {reported} Metacritic listed 147 positive reviews, no mixed and no negative ones on November 18. Its Xbox Series X page also showed 99, from far fewer reviews. Kotaku wrote that the 99 ties the highest Metacritic score on record.
 
@@ -40,7 +40,22 @@ We list a score only after reading it on the outlet's own review page.
 | [COGconnected](https://cogconnected.com/review/grand-theft-auto-vi-review/) | 100/100 | PS5 Pro | Rates it among the best games the reviewer has played. |
 | [Cultured Vultures](https://culturedvultures.com/grand-theft-auto-6-ps5-review/) | 10/10 | PS5 | Praises the game but found the frame rate rough in places on a base PS5. |
 
-We will add more outlets as we check their pages.
+## Where critics disagree {#critics-verdict}
+
+**Mission pacing.** Kyle Orland at Ars Technica found several early assignments repetitive and preferred the later heists, where earlier preparation pays off. Jordan Middler at VGC liked how choosing Jason or Lucia could give him a different role in the same job. If you chiefly play GTA for elaborate heists, the opening hours and the later campaign made different impressions on these reviewers. {src:10,11}
+
+**Time commitment.** VGC estimates about 60 hours for the main story without side content. GamesRadar’s Josh West spent more than 100 hours on his PS5 Pro review. The second number is time spent reviewing and exploring. It is a poor estimate of how long you need to finish the story. {src:11,12}
+
+**Performance.** VGC gave the game 5/5 and still saw occasional frame-rate dips in dense areas. Cultured Vultures also noticed dips on a base PS5. If fluid motion matters to you, compare footage before deciding. {src:9,11}
+
+## Watch the video reviews {#video-reviews}
+
+These two outlets published video versions alongside their written reviews on November 18. The videos show gameplay and may show story scenes. Select a video to load its player.
+
+::: video 6p7X1Mi4ItU | Watch VGC’s GTA 6 review | VGC
+::: video TcRXjJ4vH1Q | Watch Game Informer’s GTA 6 review | Game Informer
+
+If you're choosing a copy, [compare the Standard and Ultimate editions](/editions-price/#which-edition-should-you-buy). Already playing? [Choose a minimap that fits how you drive](/navigation-settings/).
 
 ## How earlier Rockstar games scored
 
@@ -52,9 +67,9 @@ We will add more outlets as we check their pages.
 
 These are the highest-platform scores. GTA 6's 99 is above all three.
 
-## What we know before reviews
+## What to check before you buy {#what-we-know-before-reviews}
 
-- {confirmed} 30 frames per second on every console. See [frame rate and PS5 Pro](/release-date/#frame-rate-and-ps5-pro).
+- {confirmed} Rockstar targets 30 frames per second on the supported consoles. See [frame rate and PS5 Pro](/release-date/#frame-rate-and-ps5-pro).
 - {reported} About 80 hours in one Rockstar developer's playthrough. See [how long is the story](/missions/#how-long-is-the-story).
 - {reported} Money gates some story chapters. See [progression](/progression/).
 
@@ -74,7 +89,7 @@ It lifted on November 18, 2026, at 6 a.m. Eastern, one day before launch, accord
 
 ### Do reviews mention performance problems?
 
-Some do. Cultured Vultures found the frame rate rough in places on a base PS5. The game targets 30 frames per second on every console.
+Some do. Cultured Vultures found the frame rate rough in places on a base PS5. Rockstar targets 30 frames per second on the supported consoles.
 
 ### What did GTA 5 score on Metacritic?
 
@@ -91,3 +106,6 @@ GTA 5 scored 97. Red Dead Redemption 2 also scored 97, and GTA 4 scored 98.
 - [But Why Tho? review](https://butwhytho.net/2026/11/grand-theft-auto-vi-review/)
 - [COGconnected review](https://cogconnected.com/review/grand-theft-auto-vi-review/)
 - [Cultured Vultures review](https://culturedvultures.com/grand-theft-auto-6-ps5-review/)
+- [Kyle Orland’s review for Ars Technica](https://arstechnica.com/gaming/2026/11/grand-theft-auto-vi-the-ars-technica-review/)
+- [Jordan Middler’s written and video review for VGC](https://www.videogameschronicle.com/review/grand-theft-auto-6/)
+- [Josh West’s review for GamesRadar](https://www.gamesradar.com/games/grand-theft-auto/gta-6-review/)

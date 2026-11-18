@@ -5,7 +5,7 @@ slug: editions-price
 order: 2
 description: Compare GTA 6 Standard and Ultimate at US stores, see exactly what $20 adds, and find the right digital or boxed copy for PS5 and Xbox.
 answer: {confirmed} **Standard is $79.99 and includes the full game.** Ultimate is $99.99 and adds vehicles, weapons, shops and bonus activities. Start with Standard if you're unsure. You can add the Ultimate upgrade later. Boxed Standard contains a download code.
-updated: 2026-11-16
+updated: 2026-11-18
 ---
 
 ## How much does GTA 6 cost?
@@ -18,6 +18,8 @@ updated: 2026-11-16
 US listing prices checked November 16, 2026 on PlayStation Store and Xbox Store. Check your local storefront for current pricing, taxes and offers.
 
 ## Which edition should you buy?
+
+Deciding whether to buy the game at all? [Compare the first reviews and watch gameplay](/reviews/#critics-verdict) before choosing an edition.
 
 **Start with Standard** if you want the story or haven’t decided whether you’ll use the extras. Standard can be upgraded on the same platform after purchase, including after redeeming a boxed copy.
 

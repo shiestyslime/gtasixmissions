@@ -4,7 +4,7 @@ slug: about
 order: 20
 description: Who runs this unofficial GTA 6 guide, how facts are checked and labeled, and how the site earns money.
 answer: This is an independent GTA 6 guide. We link official support and identify the platform and date on walkthroughs we test.
-updated: 2026-11-17
+updated: 2026-11-18
 ---
 
 ## What this site is
@@ -34,3 +34,9 @@ Guide corrections appear on the affected page. We update the test date after rep
 ## Advertising and affiliate disclosure
 
 If a store link may earn us a commission, we disclose it next to that link. We choose purchase options by compatibility and whether they solve the problem.
+
+## Sponsor a guide {#sponsorships}
+
+Brands interested in a labeled placement on a GTA VI guide can [send a sponsorship inquiry on GitHub](https://github.com/shiestyslime/gtasixmissions/issues/new?title=Sponsorship%20inquiry&body=Brand%20or%20project%3A%20%0ACompany%20website%3A%20%0AGuide%20of%20interest%3A%20%0ACampaign%20dates%3A%20). Include your brand’s website, the guide you have in mind and your campaign dates. The inquiry is public and requires a GitHub account. Keep private contact and payment details out of it.
+
+Sponsorship buys an identified advertising placement. Editors choose the recommendations and write the verdict.

@@ -5,7 +5,7 @@ slug: beginners-guide
 order: 8
 description: A short GTA 6 starter guide. What is new compared with GTA 5, what to do first, and common mistakes to avoid on day one.
 answer: Preload the game, bank your cash often, sell stolen goods quickly and do not spend everything early. {reported} Some story chapters need saved cash to unlock.
-updated: 2026-11-15
+updated: 2026-11-18
 ---
 
 ## What is new in GTA 6 compared with GTA 5?
@@ -24,11 +24,13 @@ updated: 2026-11-15
 
 ## Before you play
 
-1. Preload the game. It needs about 212 GB. See [release date and file size](/release-date/).
+1. Check the free space on your console before downloading. Rockstar lists **up to 212 GB** of available space, depending on your device. See [release date and file size](/release-date/).
 2. Update your console.
 3. Choose your edition. The Standard Edition is the full game. See [price and editions](/editions-price/).
 
 ## Your first hours
+
+At the **Navigation Experience** screen, pick **Always On** if you want the map visible throughout your first drive. If you want it to fade when you’re exploring, choose a dynamic preset. See [all three minimap settings and how to change them](/navigation-settings/).
 
 1. **Follow the story first.** Early missions teach driving, combat and the money rules.
 2. **Bank your cash.** Carried cash can be lost when you die.
@@ -54,6 +56,10 @@ No. GTA 6 has a new story, new characters and a new setting.
 
 Yes. GTA 6 has a single-player story. Rockstar has not yet detailed an online mode.
 
+### Can I listen to the GTA 6 radio on foot?
+
+{confirmed} Yes. Jason and Lucia can listen to radio stations or on-demand podcasts through headphones or earbuds connected to their in-game phones. Both are also available in vehicles. {src:8}
+
 ### Does GTA 6 run at 60 fps?
 
 No. Rockstar says GTA 6 targets 30 frames per second on PS5, PS5 Pro and Xbox Series X|S. Reports say there is no 60 fps mode at launch. The PS5 Pro adds a sharper image and ray-traced shadows, not a higher frame rate.
@@ -75,3 +81,4 @@ GTA 6 is rated for adults, like earlier games in the series. Check the rating on
 - [VICE: 6 new GTA 6 gameplay details from The Guardian's Rockstar interview](https://www.vice.com/en/article/gta-6-gameplay-details-guardian-interview/)
 - [TechRadar: 16 new GTA 6 details from the Extended Look](https://www.techradar.com/gaming/ps5/16-new-gta-6-details-we-learned-from-the-big-extended-look-gameplay-video-captured-in-game-on-a-ps5)
 - [Red Bull: GTA 6 Extended Look, everything revealed](https://www.redbull.com/us-en/gta-6-extended-look-everything-revealed)
+- [Rockstar Games on PlayStation Blog: radio and podcasts in GTA VI](https://blog.playstation.com/2026/11/18/grand-theft-auto-vi-launches-tomorrow-november-19/)

@@ -448,6 +448,7 @@ function layout({ title, description, url, body, jsonld = [], ogType = 'article'
 <meta name="twitter:image" content="${BASE}/og.png">
 <meta name="robots" content="${index ? 'index, follow, max-snippet:-1, max-image-preview:large' : 'noindex, follow'}">
 <meta name="theme-color" content="#170b30">
+${url === '/' && /^ca-pub-\d{16}$/.test(site.adsenseClient) ? `<meta name="google-adsense-account" content="${esc(site.adsenseClient)}">` : ''}
 ${url === '/' && site.googleSiteVerification ? `<meta name="google-site-verification" content="${esc(site.googleSiteVerification)}">` : ''}
 ${url === '/' && site.bingSiteVerification ? `<meta name="msvalidate.01" content="${esc(site.bingSiteVerification)}">` : ''}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -475,7 +476,7 @@ ${body}
     <div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>${esc(site.name)}</a>
     <p>An unofficial fan site. Not affiliated with, endorsed by, or sponsored by Rockstar Games or Take-Two Interactive. Grand Theft Auto and related names are trademarks of their owners.</p></div>
     <ul>${footerNav.map((n) => `<li><a href="${n.url}">${esc(n.label)}</a></li>`).join('')}</ul>
-    <ul><li><a href="/about/">About and sources</a></li><li><a href="/about/#advertising-and-affiliate-disclosure">Ad and affiliate disclosure</a></li><li><a href="/privacy/">Privacy</a></li><li><a href="/feed.xml">Updates feed</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul>
+    <ul><li><a href="/about/">About and sources</a></li><li><a href="/about/#sponsorships">Sponsor a guide</a></li><li><a href="/about/#advertising-and-affiliate-disclosure">Ad and affiliate disclosure</a></li><li><a href="/privacy/">Privacy</a></li><li><a href="/feed.xml">Updates feed</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul>
   </div>
 </footer>
 ${scripts}
@@ -601,14 +602,18 @@ ${scene()}
 <div class="wrap hero-inner">
 <p class="eyebrow">Unofficial GTA 6 guide</p>
 <h1>GTA 6 <span>missions and walkthroughs</span></h1>
-<p class="lede">Find your next objective or fix a problem getting into the game.</p>
+<p class="lede">${missions.length ? "Search for the objective on your screen or open a walkthrough." : "Check when your copy unlocks, choose your minimap, or compare the first reviews."}</p>
 ${searchUi}
-<div class="hero-cta"><a class="btn" href="/missions/">Browse missions</a><a class="btn btn-ghost" href="/launch-help/">Fix a launch problem</a></div>
+<div class="hero-cta">
+<a class="btn" href="${missions.length ? '/missions/' : '/navigation-settings/'}">${missions.length ? 'Browse mission walkthroughs' : 'Choose your minimap'}</a>
+<a class="btn btn-ghost" href="/release-date/#ps5-unlock-time-by-store-region">Check my PS5 unlock time</a>
+<a class="btn btn-ghost" href="/reviews/#critics-verdict">Compare the reviews</a>
+</div>
 </div>
 </section>
 <section class="facts"><div class="wrap facts-row">${site.keyFacts.map((f) => `<a href="${f.url}"><span>${esc(f.label)}</span><b>${esc(f.value)}</b></a>`).join('')}</div></section>
 <div class="wrap">
-<section><h2>Get ready to play</h2>${quickJumps(launchJumps, 'Launch problems')}</section>
+<section><h2>Launch help</h2>${quickJumps(launchJumps, 'Launch problems')}</section>
 <section><h2>Guides</h2><div class="cards">${[...featured, ...guides.filter((guide) => !featured.includes(guide))].map(card).join('')}</div></section>
 <section><h2>Explore Leonida</h2><div class="regions">${site.regions.map((r, i) => `<a class="region r${i + 1}" href="/map-locations/#${slugify(r.name)}"><b>${esc(r.name)}</b><span>${esc(r.blurb)}</span></a>`).join('')}</div></section>
 <section><h2 id="latest-updates">Latest guide updates</h2><ul class="news">${recentlyUpdated().slice(0, 5).map((p) => `<li><a href="${p.url}">${esc(p.h1 || p.title)}</a><span>${p.isMission ? esc(statusLabel(p)) : `Updated <time datetime="${p.updated}">${fmtDate(p.updated)}</time>`}</span></li>`).join('')}</ul><p><a href="/feed.xml">Follow updates in a feed reader</a></p></section>
@@ -629,6 +634,10 @@ ${newsList(news.filter(({ title }) => !/\b(leak\w*|rumou?r\w*|spoiler\w*)\b/i.te
 }
 
 const searchAliases = {
+  '/missions/#checkpoint-or-replay': ['retry checkpoint', 'manual save', 'replay mission', 'restart checkpoint', 'replay a completed mission'],
+  '/navigation-settings/#change-the-minimap': ['mini map', 'route line', 'missing GPS route', 'turn on the map'],
+  '/reviews/#video-reviews': ['watch GTA 6 reviews', 'GTA 6 review video'],
+  '/reviews/': ['GTA 6 reviews', 'video reviews', 'critic scores', 'worth buying', 'review roundup'],
   '/missions/': ['story mission list', 'all walkthroughs', 'mission order', 'where am i in the story'],
   '/progression/': ['what to do next', 'next available mission', 'mission not starting', 'story unlock'],
   '/money-making/': ['how to get money', 'earn cash', 'make money', 'how to sell stolen goods'],
@@ -639,9 +648,8 @@ const searchAliases = {
   '/launch-help/#code-missing-or-unreadable': ['missing code', 'code not in box', 'no code', 'damaged voucher'],
   '/launch-help/#wrong-region': ['code region mismatch', 'wrong country', 'code for a different region'],
   '/launch-help/#code-already-redeemed': ['code already redeemed', 'code already used', 'code has been used'],
-  '/launch-help/#game-missing-or-locked': ['game missing or locked', 'cannot launch'],
   '/launch-help/#missing-after-redemption': ['game not in library', 'already owned', 'download not showing'],
-  '/launch-help/#installed-but-locked': ['game locked', 'padlock', 'lock icon', 'restore licenses'],
+  '/launch-help/#installed-but-locked': ['game locked', 'padlock', 'lock icon', 'restore licenses', 'game missing or locked', 'cannot launch'],
   '/launch-help/#xbox-one-cloud-gaming': ['can i play on xbox one', 'xbox one', 'cloud gaming', 'game pass', 'cloud playtime'],
   '/launch-help/#is-it-down-check-the-official-status-pages': ['servers down', 'is psn down', 'is gta 6 down', 'server status'],
   '/launch-help/#can-you-play-gta-6-offline-on-ps5': ['play offline', 'no internet', 'without internet', 'offline mode', 'console sharing and offline play', 'primary ps5'],
@@ -672,7 +680,7 @@ function sectionResults(page) {
     const url = `${page.url}#${id}`;
     const block = page.isMission ? firstBlock(body) : (body.match(/<(?:p|ol|ul)>[\s\S]*?<\/(?:p|ol|ul)>/) || [body])[0];
     const summary = stripTags(block.replace(NO_CITES, ''));
-    const record = { q: stripTags(heading), a: summary.slice(0, 220), url, kind: page.isMission ? 'objective' : 'support', aliases: searchAliases[url] || [], ...parentFields(page), ...missionFields(page), ...sourcesFor(page, block) };
+    const record = { q: stripTags(heading), a: summary.slice(0, 220), url, kind: page.isMission ? 'objective' : 'support', aliases: searchAliases[url] || [], ...pressFields(page), ...parentFields(page), ...missionFields(page), ...sourcesFor(page, block) };
     if (summary && !unsupported(record)) results.push(record);
   }
   return results;
@@ -691,7 +699,7 @@ for (const f of fs.readdirSync(path.join(ROOT, 'assets'))) fs.copyFileSync(path.
 const searchable = [...guides, ...missions.filter((page) => !page.nav)];
 write('search.json', JSON.stringify([
   ...searchable.map((p) => ({ q: p.h1 || p.title, a: stripTags(inline(p.answer).replace(NO_CITES, '')), url: p.url, aliases: [...(searchAliases[p.url] || []), ...pageAliases(p)], ...pressFields(p), ...missionFields(p), ...sourcesFor(p, inline(p.answer)) })),
-  ...searchable.filter((p) => p.isMission || p.slug === 'launch-help').flatMap(sectionResults),
+  ...searchable.flatMap((p) => sectionResults(p).filter((section) => p.isMission || p.slug === 'launch-help' || searchAliases[section.url])),
   ...searchable.flatMap((p) => p.faq.map((f) => { const block = p.isMission ? firstBlock(f.html) : f.html; return { q: f.q, a: stripTags(block.replace(NO_CITES, '')).slice(0, 220), url: `${p.url}#${f.id}`, ...pressFields(p), ...parentFields(p), ...missionFields(p), ...sourcesFor(p, block) }; }).filter((record) => !unsupported(record))),
 ]));
 

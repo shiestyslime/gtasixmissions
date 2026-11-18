@@ -1,0 +1,45 @@
+---
+title: GTA 6 Minimap Settings: Which Navigation Experience to Choose
+nav: Minimap settings
+slug: navigation-settings
+order: 8
+description: Choose a GTA 6 navigation preset, keep your minimap visible, or bring back a missing GPS route. Includes the PS5 settings path.
+answer: For a map you can glance at throughout a drive, choose **Always On**. For a quieter screen while exploring, choose **Minimap (Dynamic)**. VGC’s gameplay guide shows that the dynamic map fades in quiet moments. You can change your choice later. {src:1}
+aliases: navigation experience | which minimap should I pick | always on minimap | minimap disappeared | missing GPS line | compass settings
+published: 2026-11-18
+updated: 2026-11-18
+---
+
+## Choose a preset {#choose-a-preset}
+
+| What you want | Pick this during setup |
+|---|---|
+| A map that stays visible while you learn the streets | **Always On** |
+| A map when navigating and a clear view during quieter moments | **Minimap (Dynamic)** |
+| A temporary map plus a compass pointing toward your markers, missions and nearby places | **Minimap and Compass (Dynamic)** |
+
+Jordan Middler shows the three displays using examples from the opening half hour in VGC’s guide. For a first drive, we’d pick Always On so you can see which street you just passed. Once you know the area, try a dynamic preset and see whether you miss the map. {src:1}
+
+## Change the minimap on PS5 {#change-the-minimap}
+
+1. Pause the game, open **Settings** and select the **UI** tab. Find the **Navigation** settings. ViceManual documented this menu on PS5. {src:2}
+2. If the map disappears when you stop to look around, set **Minimap** to stay on. Dynamic lets it fade again during quiet stretches. {src:1,2}
+3. If the map is visible but the route line is missing, check **GPS Route**. It has its own on/off setting. If the route is there but the map is hard to read from your couch, try the other **Minimap Size**. {src:2}
+
+On **Xbox Series X or S**, DayOne lists **On**, **Dynamic** and **Off** for the Minimap option under Navigation. Choose On for a permanent map or Dynamic for one that appears as needed. {src:3}
+
+## FAQ
+
+### Do I need to restart GTA 6 to change navigation?
+
+No. VGC describes changing individual navigation options in Settings after setup. On PS5, look under **UI**. {src:1,2}
+
+### Why does my GTA 6 minimap disappear when I walk around?
+
+Dynamic hides the map during quiet stretches. VGC describes bringing it up on demand with the D-pad. For a permanent map, switch the minimap to stay on in the navigation settings. {src:1,2,3}
+
+## Sources
+
+- [VGC’s in-game examples of the three Navigation Experience presets](https://www.videogameschronicle.com/guide/gta-6-navigation-experience-explained-which-navigation-experience-should-i-pick/)
+- [ViceManual’s PS5 UI menu capture and navigation settings](https://vicemanual.com/gta-6-settings)
+- [DayOne’s Xbox Series X and S navigation options](https://playday.one/2026/11/18/all-in-game-options-in-gta-6/)
