@@ -1,11 +1,11 @@
 ---
-title: How to Make Money in GTA 6
+title: GTA 6 Money Guide – Where to Keep Cash and How to Earn by Chapter
 nav: Money-making
 slug: money-making
 order: 6
-description: How money works in GTA 6: bank funds, cash and stolen goods. The known ways to earn, and a safe plan for your first hours.
-answer: {reported} In GTA 6 you earn money from missions, heists, robberies and selling stolen vehicles and goods. Stolen goods are worth nothing until you sell them to a fence, and cash you carry can be lost when you die.
-updated: 2026-11-14
+description: Find the cash stash before banking unlocks, choose an early money activity and see which vehicle sales open later.
+answer: Before you have a bank account, use the loose floorboards in Jason’s bedroom to stash cash. VGC places the banking unlock at the mission Buck Me. For early income, you can win races in Chapter 1 or sell eligible cars to Moses once he becomes available in Chapter 2. {src:4,5}
+updated: 2026-11-18
 ---
 
 ## How money works in GTA 6
@@ -29,35 +29,33 @@ updated: 2026-11-14
 - {reported} **Selling stolen goods to a fence.**
 - {unknown} Businesses, property income and a stock market. Not announced.
 
-> Exact payouts are not known before launch. We do not print dollar figures until we have tested them in the game.
+## Where to put cash before banking unlocks {#early-cash-stash}
+
+In Jason’s bedroom, walk up to the loose floorboards and use the interaction prompt. VGC found that money kept here can be set aside before you get the digital account in **Buck Me**. If that mission is still ahead of you, the floor stash is available earlier. {src:4}
 
 ## A safe money plan for your first hours
 
-This plan uses only the reported rules above. It needs no glitches.
+Use the options available at your point in the story.
 
-1. **Bank your cash often.** Carried cash can be lost when you die. Deposit it before risky missions.
+1. **Stash your cash.** Use the floor stash until your account opens. Cash in your pocket can be lost when you die. {src:4}
 2. **Sell loot quickly.** Stolen goods have no value until you reach a fence.
 3. **Do not overspend early.** Some chapters need a cash total to unlock. Buy what missions need first.
 4. **Mix missions and open-world jobs.** Missions alone will not pay for the story.
 5. **Keep your wanted level low on the way to a fence.** Dying or getting arrested can cost you what you carry.
 
-## Money methods we will test at launch
+## What pays at my chapter? {#earn-by-chapter}
 
-- Payout for each robbery type
-- Best vehicles to steal and sell
-- Fence locations and prices
-- Heist payouts and the best crew choices
-- Any money method that Rockstar later patches
+**Chapter 1.** Race winnings give you an early alternative to story missions. PowerPyx recommends moving the story along before spending much time farming money. {src:5}
 
-## Money glitches and cheats
+**Chapter 2.** Once the story introduces Moses as a buyer, check the vehicle’s tracker status. His early garage accepts cars without trackers. {src:5}
 
-{unknown} No money cheats or glitches are known before launch. Earlier GTA games had no cheat code that added money in story mode. Be careful with any site or video that asks you to download a file or enter account details for "free GTA 6 money". Those are scams.
+**Chapter 3.** The Pay ’n’ Spray vehicle-sale option opens up for cars with standard trackers. PowerPyx recorded sales above $4,000 for some cars in this category. {src:5}
 
 ## FAQ
 
 ### What is the fastest way to make money in GTA 6?
 
-Before launch, nobody has tested it. Previews point to bank heists as the largest payouts, with robberies and vehicle sales as quick income between missions.
+It depends on your chapter. PowerPyx places the highest-paying bank vault jobs late in Chapter 4. If you are early in Chapter 2, look for the story unlock that lets you sell cars to Moses. {src:5}
 
 ### Do you lose money when you die in GTA 6?
 
@@ -73,10 +71,12 @@ Yes, according to previews. Some chapters need a set amount of cash before they 
 
 ### Is there a money cheat in GTA 6?
 
-None is known. Earlier GTA story modes did not have one.
+We haven’t verified a money cheat. [See the chapter guide](/money-making/#earn-by-chapter) for ways to earn through normal play.
 
 ## Sources
 
 - [VICE: GTA 6 new gameplay details revealed](https://www.vice.com/en/article/gta-6-new-gameplay-features-details-revealed/)
 - [Dork: GTA 6 mission options and progression details](https://readdork.com/gaming/gta-6-mission-options-shop-exclusives-progression-a6be638cc9)
 - [KeenGamer: GTA 6 Extended Look recap](https://www.keengamer.com/articles/news/gta-6-extended-look-recap-all-gameplay-details/)
+- [VGC’s bedroom cash stash and banking unlock](https://www.videogameschronicle.com/guide/gta-6-beginners-guide-6-tips-you-need-to-know-before-starting-gta-6/)
+- [PowerPyx’s hands-on money guide by chapter (later-game spoilers)](https://www.powerpyx.com/gta-6-money-guide-how-to-get-money-fast/)

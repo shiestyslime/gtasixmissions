@@ -11,12 +11,21 @@ const ROOT = path.dirname(new URL(import.meta.url).pathname);
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gsm-test-'));
 for (const item of ['build.mjs', 'check.mjs', 'site.json', 'assets', 'content', 'data']) fs.cpSync(path.join(ROOT, item), path.join(tmp, item), { recursive: true });
 fs.mkdirSync(path.join(tmp, 'content/missions'), { recursive: true });
-const baseSite = JSON.parse(fs.readFileSync(path.join(tmp, 'site.json'), 'utf8'));
+const productionSite = JSON.parse(fs.readFileSync(path.join(tmp, 'site.json'), 'utf8'));
+// Historical cases start from explicit fixture state, regardless of what is live today.
+// The untouched production copy is built below before this baseline is ever written.
+const baseSite = {
+  ...productionSite,
+  communityGuides: { enabled: false, releaseConfirmedOn: '', releaseSource: '' },
+  ps5Unlocks: productionSite.ps5Unlocks.map((u) => ({ ...u, checked: '2026-11-15' })),
+  adsEnabled: false,
+  adsConsentConfirmed: false,
+};
 const setSite = (patch) => fs.writeFileSync(path.join(tmp, 'site.json'), JSON.stringify({ ...baseSite, ...patch }, null, 2));
 const gateOn = { communityGuides: { enabled: true, releaseConfirmedOn: '2026-11-19', releaseSource: 'https://www.rockstargames.com/VI' } };
 const run = (script, date, extra = {}) => { const env = { ...process.env, NO_FETCH: '1', ...extra }; delete env.BUILD_DATE; if (date) env.BUILD_DATE = date; const r = spawnSync('node', [script], { cwd: tmp, encoding: 'utf8', env }); return { ok: r.status === 0, out: r.stdout + r.stderr }; };
 const out = (rel) => fs.readFileSync(path.join(tmp, 'dist', rel), 'utf8');
-const clearMissions = () => { for (const f of fs.readdirSync(path.join(tmp, 'content/missions'))) fs.rmSync(path.join(tmp, 'content/missions', f)); };
+const clearMissions = () => { const dir = path.join(tmp, 'content/missions'); fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true }); };
 
 const DEFAULT_SOURCES = [{ url: 'https://www.ign.com/wikis/a', by: 'IGN', group: 'ign', at: 'Dock section' }, { url: 'https://www.gamespot.com/guides/b', by: 'GameSpot', group: 'gamespot', at: 'Step 2' }];
 // A source is a URL string (gets its own creator and group) or { url, by, group, at }.
@@ -39,10 +48,18 @@ const rejects = (name, date, needle) => { const r = run('build.mjs', date); expe
 let r = run('build.mjs'); expect('production content builds today', r.ok, r.out);
 r = run('check.mjs'); expect('production content passes the checker', r.ok, r.out);
 
-// The cases below simulate fixed dates. Give the copied general guides an early "updated" date so that
-// a simulated day in the past does not trip the no-future-date rule on real content.
+// Keep production missions, release switches and editorial dates out of simulated cases.
+// Production content and its real dates were checked above; publication-date fixtures are added below.
+clearMissions();
+setSite({});
 const guideFiles = fs.readdirSync(path.join(tmp, 'content')).filter((f) => f.endsWith('.md'));
-for (const f of guideFiles) { const file = path.join(tmp, 'content', f); fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/^updated: .*$/m, 'updated: 2026-11-15').replace(/^published: .*$/m, 'published: 2026-11-15')); }
+for (const f of guideFiles) {
+  const file = path.join(tmp, 'content', f);
+  fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/^---\n([\s\S]*?)\n---/, (_, meta) => `---\n${meta.replace(/^updated: .*$/m, 'updated: 2026-11-15').replace(/^published: .*\n?/m, '')}\n---`));
+}
+// These answers exercise the hub's state change without depending on editorial wording.
+const hubFile = path.join(tmp, 'content/missions.md');
+fs.writeFileSync(hubFile, fs.readFileSync(hubFile, 'utf8').replace(/^answer: .*$/m, 'answer: No mission guides are published here yet.').replace(/^answer_missions: .*$/m, 'answer_missions: Search the mission name or objective in the guides below.'));
 r = run('build.mjs', '2026-11-16'); expect('general guides build on a simulated pre-launch day', r.ok, r.out);
 const guideFile = path.join(tmp, 'content/launch-help.md');
 const guideText = fs.readFileSync(guideFile, 'utf8');
@@ -138,6 +155,8 @@ clearMissions(); setSite(gateOn);
 builds('hub builds with no mission guides in the early unlock window', early);
 let h = hubHtml();
 expect('hub with zero guides says none are published, and nothing contradicts it', h.includes('No mission guides are published yet') && h.includes('No mission guides are published here yet') && !/\d+ verified walkthrough/.test(h) && !h.includes('There are no verified walkthroughs'));
+expect('home with no mission guides points its main button to usable launch help', out('index.html').includes('<a class="btn" href="/navigation-settings/">Choose your minimap</a>') && !out('index.html').includes('Browse mission guides'));
+expect('home does not show an empty opening-missions row', !out('index.html').includes('id="opening-missions"'));
 expect('hub freshness with zero guides is its own updated date', sameDate(hubDate(), '2026-11-15'), JSON.stringify(hubDate()));
 put('b.md', tested({ ...launchNight, updated: '2026-11-19' }));
 builds('tested guide builds in the early unlock window', early);
@@ -147,7 +166,18 @@ expect('adding a guide moves hub date, Article dateModified and sitemap lastmod 
 clearMissions(); put('a.md', community({ updated: '2026-11-18', checkedDate: '2026-11-18' }));
 builds('community guide builds in the early unlock window', early);
 h = hubHtml();
-expect('hub with only a community guide says 0 verified and lists it apart', h.includes('0 verified walkthroughs') && h.includes('None of the guides below has been tested by us yet') && h.includes('Community-sourced guides (1)') && !/No mission guides are published/.test(h));
+expect('community-only hub lists the guide and its status without an empty tested section', h.includes('Community-sourced guides (1)') && h.includes('/missions/zz-fixture-dock-job/') && h.includes('Not tested by us.') && !/\d+ verified walkthrough|No mission guides are published|None of the guides below/.test(h));
+expect('community-only hub keeps its existing anchor targets', ['mission-guides', 'walkthroughs', 'community-guides'].every((id) => h.includes(`id="${id}"`)));
+expect('home with a community guide opens the mission list and describes public gameplay sources', out('index.html').includes('<a class="btn" href="/missions/">Browse mission guides</a>') && out('index.html').includes('guides built from public gameplay sources'));
+put('c.md', community({ title: 'FIXTURE Harbor Job Walkthrough', slug: 'missions/zz-fixture-harbor-job', updated: '2026-11-18', checkedDate: '2026-11-18', order: '91' }));
+builds('two community guides build in the early unlock window', early);
+h = hubHtml();
+expect('multiple community guides appear without inventing tested walkthroughs', h.includes('Community-sourced guides (2)') && ['zz-fixture-dock-job', 'zz-fixture-harbor-job'].every((slug) => h.includes(`/missions/${slug}/`)) && !/\d+ verified walkthrough/.test(h));
+put('d.md', community({ title: 'FIXTURE Opening Job', slug: 'missions/zz-fixture-opening-job', updated: '2026-11-18', checkedDate: '2026-11-18', order: '1' }));
+put('e.md', community({ title: 'FIXTURE Later Job', slug: 'missions/zz-fixture-later-job', updated: '2026-11-18', checkedDate: '2026-11-18', order: '99' }));
+builds('home builds with four mission guides in non-filename order', early);
+const openingRow = (out('index.html').match(/<section><h2 id="opening-missions">[\s\S]*?<\/section>/) || [''])[0];
+expect('opening row links only the first three guides in story order, above launch help', JSON.stringify([...openingRow.matchAll(/href="([^"]+)"/g)].map((m) => m[1])) === JSON.stringify(['/missions/zz-fixture-opening-job/', '/missions/zz-fixture-dock-job/', '/missions/zz-fixture-harbor-job/']) && out('index.html').indexOf('id="opening-missions"') < out('index.html').indexOf('<h2>Launch help</h2>'));
 clearMissions(); put('b.md', tested({ updated: '2026-11-19' }));
 builds('hub freshness: first build', '2026-11-20');
 const firstHub = hubDate();
@@ -367,6 +397,27 @@ setSite(gateOn);
   expect('story setup stays out of search results and the page answer', !idx.some((e) => /goes wrong|Penitentiary|conspiracy/.test(`${e.q} ${e.a}`)));
   expect('the mission hub labels spoilers before the click', /href="\/characters\/#story-setup">[^<]*light spoilers/.test(out('missions/index.html')));
 }
+
+// News keeps every cached headline and its publisher; explicit spoiler labels require expansion.
+const newsFile = path.join(tmp, 'data/news.json');
+const savedNews = fs.readFileSync(newsFile, 'utf8');
+const newsCases = [
+  ['rumor', 'GTA 6 rumor: a new update'],
+  ['leak', 'GTA 6 leak discussed by the publisher'],
+  ['spoiler-free', 'GTA 6 spoiler-free review'],
+  ['avoid-spoilers', 'How to avoid GTA 6 spoilers'],
+  ['spoiler', '[Spoilers] GTA 6 story discussion'],
+  ['warning', 'Spoiler warning: GTA 6 story discussion'],
+].map(([key, title]) => ({ title, link: `https://www.ign.com/test-news/${key}`, source: `Test publisher ${key}`, date: '2026-11-18T12:00:00Z' }));
+fs.writeFileSync(newsFile, JSON.stringify(newsCases));
+builds('news renders rumors and spoiler-labeled headlines', '2026-11-20');
+const newsHtml = out('news/index.html');
+const spoilerDisclosure = (newsHtml.match(/<details><summary>Headlines marked as spoilers[\s\S]*?<\/details>/) || [''])[0];
+const visibleNews = newsHtml.replace(spoilerDisclosure, '');
+expect('rumor, leak and spoiler-free coverage remain in the visible news list', newsCases.slice(0, 4).every((n) => visibleNews.includes(`href="${n.link}"`)));
+expect('explicit spoiler headlines are retained inside a closed disclosure', spoilerDisclosure.includes('Headlines marked as spoilers (2)') && !/<details\b[^>]*\bopen\b/.test(spoilerDisclosure) && newsCases.slice(4).every((n) => spoilerDisclosure.includes(`href="${n.link}"`) && !visibleNews.includes(`href="${n.link}"`)));
+expect('every news item keeps its publisher attribution and original link exactly once', newsCases.every((n) => newsHtml.includes(`<span>${n.source} · <time`) && newsHtml.split(`href="${n.link}"`).length === 2));
+fs.writeFileSync(newsFile, savedNews);
 
 // 5. Ads stay off unless IDs and both confirmations are present
 clearMissions(); put('b.md', tested({ ads: 'yes' }));

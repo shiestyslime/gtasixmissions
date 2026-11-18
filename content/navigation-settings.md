@@ -28,6 +28,10 @@ Jordan Middler shows the three displays using examples from the opening half hou
 
 On **Xbox Series X or S**, DayOne lists **On**, **Dynamic** and **Off** for the Minimap option under Navigation. Choose On for a permanent map or Dynamic for one that appears as needed. {src:3}
 
+## Reading the minimap indoors {#indoor-map}
+
+If a shop looks like a single room, walk closer to its interior doors and look at the minimap again. VGC found that nearby back rooms and stairways can appear as you approach. {src:4}
+
 ## FAQ
 
 ### Do I need to restart GTA 6 to change navigation?
@@ -43,3 +47,4 @@ Dynamic hides the map during quiet stretches. VGC describes bringing it up on de
 - [VGC’s in-game examples of the three Navigation Experience presets](https://www.videogameschronicle.com/guide/gta-6-navigation-experience-explained-which-navigation-experience-should-i-pick/)
 - [ViceManual’s PS5 UI menu capture and navigation settings](https://vicemanual.com/gta-6-settings)
 - [DayOne’s Xbox Series X and S navigation options](https://playday.one/2026/11/18/all-in-game-options-in-gta-6/)
+- [VGC’s in-game examples of indoor minimap details](https://www.videogameschronicle.com/guide/gta-6-beginners-guide-6-tips-you-need-to-know-before-starting-gta-6/)

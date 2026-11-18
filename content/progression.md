@@ -5,7 +5,7 @@ slug: progression
 order: 7
 description: How progression works in GTA 6. Cash gates on story chapters, the six-star wanted system, customization and what carries your game forward.
 answer: {reported} GTA 6 story progress depends on **missions and money**. Some chapters unlock only when you have enough cash, so you must earn in the open world between missions.
-updated: 2026-11-15
+updated: 2026-11-18
 ---
 
 ## How do you progress in GTA 6?
@@ -44,12 +44,9 @@ A high wanted level puts carried cash and loot at risk. Lose the police before y
 
 {unknown} Which activities give rewards that help the story, and how far the effects of your actions go.
 
-## What we will add at launch
+## Where do I start the story? {#start-the-story}
 
-- The cash amount each chapter needs
-- The order of chapters and unlocks
-- 100% completion checklist
-- What carries over after the story ends
+Start with Lucia in the Prologue. Gone Fishing follows and puts you in control of Jason. Choose your current objective in the [mission guides](/missions/) to get help without reading ahead. {src:5,6}
 
 ## FAQ
 
@@ -83,3 +80,5 @@ Rockstar has not announced an online mode or its date.
 - [VICE: 6 new GTA 6 gameplay details from The Guardian's Rockstar interview](https://www.vice.com/en/article/gta-6-gameplay-details-guardian-interview/)
 - [KeenGamer: GTA 6 Extended Look recap](https://www.keengamer.com/articles/news/gta-6-extended-look-recap-all-gameplay-details/)
 - [VGTimes: GTA 6 Extended Look breakdown](https://vgtimes.com/articles/165665-gta-6-an-extended-look-breakdown.html)
+- [PowerPyx’s Prologue guide and next mission](https://www.powerpyx.com/gta-6-prologue-walkthrough/)
+- [VGC’s Gone Fishing guide](https://www.videogameschronicle.com/guide/gta-6-gone-fishing-mission-walkthrough/)

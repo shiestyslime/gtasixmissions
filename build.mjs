@@ -523,10 +523,10 @@ function missionIndex() {
   const count = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
   if (!missions.length) return `<section class="mission-list" id="mission-guides"><h2 id="walkthroughs">Mission guides</h2><p>No mission guides are published yet. A guide appears here only after the retail release is confirmed and its steps are checked against gameplay.</p></section>`;
   const item = (mission, note) => `<li><a href="${mission.url}">${esc(mission.h1 || mission.title)}</a> <span>${note}</span></li>`;
-  return `<section class="mission-list" id="mission-guides"><h2 id="walkthroughs">${count(tested.length, 'verified walkthrough')}</h2>
-${tested.length ? `<ul>${tested.map((mission) => item(mission, `Tested on ${esc(mission.testedPlatform)}, ${fmtDate(mission.testedDate)}`)).join('')}</ul>` : '<p>None of the guides below has been tested by us yet.</p>'}
+  return `<section class="mission-list" id="mission-guides"><div id="walkthroughs">
+${tested.length ? `<h2>${count(tested.length, 'verified walkthrough')}</h2><ul>${tested.map((mission) => item(mission, `Tested on ${esc(mission.testedPlatform)}, ${fmtDate(mission.testedDate)}`)).join('')}</ul>` : ''}
 ${community.length ? `<h2 id="community-guides">Community-sourced guides (${community.length})</h2><p>Built from public gameplay videos and player reports, with every source linked. Not tested by us.</p><ul>${community.map((mission) => item(mission, `Sources checked ${fmtDate(mission.checkedDate)}`)).join('')}</ul>` : ''}
-</section>`;
+</div></section>`;
 }
 // What the guide covers and how we know, stated once near the top of every mission guide.
 function scopePanel(p) {
@@ -597,15 +597,16 @@ const recentlyUpdated = () => pages.filter((p) => p.nav || p.isMission).sort((a,
 function renderHome() {
   const featured = nav.map(({ url }) => guides.find((guide) => guide.url === url));
   const topFaq = featured.flatMap((p) => p.faq.slice(0, 1).map((f) => ({ ...f, url: p.url + '#' + f.id })));
+  const communityOnly = missions.length && missions.every((mission) => mission.community);
   const body = `<section class="hero">
 ${scene()}
 <div class="wrap hero-inner">
 <p class="eyebrow">Unofficial GTA 6 guide</p>
 <h1>GTA 6 <span>missions and walkthroughs</span></h1>
-<p class="lede">${missions.length ? "Search for the objective on your screen or open a walkthrough." : "Check when your copy unlocks, choose your minimap, or compare the first reviews."}</p>
+<p class="lede">${communityOnly ? 'Find your mission or objective in guides built from public gameplay sources.' : missions.length ? 'Search for the objective on your screen or open a mission guide.' : 'Check when your copy unlocks, choose your minimap, or compare the first reviews.'}</p>
 ${searchUi}
 <div class="hero-cta">
-<a class="btn" href="${missions.length ? '/missions/' : '/navigation-settings/'}">${missions.length ? 'Browse mission walkthroughs' : 'Choose your minimap'}</a>
+<a class="btn" href="${missions.length ? '/missions/' : '/navigation-settings/'}">${missions.length ? 'Browse mission guides' : 'Choose your minimap'}</a>
 <a class="btn btn-ghost" href="/release-date/#ps5-unlock-time-by-store-region">Check my PS5 unlock time</a>
 <a class="btn btn-ghost" href="/reviews/#critics-verdict">Compare the reviews</a>
 </div>
@@ -613,6 +614,7 @@ ${searchUi}
 </section>
 <section class="facts"><div class="wrap facts-row">${site.keyFacts.map((f) => `<a href="${f.url}"><span>${esc(f.label)}</span><b>${esc(f.value)}</b></a>`).join('')}</div></section>
 <div class="wrap">
+${missions.length ? `<section><h2 id="opening-missions">Opening missions</h2>${quickJumps(missions.slice(0, 3).map((mission) => ({ label: mission.h1 || mission.title, url: mission.url })), 'Opening missions')}</section>` : ''}
 <section><h2>Launch help</h2>${quickJumps(launchJumps, 'Launch problems')}</section>
 <section><h2>Guides</h2><div class="cards">${[...featured, ...guides.filter((guide) => !featured.includes(guide))].map(card).join('')}</div></section>
 <section><h2>Explore Leonida</h2><div class="regions">${site.regions.map((r, i) => `<a class="region r${i + 1}" href="/map-locations/#${slugify(r.name)}"><b>${esc(r.name)}</b><span>${esc(r.blurb)}</span></a>`).join('')}</div></section>
@@ -627,9 +629,14 @@ ${searchUi}
 }
 
 function renderNews() {
+  // Hide explicitly labeled spoilers, not rumors or articles advertised as spoiler-free.
+  const spoilerLabel = /\[\s*(?:(?:major|story)\s+)?spoilers?\s*\]|\(\s*(?:(?:major|story)\s+)?spoilers?\s*\)|\bspoiler\s+(?:warning|alert)\b|^(?:(?:major|story)\s+)?spoilers?(?![- ]free)\s*[:—–-]/i;
+  const spoilers = news.filter(({ title }) => spoilerLabel.test(title));
+  const visible = news.filter(({ title }) => !spoilerLabel.test(title));
   const body = `${pageHero('News', 'Latest GTA 6 News Headlines', `<p class="meta"><span class="pill">Auto-updated</span> Refreshed <time datetime="${NOW.toISOString()}">${fmtDate(NOW.toISOString())}</time></p>`)}
 <div class="wrap narrow"><p>Headlines about GTA 6 from established gaming outlets. Each link opens the original article on the publisher's site. This list refreshes each time the site rebuilds.</p>
-${newsList(news.filter(({ title }) => !/\b(leak\w*|rumou?r\w*|spoiler\w*)\b/i.test(title)))}</div>`;
+${visible.length ? newsList(visible) : ''}
+${spoilers.length ? `<section class="faq"><details><summary>Headlines marked as spoilers (${spoilers.length})</summary><p>These publisher titles may reveal story details.</p>${newsList(spoilers)}</details></section>` : ''}</div>`;
   return layout({ title: `Latest GTA 6 News Headlines | ${site.name}`, description: 'The latest GTA 6 news headlines from established gaming outlets, refreshed daily, with links to the original articles.', url: '/news/', body, ogType: 'website', index: false });
 }
 

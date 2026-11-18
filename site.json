@@ -47,9 +47,9 @@
   "contactEmail": "",
   "correctionsUrl": "https://github.com/shiestyslime/gtasixmissions/issues/new",
   "communityGuides": {
-    "enabled": false,
-    "releaseConfirmedOn": "",
-    "releaseSource": ""
+    "enabled": true,
+    "releaseConfirmedOn": "2026-11-18",
+    "releaseSource": "https://store.playstation.com/en-nz/product/EP1004-PPSA38500_00-GTAVISTANDARD001"
   },
   "adsenseClient": "",
   "adsenseSlot": "",

@@ -4,7 +4,7 @@ nav: Beginner's guide
 slug: beginners-guide
 order: 8
 description: A short GTA 6 starter guide. What is new compared with GTA 5, what to do first, and common mistakes to avoid on day one.
-answer: Preload the game, bank your cash often, sell stolen goods quickly and do not spend everything early. {reported} Some story chapters need saved cash to unlock.
+answer: Choose your minimap, start the Prologue as Lucia, and use the [mission guides](/missions/) if an objective stalls. If the game is still locked, [look up your region’s unlock time](/release-date/#ps5-unlock-time-by-store-region).
 updated: 2026-11-18
 ---
 
@@ -32,8 +32,8 @@ updated: 2026-11-18
 
 At the **Navigation Experience** screen, pick **Always On** if you want the map visible throughout your first drive. If you want it to fade when you’re exploring, choose a dynamic preset. See [all three minimap settings and how to change them](/navigation-settings/).
 
-1. **Follow the story first.** Early missions teach driving, combat and the money rules.
-2. **Bank your cash.** Carried cash can be lost when you die.
+1. **Start with the Prologue.** If the first conversation does not start, open the [mission guides](/missions/) and search for “talk to your cellmates.”
+2. **Stash your cash.** Banking opens later. Until then, use the [floor stash in Jason’s bedroom](/money-making/#early-cash-stash).
 3. **Sell loot soon.** Stolen goods are worth nothing until you reach a fence.
 4. **Save some money.** Later chapters may need it.
 5. **Explore between missions.** The open world is where extra income comes from.

@@ -5,7 +5,7 @@ slug: characters
 order: 4
 description: GTA 6 has two playable protagonists, Jason Duval and Lucia Caminos. Meet the confirmed supporting cast and what each character does.
 answer: {confirmed} GTA 6 has **two playable protagonists: Jason Duval and Lucia Caminos**. They are a couple, and the story follows both of them.
-updated: 2026-11-17
+updated: 2026-11-18
 ---
 
 ## Who do you play as in GTA 6?
@@ -45,7 +45,7 @@ updated: 2026-11-17
 - {confirmed} Lucia's father trained her to fight from a young age. Fighting for her family put her in Leonida Penitentiary, and she got out by luck. She wants the good life her mother has hoped for since the family lived in Liberty City.
 - {confirmed} Jason grew up around crooks and served in the Army. He now works for drug runners in the Keys and stays rent-free at a property owned by Brian Heder, in return for helping with local shakedowns.
 - {confirmed} Raul Bautista is a veteran bank robber who keeps looking for people willing to take big risks for big rewards.
-- {unknown} Rockstar has not published mission names, mission order or story outcomes. We add missions only from the released game.
+- For help with the first playable scenes, start with the [opening mission guides](/missions/).
 
 ## Can you switch between Jason and Lucia?
 
@@ -80,7 +80,7 @@ Two: Jason and Lucia. GTA 5 had three.
 
 ### Who are the voice actors for Jason and Lucia?
 
-Rockstar has not announced the cast. Names you see online for Jason and Lucia before the credits are public are not confirmed. One actor has spoken: Stephen Root said in September 2026 that he is in the game. Outlets report that he plays Brian Heder. Rockstar has not confirmed the role.
+The Game Awards nominated **Manni L. Perez** for her GTA VI performance, and GamesRadar identifies her role as Lucia Caminos. We have not verified Jason’s actor from the credits. Stephen Root separately confirmed to the Associated Press that he appears in the game. {src:7,8,9}
 
 ## Sources
 
@@ -90,3 +90,6 @@ Rockstar has not announced the cast. Names you see online for Jason and Lucia be
 - [Push Square: the first GTA 6 actor has confirmed their involvement](https://www.pushsquare.com/news/2026/09/the-first-gta-6-actor-has-confirmed-their-involvement-and-nobodys-surprised)
 - [GTABase: GTA 6 characters guide](https://www.gtabase.com/de/gta-6/characters/)
 - [Red Bull: GTA 6 Extended Look, everything revealed](https://www.redbull.com/us-en/gta-6-extended-look-everything-revealed)
+- [The Game Awards’ official Best Performance nominees](https://thegameawards.com/categories/best-performance)
+- [GamesRadar on the nomination and Lucia’s role](https://www.gamesradar.com/games/grand-theft-auto/gta-6-lucia-actor-revealed-thanks-to-the-game-awards-best-performance-nomination-and-yes-its-exactly-who-everyone-expected/)
+- [Associated Press on its interview with Stephen Root](https://apnews.com/article/6e255c930da6de820e539721f4682253)
