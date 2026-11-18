@@ -37,14 +37,14 @@ Add newly verified GTA 6 facts to `content/*.md`, so each guide answers its ques
 
 ## Steps
 
-1. Start with `launch-help.md`, `release-date.md`, `editions-price.md`, and the most useful existing verified guides. Check for changed instructions and reported blockers.
+1. During the launch window, start with a question players are trying to answer. Use this site's Search Console queries when available. Otherwise look for a concrete question in a public launch discussion, a correction on the site or a new gameplay guide. Record which signal you used. A single player post establishes a question, not how many people searched for it.
 2. Check Rockstar support, PlayStation support, Xbox support and the exact relevant storefront or patch notice. Use community reports and other guides to identify questions to verify.
 3. Update the pages. Priority order after launch:
-   - `launch-help.md`: keep error fixes, required free space, account region and cloud instructions accurate.
+   - Address a widespread installation, access or save-loss problem first if current platform support confirms it. Otherwise prioritize a playable mission objective, a missing marker or a control that stops progress.
    - `content/missions/`, tested guides (`status: published`): use the README publication format once you have first-hand notes. Never write or change one from public sources alone.
    - `content/missions/`, community-sourced guides (`status: community`): allowed only while the `communityGuides` switch in `site.json` is on, under rule 12. The build lists them apart from tested guides.
    - `progression.md` and `money-making.md`: add measured retail unlock conditions and payouts when you have test evidence and distinguish platform/build differences.
-4. Update a relevant existing answer for real player questions. Check reports against your evidence and keep existing route and section URLs stable.
+4. Search the live site using the wording the player used. If an answer exists, improve that section, add a helpful alias to the page's front matter where appropriate, and keep the URL stable. If it needs a new guide, link it from the page a stuck player is most likely to be reading. Keep the immediate answer before any later story information.
 5. Run `node build.mjs` then `node check.mjs`. Fix every problem it reports.
 6. Write a short change note in `CHANGELOG.md`: which pages changed, which facts were added, and their sources.
 7. Commit and push as rule 11 says. GitHub then rebuilds and publishes the site.
