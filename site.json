@@ -45,6 +45,7 @@
     }
   ],
   "contactEmail": "",
+  "supportUrl": "",
   "correctionsUrl": "https://github.com/shiestyslime/gtasixmissions/issues/new",
   "communityGuides": {
     "enabled": true,

@@ -28,6 +28,16 @@ Jordan Middler shows the three displays using examples from the opening half hou
 
 On **Xbox Series X or S**, DayOne lists **On**, **Dynamic** and **Off** for the Minimap option under Navigation. Choose On for a permanent map or Dynamic for one that appears as needed. {src:3}
 
+## Can I drive with the minimap off? {#drive-without-the-minimap}
+
+In his tech review, Digital Foundry’s John Linneman describes leaving GPS directions on while driving with the minimap hidden. He followed the road signs and directions. If you like an uncluttered screen but still want help at junctions, [jump to the driving discussion at 38:00](https://www.youtube.com/watch?v=qsBU0bcpONA&t=2280s). {src:5}
+
+DayOne’s Jesse Norris also describes using street and highway signs to find his way. [Hear his example at 2:11](https://www.youtube.com/watch?v=c9meSdlHhYM&t=131s). {src:6}
+
+## How to turn on auto-drive {#auto-drive}
+
+Set a map waypoint before starting. In his review, Norris describes holding **down on the D-pad** in your vehicle to start auto-drive. He found it more reliable on the road than in planes or boats. [Hear the controls and limitations at 11:59](https://www.youtube.com/watch?v=c9meSdlHhYM&t=719s). {src:6}
+
 ## Reading the minimap indoors {#indoor-map}
 
 If a shop looks like a single room, walk closer to its interior doors and look at the minimap again. VGC found that nearby back rooms and stairways can appear as you approach. {src:4}
@@ -48,3 +58,5 @@ Dynamic hides the map during quiet stretches. VGC describes bringing it up on de
 - [ViceManual’s PS5 UI menu capture and navigation settings](https://vicemanual.com/gta-6-settings)
 - [DayOne’s Xbox Series X and S navigation options](https://playday.one/2026/11/18/all-in-game-options-in-gta-6/)
 - [VGC’s in-game examples of indoor minimap details](https://www.videogameschronicle.com/guide/gta-6-beginners-guide-6-tips-you-need-to-know-before-starting-gta-6/)
+- [Digital Foundry’s GTA VI technical review, navigation discussion at 38:00](https://www.youtube.com/watch?v=qsBU0bcpONA&t=2280s)
+- [Jesse Norris’s written and video review for DayOne](https://playday.one/2026/11/18/grand-theft-auto-6-review/)

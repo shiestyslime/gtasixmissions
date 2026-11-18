@@ -430,6 +430,35 @@ expect('IDs plus one confirmation still leave ads off', !out('missions/zz-fixtur
 setSite({ ...gateOn, ...adIds, adsEnabled: true, adsConsentConfirmed: true }); run('build.mjs', '2026-11-20');
 expect('IDs plus both confirmations turn ads on for an opted-in guide only', out('missions/zz-fixture-bank-run/index.html').includes('adsbygoogle') && !out('index.html').includes('adsbygoogle') && fs.existsSync(path.join(tmp, 'dist/ads.txt')));
 
+// 5b. Optional support stays absent until a public creator profile is configured.
+clearMissions(); put('a.md', community()); put('b.md', tested());
+for (const supportUrl of [undefined, '']) {
+  setSite({ ...gateOn, supportUrl });
+  r = run('build.mjs', '2026-11-20');
+  expect(`support link is absent when the setting is ${supportUrl === undefined ? 'missing' : 'empty'}`, r.ok && ['missions/zz-fixture-dock-job/index.html', 'missions/zz-fixture-bank-run/index.html'].every((file) => !out(file).includes('Support this guide')), r.out);
+}
+for (const supportUrl of ['https://ko-fi.com/fixture_creator', 'https://buymeacoffee.com/fixture-creator/', 'https://paypal.me/FixtureCreator', 'https://www.ko-fi.com/fixture_creator', 'https://www.buymeacoffee.com/fixture-creator', 'https://www.paypal.me/FixtureCreator/']) {
+  setSite({ ...gateOn, supportUrl });
+  r = run('build.mjs', '2026-11-20');
+  const supportLink = `<a href="${supportUrl}" rel="nofollow noopener">Support this guide</a>`;
+  const missionFiles = ['missions/zz-fixture-dock-job/index.html', 'missions/zz-fixture-bank-run/index.html'];
+  expect(`public ${new URL(supportUrl).hostname} profile appears once in each mission's closing navigation`, r.ok && missionFiles.every((file) => {
+    const html = out(file);
+    return html.split(supportLink).length === 2 && html.match(/<nav class="mission-nav"[\s\S]*?<\/nav>/)?.[0].includes(supportLink);
+  }), r.out);
+  expect('support stays off the homepage, mission index and general guides', ['index.html', 'missions/index.html', 'launch-help/index.html'].every((file) => !out(file).includes('Support this guide')));
+}
+for (const supportUrl of [
+  'http://ko-fi.com/creator', 'https://ko-fi.com/', 'https://other.ko-fi.com/creator', 'https://ko-fi.com.evil.invalid/creator',
+  'https://user:pass@ko-fi.com/creator', 'https://ko-fi.com:443/creator', 'https://ko-fi.com/creator?amount=5', 'https://ko-fi.com/creator#tip',
+  'https://paypal.me/creator/5', 'https://ko-fi.com/%63reator', 'https://ko-fi.com/../creator', 'https://ko-fi.com/creator\\other',
+  'https://buymeacoffee.com/login', 'https://paypal.me/Privacy', ' https://ko-fi.com/creator', 'https://ko-fi.com/creator\n', null, 123,
+]) {
+  setSite({ ...gateOn, supportUrl });
+  rejects('invalid or non-profile support URL is refused', '2026-11-20', 'site.json supportUrl');
+}
+setSite(gateOn);
+
 // 6. IndexNow submits only what a push changed, and reports failures as failures
 fs.copyFileSync(path.join(ROOT, 'indexnow.mjs'), path.join(tmp, 'indexnow.mjs'));
 const git = (...args) => spawnSync('git', ['-c', 'user.name=test', '-c', 'user.email=test@test.invalid', '-c', 'commit.gpgsign=false', ...args], { cwd: tmp, encoding: 'utf8' });

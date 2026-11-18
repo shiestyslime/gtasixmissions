@@ -27,6 +27,10 @@ The trailer cash is optional. If you skip the trailer, you can keep going to the
 
 {nav} Just started? See the [Prologue controls](/missions/prologue/). Finished here? [Find Cal’s next map marker](/missions/unwanted-attention/#go-see-cal).
 
+## Watch the opening boat mission (story spoilers) {#boat-mission-video}
+
+::: video 3PiR0G3rVw8 | IGN’s 15 minutes of PS5 Pro gameplay after the Prologue (story spoilers) | IGN
+
 ## FAQ
 
 ### Must I clear every enemy before leaving?

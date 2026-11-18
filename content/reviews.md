@@ -55,6 +55,8 @@ These two outlets published video versions alongside their written reviews on No
 ::: video 6p7X1Mi4ItU | Watch VGC’s GTA 6 review | VGC
 ::: video TcRXjJ4vH1Q | Watch Game Informer’s GTA 6 review | Game Informer
 
+**Looking for a particular example?** [Digital Foundry on driving without the minimap at 38:00](https://www.youtube.com/watch?v=qsBU0bcpONA&t=2280s) and [DayOne on taxis and the ride-skip fee at 11:49](https://www.youtube.com/watch?v=c9meSdlHhYM&t=709s) take you straight to each reviewer’s explanation. GameSpot’s staff also discuss their [10/10 verdict](https://www.youtube.com/watch?v=ftI6gjFsPuw).
+
 If you're choosing a copy, [compare the Standard and Ultimate editions](/editions-price/#which-edition-should-you-buy). Already playing? [Choose a minimap that fits how you drive](/navigation-settings/).
 
 ## How earlier Rockstar games scored

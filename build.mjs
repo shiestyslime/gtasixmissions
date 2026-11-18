@@ -16,6 +16,15 @@ if (Number.isNaN(NOW.getTime())) throw new Error('BUILD_DATE is not a valid date
 const LAUNCHED = NOW >= new Date(site.launchDate);
 // Ads need IDs AND two explicit confirmations. Entering IDs alone never turns ads on.
 const adReady = Boolean(site.adsenseClient && site.adsenseSlot && site.adsEnabled === true && site.adsConsentConfirmed === true);
+// Paste only the owner's verified public creator profile. This checks the URL shape, not account ownership.
+const supportUrl = (() => {
+  const value = site.supportUrl;
+  if (value === undefined || value === '') return '';
+  const match = typeof value === 'string' && value === value.trim() && value.match(/^https:\/\/(?:www\.)?(ko-fi\.com|buymeacoffee\.com|paypal\.me)\/([A-Za-z0-9][A-Za-z0-9_-]*)\/?$/);
+  const serviceRoutes = new Set(['about', 'account', 'blog', 'contact', 'dashboard', 'explore', 'faq', 'help', 'home', 'login', 'logout', 'privacy', 'register', 'search', 'settings', 'shop', 'signup', 'support', 'terms']);
+  if (!match || serviceRoutes.has(match[2].toLowerCase())) throw new Error('site.json supportUrl must be empty or an HTTPS public creator profile on ko-fi.com, buymeacoffee.com or paypal.me, with no credentials, port, query, fragment or extra path');
+  return value;
+})();
 const isRealDate = (d) => /^\d{4}-\d{2}-\d{2}$/.test(d || '') && !Number.isNaN(Date.parse(`${d}T00:00:00Z`)) && new Date(`${d}T00:00:00Z`).toISOString().slice(0, 10) === d;
 const BUILD_DAY = new Date(NOW.getTime() + 14 * 36e5).toISOString().slice(0, 10); // latest calendar day anywhere at build time
 // launchDate switches the editorial pre-launch and post-launch wording. It is not the mission gate.
@@ -77,7 +86,7 @@ const unent = (s) => s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/&lt
 const stripTags = (h) => unent(h.replace(/<\/(?:p|h[23]|li|tr)>/g, ' ').replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
 const NO_CITES = /<sup class="cite">[\s\S]*?<\/sup>/g; // search excerpts leave out citation numbers; the record carries the links
 const TAGS = { confirmed: 'Confirmed', unknown: 'Not yet known' };
-const PRESS_CONTEXT = 'Includes pre-release press coverage; gameplay details are not yet verified by this site.';
+const PRESS_CONTEXT = 'Includes observations from the outlets linked below.';
 
 // ---------- tiny markdown ----------
 function link(text, url) {
@@ -550,7 +559,7 @@ function renderPage(p) {
   const crumbs = p.isMission && hubPage ? [{ label: hubPage.nav, url: hubPage.url }, p.h1 || p.title] : p.nav || p.title;
   const at = missions.indexOf(p);
   const neighbours = at < 0 ? '' : [[missions[at - 1], 'Previous guide in the list'], [missions[at + 1], 'Next guide in the list']].filter(([m]) => m).map(([m, label]) => `<li><span>${label}</span> <a href="${m.url}">${esc(m.h1 || m.title)}</a></li>`).join('');
-  const missionNav = p.isMission ? `<nav class="mission-nav" aria-label="More mission guides"><ul>${neighbours}<li><a href="/missions/#mission-guides">All mission guides</a></li></ul></nav>` : '';
+  const missionNav = p.isMission ? `<nav class="mission-nav" aria-label="More mission guides"><ul>${neighbours}<li><a href="/missions/#mission-guides">All mission guides</a></li>${supportUrl ? `<li><a href="${esc(supportUrl)}" rel="nofollow noopener">Support this guide</a></li>` : ''}</ul></nav>` : '';
   const faqHtml = p.faq.length ? `<section class="faq"><h2 id="faq">Frequently asked questions</h2>${p.faq.map((f) => `<details id="${f.id}"><summary>${esc(f.q)}</summary>${f.html}</details>`).join('')}</section>` : '';
   // Keep the answer and first two sections ahead of any optional ad.
   const adPosition = [...p.html.matchAll(/<h2 /g)][2]?.index;
@@ -560,7 +569,7 @@ function renderPage(p) {
   const content = ads ? p.html.slice(0, adPosition) + adSlot('in-article') + p.html.slice(adPosition) : p.html;
   const launchHelp = p.slug === 'launch-help';
   const missionHub = p.slug === 'missions';
-  const phaseLabel = p.tested ? `Tested on ${esc(p.testedPlatform)}` : p.community ? 'Community-sourced' : missionHub && missions.length ? 'Mission index' : LAUNCHED ? 'Launch guide' : 'Pre-launch info';
+  const phaseLabel = p.tested ? `Tested on ${esc(p.testedPlatform)}` : p.community ? 'Community-sourced' : missionHub && missions.length ? 'Mission index' : LAUNCHED || missions.length ? 'Launch guide' : 'Pre-launch info';
   const toc = p.toc.length > 2 ? `<nav class="toc" aria-label="On this page"><strong>On this page</strong><ul>${p.toc.map((t) => `<li><a href="#${t.id}">${esc(t.text)}</a></li>`).join('')}${p.faq.length ? '<li><a href="#faq">FAQ</a></li>' : ''}</ul></nav>` : '';
   const freshness = p.community ? `Sources checked <time datetime="${p.checkedDate}">${fmtDate(p.checkedDate)}</time>` : p.isMission ? `Tested <time datetime="${p.testedDate}">${fmtDate(p.testedDate)}</time>${p.testedBuild ? ` · Build ${esc(p.testedBuild)}` : ''}` : `Updated <time datetime="${p.updated}">${fmtDate(p.updated)}</time>`;
   const body = `${pageHero(crumbs, p.h1 || p.title, `<p class="meta"><span class="pill">${phaseLabel}</span> ${freshness} · <a href="/about/#how-we-label-facts">How we label facts</a></p>`)}
@@ -643,6 +652,10 @@ ${spoilers.length ? `<section class="faq"><details><summary>Headlines marked as 
 const searchAliases = {
   '/missions/#checkpoint-or-replay': ['retry checkpoint', 'manual save', 'replay mission', 'restart checkpoint', 'replay a completed mission'],
   '/navigation-settings/#change-the-minimap': ['mini map', 'route line', 'missing GPS route', 'turn on the map'],
+  '/map-locations/#fast-travel': ['fast travel', 'call a taxi', 'Paradise Taxi', 'RydeMe', 'skip the ride'],
+  '/money-making/#early-cash-stash': ['where to store cash', 'bedroom floorboards', 'bank account', 'cash stash'],
+  '/navigation-settings/#auto-drive': ['auto drive', 'automatic driving', 'cinematic driving controls'],
+  '/navigation-settings/#drive-without-the-minimap': ['GPS directions without minimap', 'drive with no map'],
   '/reviews/#video-reviews': ['watch GTA 6 reviews', 'GTA 6 review video'],
   '/reviews/': ['GTA 6 reviews', 'video reviews', 'critic scores', 'worth buying', 'review roundup'],
   '/missions/': ['story mission list', 'all walkthroughs', 'mission order', 'where am i in the story'],
