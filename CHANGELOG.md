@@ -70,3 +70,21 @@ Facts added:
 - Rechecked on November 17: no reviews are published yet (reviews). The US PlayStation Store still lists $79.99 and $99.99 and 05:00 UTC on November 19, 2026 (release-date "delayed again" FAQ). Sources: US PlayStation Store listing, PlayStation GTA VI support page.
 
 Not verified, left unchanged: review embargo time (only unofficial reports), Xbox update size (single uncorroborated report), Rockstar Newswire posts since November 10 (page did not render).
+
+## 2026-11-18
+
+Pre-launch run, review embargo day. The US release is November 19, 2026, so no mission guide work was done. `communityGuides.enabled` is still false.
+
+Pages changed: reviews.
+
+Facts added:
+
+- {reported} Reviews went live November 18, 2026, at 6 a.m. Eastern. Replaces the {unknown} time and the "not yet" status (reviews). Source: Kotaku. https://kotaku.com/gta-6-review-scores-99-metacritic-rockstar-grand-theft-auto-vi-2000757999 . Game Informer and Vice review timestamps agree.
+- {reported} Metacritic: 99 for PS5, 147 reviews, all positive. The Xbox Series X page also shows 99 from fewer reviews (reviews). Source: https://www.metacritic.com/game/grand-theft-auto-vi/
+- {reported} OpenCritic: 99 Top Critic Average, 99% recommend, 81 reviews (reviews). Source: https://opencritic.com/game/15398/grand-theft-auto-vi . Kotaku had earlier cited 98 and 100%; the page itself was used.
+- Outlet scores, each read on the outlet's own page: Game Informer 10/10, Vice 10/10, But Why Tho? 10/10, COGconnected 100/100, Cultured Vultures 10/10 (reviews). Summaries are in our own words, no quotes.
+- New FAQ entries: OpenCritic score, performance problems in reviews. Removed the "Should I wait for reviews" FAQ, which no longer applies.
+
+Not verified, left out: GameStar (97 on Metacritic) and ScreenHub (80 on Metacritic) pages refused the fetch; CGMagazine shows no visible score; outlets seen only on aggregator lists.
+
+Build and check: `node build.mjs` built 14 pages, `node check.mjs` reported 0 problems.
