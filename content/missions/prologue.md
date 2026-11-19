@@ -36,6 +36,8 @@ If this objective appears, follow the destination marker back toward the shop. A
 
 ::: video rQLEb0W7REo | Watch theRadBrad’s GTA 6 walkthrough, Part 1 (story spoilers) | theRadBrad
 
+::: video Zh6VrJuW_i8 | Prologue gameplay (mission spoilers) | GTA Series Videos
+
 ## FAQ
 
 ### What is the first mission in GTA 6?

@@ -85,7 +85,6 @@ const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-
 const unent = (s) => s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0?39;|&apos;|&#8217;|&#x2019;/g, "'").replace(/&#8216;/g, "'").replace(/&#822[01];/g, '"').replace(/&#8211;/g, '-').replace(/&amp;/g, '&');
 const stripTags = (h) => unent(h.replace(/<\/(?:p|h[23]|li|tr)>/g, ' ').replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
 const NO_CITES = /<sup class="cite">[\s\S]*?<\/sup>/g; // search excerpts leave out citation numbers; the record carries the links
-const TAGS = { confirmed: 'Confirmed', unknown: 'Not yet known' };
 const PRESS_CONTEXT = 'Includes observations from the outlets linked below.';
 
 // ---------- tiny markdown ----------
@@ -103,8 +102,7 @@ function link(text, url) {
 const cite = (nums) => `<sup class="cite">[${nums.split(',').map((n) => `<a href="#source-${Number(n)}">${Number(n)}</a>`).join(', ')}]</sup>`;
 function inline(s) {
   return esc(s)
-    .replace(/\{reported\} ?/g, '')
-    .replace(/\{(confirmed|unknown)\}/g, (_, t) => `<span class="tag tag-${t}">${TAGS[t]}</span>`)
+    .replace(/\{(?:confirmed|reported|unknown)\} ?/g, '')
     .replace(/ ?\{src:(\d+(?:, ?\d+)*)\}/g, (_, nums) => cite(nums.replace(/ /g, '')))
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, t, u) => link(t, unent(u)));
@@ -351,10 +349,12 @@ const missions = readPages('missions', true).sort((a, b) => a.order - b.order ||
 publishedMissions = missions;
 const pages = [...readPages(''), ...missions].sort((a, b) => a.order - b.order);
 if (new Set(pages.map((page) => page.slug)).size !== pages.length) throw new Error('Duplicate page slug');
+const storyCatalogue = loadStoryCatalogue();
+const storyTips = loadStoryTips();
 // The hub lists every mission guide, so its freshness is the newest of its own edit and its listed guides' edits.
 // A rebuild with no content change leaves it as it was. Removing a guide needs a manual "updated" on content/missions.md.
 const hub = pages.find((p) => p.slug === 'missions');
-if (hub) hub.updated = [hub.updated, ...missions.map((m) => m.updated)].sort().pop();
+if (hub) hub.updated = [hub.updated, ...missions.map((m) => m.updated), ...(storyCatalogue ? [storyCatalogue.checkedDate] : []), ...(storyTips ? [storyTips.checkedDate] : [])].sort().pop();
 const guides = pages.filter((p) => p.nav);
 
 // ---------- news (headlines from publisher RSS feeds, cached in data/news.json) ----------
@@ -512,7 +512,7 @@ const card = (p) => `<a class="card" href="${p.url}"><span class="card-icon">${i
 const newsList = (items) => `<ul class="news">${items.map((n) => `<li><a href="${esc(n.link)}" rel="nofollow noopener">${esc(n.title)}</a><span>${esc(n.source)} · <time datetime="${n.date}">${fmtDate(n.date)}</time></span></li>`).join('')}</ul>`;
 // crumb is the current page's label, or [parent links..., current label]. The JSON-LD trail uses the same list.
 const pageHero = (crumb, h1, meta) => { const trail = Array.isArray(crumb) ? crumb : [crumb]; return `<div class="page-hero"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span aria-hidden="true">/</span> ${trail.map((c) => (typeof c === 'string' ? esc(c) : `<a href="${c.url}">${esc(c.label)}</a> <span aria-hidden="true">/</span>`)).join(' ')}</nav><h1>${esc(h1)}</h1>${meta}</div></div>`; };
-const searchUi = `<form class="search" role="search" data-site-search hidden>
+const searchUi = `<form class="search" role="search" data-site-search data-catalogue-available="${Boolean(storyCatalogue)}" hidden>
 <label for="q">Find a mission or objective</label>
 <input id="q" type="search" placeholder="Mission, objective, or error" autocomplete="off" aria-controls="results" aria-describedby="search-status">
 <p class="search-status" id="search-status" data-search-status role="status"></p>
@@ -539,14 +539,117 @@ const storageCheck = `<form class="storage-check" data-storage-check hidden>
 </fieldset></form>`;
 
 const statusLabel = (p) => p.tested ? `Tested on ${p.testedPlatform}, ${fmtDate(p.testedDate)}` : p.community ? `Community-sourced, not tested by this site. Sources checked ${fmtDate(p.checkedDate)} (${p.sourceReview === 'automated' ? 'automated check, no human review' : p.sourceReview === 'owner' ? 'source check reviewed by the site owner' : 'source check reviewed by an approved tester'})` : '';
+// This source catalog is a checklist, not a claim that we authored or tested every walkthrough.
+function loadStoryCatalogue() {
+  const file = path.join(ROOT, 'data', 'story-missions.json');
+  if (!fs.existsSync(file)) return null;
+  const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const fail = (message) => { throw new Error(`story-missions.json: ${message}`); };
+  const text = (value) => typeof value === 'string' && value.trim().length > 0;
+  const external = (value) => { try { const url = new URL(value); return typeof value === 'string' && value === value.trim() && url.protocol === 'https:' && !url.username && !url.password && url.origin !== new URL(BASE).origin; } catch { return false; } };
+  if (!isRealDate(data.checkedDate) || data.checkedDate > BUILD_DAY) fail('checkedDate must be a real date, not later than today');
+  if (!Array.isArray(data.sources) || !data.sources.length || data.sources.some((s) => !text(s.publisher) || !external(s.url))) fail('sources need a publisher and an external HTTPS URL');
+  if (!Array.isArray(data.chapters) || !data.chapters.length) fail('chapters must be a nonempty list');
+  const chapterIds = new Set(), keys = new Set();
+  for (const [chapterIndex, chapter] of data.chapters.entries()) {
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(chapter.id || '') || chapterIds.has(chapter.id)) fail('chapter IDs must be unique slugs');
+    chapterIds.add(chapter.id);
+    if (!text(chapter.title) || typeof chapter.spoiler !== 'boolean' || !Array.isArray(chapter.missions) || !chapter.missions.length) fail('each chapter needs a title, explicit spoiler setting and entries');
+    if (chapterIndex > 0 && !chapter.spoiler) fail('later chapters must keep spoiler protection');
+    for (const item of chapter.missions) {
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.key || '') || keys.has(item.key) || !text(item.title)) fail('entries need globally unique keys and a title');
+      keys.add(item.key);
+      if (item.aliases !== undefined && (!Array.isArray(item.aliases) || item.aliases.some((a) => !text(a)))) fail(`${item.key}: aliases must be text`);
+      if (![undefined, null, true, false].includes(item.optional)) fail(`${item.key}: optional must be true, false or null`);
+      if (item.kind !== undefined && !['story', 'optional', 'other-campaign-entry'].includes(item.kind)) fail(`${item.key}: unknown entry kind`);
+      if (!Array.isArray(item.sourceUrls) || !item.sourceUrls.length || item.sourceUrls.some((url) => !external(url))) fail(`${item.key}: every entry needs an external HTTPS source`);
+      if (item.walkthrough && (!text(item.walkthrough.publisher) || !external(item.walkthrough.url))) fail(`${item.key}: walkthrough needs a publisher and an external HTTPS URL`);
+      if (item.localSlug !== undefined && !/^missions\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.localSlug)) fail(`${item.key}: invalid localSlug`);
+    }
+  }
+  return data;
+}
+const missionIdentity = (text) => String(text).normalize('NFKD').replace(/\p{M}/gu, '').toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+function loadStoryTips() {
+  const file = path.join(ROOT, 'data', 'mission-tips.json');
+  if (!storyCatalogue || !fs.existsSync(file)) return null;
+  const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const fail = (message) => { throw new Error(`mission-tips.json: ${message}`); };
+  if (!isRealDate(data.checkedDate) || data.checkedDate > BUILD_DAY || data.sourceReview !== 'automated' || data.testedByUs !== false) fail('requires a real checkedDate, automated source review and testedByUs:false');
+  if (!data.tips || typeof data.tips !== 'object' || Array.isArray(data.tips)) fail('tips must be an object keyed by mission identity');
+  const keys = new Set(storyCatalogue.chapters.flatMap((chapter) => chapter.missions.map((entry) => entry.key)));
+  const byKey = new Map();
+  for (const [key, record] of Object.entries(data.tips)) {
+    const missionKey = record.missionKey || key;
+    if (!keys.has(missionKey) || byKey.has(missionKey)) fail(`${missionKey}: missing or duplicate catalog mission key`);
+    if (!Array.isArray(record.items) || !record.items.length) fail(`${missionKey}: needs at least one tip`);
+    for (const tip of record.items) {
+      if (![tip.question, tip.answer].every((text) => typeof text === 'string' && text.trim())) fail(`${missionKey}: tips need a question and answer`);
+      if (!Array.isArray(tip.sources) || !tip.sources.length || tip.sources.some((source) => {
+        try { const url = new URL(source.url); return !source.publisher?.trim() || !source.at?.trim() || url.protocol !== 'https:' || Boolean(url.username || url.password) || url.origin === new URL(BASE).origin; } catch { return true; }
+      })) fail(`${missionKey}: tips need linked publisher evidence and a source location`);
+    }
+    byKey.set(missionKey, record.items);
+  }
+  return { ...data, byKey };
+}
+function catalogueTips(key) {
+  const tips = storyTips?.byKey.get(key);
+  if (!tips?.length) return '';
+  return `<div class="catalogue-tips" data-story-tips>${tips.map((tip) => `<details><summary>${esc(tip.question)}</summary><p>${esc(tip.answer)}</p><ul>${tip.sources.map((source) => `<li><a href="${esc(source.url)}" rel="noopener">${esc(source.publisher)}</a> · ${esc(source.at)}</li>`).join('')}</ul></details>`).join('')}</div>`;
+}
+function authoredMission(item) {
+  const bySlug = new Map(missions.map((m) => [m.slug.replace(/^missions\//, ''), m]));
+  // Repeated map prompts such as "Meet Brian" are search terms, not mission identities.
+  const canonical = bySlug.get(missionIdentity(item.key)) || bySlug.get(missionIdentity(item.title));
+  if (canonical) return canonical;
+  return item.localSlug ? missions.find((m) => m.slug === item.localSlug) || null : null;
+}
+function chapterCatalogue() {
+  if (!storyCatalogue) return '';
+  const chapters = storyCatalogue.chapters.map((chapter, i) => {
+    const companion = pages.find((page) => page.slug === `chapter-${i + 1}-missions`);
+    return { ...chapter, missions: chapter.missions.map((entry) => ({ ...entry, local: authoredMission(entry), help: companion && new RegExp(`<h[23] id="${entry.key}"`).test(companion.html) ? `${companion.url}#${entry.key}` : null })) };
+  });
+  const entries = chapters.flatMap((chapter) => chapter.missions);
+  const own = entries.filter((entry) => entry.local).length;
+  const external = entries.filter((entry) => !entry.local && entry.walkthrough).length;
+  const sourceOnly = entries.length - own - external;
+  const supplemental = entries.filter((entry) => !entry.local && entry.help).length;
+  const row = (entry) => {
+    const destination = entry.local?.url || (!entry.help && entry.walkthrough?.url);
+    const label = entry.local ? 'Guide on this site' : entry.walkthrough ? `${entry.walkthrough.publisher} walkthrough (external)` : 'Campaign reference';
+    const name = destination ? `<a class="catalogue-title" href="${esc(destination)}"${entry.local || entry.help ? '' : ' rel="noopener"'}>${esc(entry.title)}</a>` : `<span class="catalogue-title">${esc(entry.title)}</span>`;
+    const helpLink = !entry.local && entry.help ? `<a href="${esc(entry.help)}">Objective help on this site</a> · ` : '';
+    const route = !entry.local && entry.help && entry.walkthrough ? `<a href="${esc(entry.walkthrough.url)}" rel="noopener">${esc(label)}</a>` : esc(label);
+    const sources = [...new Set(entry.sourceUrls)].filter((url) => entry.local || url !== entry.walkthrough?.url).map((url) => {
+      const parsed = new URL(url);
+      const host = parsed.hostname.replace(/^www\./, '');
+      const source = storyCatalogue.sources.find((s) => new URL(s.url).hostname.replace(/^www\./, '') === host);
+      const caption = host === 'gtabase.com' && /\/missions\/[^/]+\/?$/.test(parsed.pathname) ? 'GTA Base mission entry' : source ? `${source.publisher} ${url.split('#')[0] === source.url.split('#')[0] ? 'list' : 'source'}` : parsed.hostname;
+      return `<a href="${esc(url)}" rel="noopener">${esc(caption)}</a>`;
+    }).join(' · ');
+    return `<li data-story-key="${entry.key}" data-mission-name="${esc([entry.title, ...(entry.aliases || [])].join(' | '))}" data-guide-kind="${entry.local ? 'local' : entry.walkthrough ? 'publisher' : 'source'}">${name}${entry.optional === true ? '<span class="catalogue-optional">Optional</span>' : ''}<span class="catalogue-route">${helpLink}${route}</span><span class="catalogue-sources">${sources}</span><label class="catalogue-check" data-story-check-control hidden><input type="checkbox" data-story-check="${entry.key}" aria-label="Mark ${esc(entry.title)} complete"> Completed</label>${catalogueTips(entry.key)}</li>`;
+  };
+  return `<section class="chapter-catalogue" id="chapter-missions" data-mission-browser>
+<h2>Browse the chapter checklist</h2>
+<p class="catalogue-count" data-catalogue-count="${entries.length}" data-local-count="${own}" data-publisher-count="${external}" data-source-count="${sourceOnly}" data-objective-help-count="${supplemental}"><strong>${entries.length} catalog entries across ${chapters.length} chapters.</strong> ${own} link to our dedicated guides; ${external} to a publisher's walkthrough; ${sourceOnly} to campaign references.${supplemental ? ` ${supplemental} also have on-site objective help.` : ''}</p>
+<p data-story-progress hidden aria-live="polite"></p>
+<form class="catalogue-search" data-catalogue-search hidden role="search"><label for="mission-name">Find a mission by name</label><input id="mission-name" type="search" autocomplete="off" placeholder="Type the mission name on your screen" aria-describedby="catalogue-search-help" aria-controls="catalogue-matches"><label class="catalogue-spoiler-choice"><input type="checkbox" data-include-spoilers> Search all chapter titles (mission-name spoilers)</label><p id="catalogue-search-help">By default, search includes our authored guides and any chapters you open. Enable the option above to search names in closed chapters too.</p><p data-catalogue-status role="status" aria-live="polite"></p><ul id="catalogue-matches" class="catalogue-missions" data-catalogue-matches hidden></ul></form>
+<p class="catalogue-warning"><strong>Spoiler warning:</strong> later mission and chapter titles can reveal story developments. Open only the chapters you want to see. Publisher links may contain full story spoilers.</p>
+${storyTips?.byKey.size ? `<p class="catalogue-warning">Quick answers cite published gameplay sources; not tested by us. Checked ${fmtDate(storyTips.checkedDate)}.</p>` : ''}
+${chapters.map((chapter, i) => `<details class="catalogue-chapter" id="catalogue-${chapter.id}" data-story-chapter data-spoiler="${chapter.spoiler}"${chapter.spoiler ? '' : ' open'}><summary>Chapter ${i + 1} · ${chapter.missions.length} entries${chapter.spoiler ? ' · Show titles (spoilers)' : ''}</summary><div class="catalogue-chapter-content"><h3>${esc(chapter.title)}${chapter.gameTitle ? `: ${esc(chapter.gameTitle)}` : ''}</h3><ul class="catalogue-missions">${chapter.missions.map(row).join('')}</ul></div></details>`).join('\n')}
+<details class="catalogue-notes"><summary>Sources and how these counts differ</summary>${storyCatalogue.coverage?.note ? `<p>${esc(storyCatalogue.coverage.note)}</p>` : '<p>This checklist follows the linked publishers and includes optional activities and other campaign entries. It is not an official Rockstar mission total.</p>'}<p>Sources checked <time datetime="${storyCatalogue.checkedDate}">${fmtDate(storyCatalogue.checkedDate)}</time>: ${storyCatalogue.sources.map((s) => `<a href="${esc(s.url)}" rel="noopener">${esc(s.publisher)}</a>`).join(' · ')}. Publisher links open the original coverage.</p>${Array.isArray(storyCatalogue.discrepancies) ? storyCatalogue.discrepancies.filter((note) => typeof note === 'string').map((note) => `<p>${esc(note)}</p>`).join('') : ''}</details>
+</section>`;
+}
 // Every availability statement on the hub comes from the guides actually published in this build.
 function missionIndex() {
   const tested = missions.filter((mission) => mission.tested);
   const community = missions.filter((mission) => mission.community);
   const count = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
-  if (!missions.length) return `<section class="mission-list" id="mission-guides"><h2 id="walkthroughs">Mission guides</h2><p>No mission guides are published yet. A guide appears here only after the retail release is confirmed and its steps are checked against gameplay.</p></section>`;
+  if (!missions.length) return `${chapterCatalogue()}<section class="mission-list" id="mission-guides"><h2 id="walkthroughs">Our mission guides</h2><p>No mission guides are published yet. A guide appears here only after the retail release is confirmed and its steps are checked against gameplay.</p></section>`;
   const item = (mission, note) => `<li><a href="${mission.url}">${esc(mission.h1 || mission.title)}</a> <span>${note}</span></li>`;
-  return `<section class="mission-list" id="mission-guides"><div id="walkthroughs">
+  return `${chapterCatalogue()}<section class="mission-list" id="mission-guides"><div id="walkthroughs">
 ${tested.length ? `<h2>${count(tested.length, 'verified walkthrough')}</h2><ul>${tested.map((mission) => item(mission, `Tested on ${esc(mission.testedPlatform)}, ${fmtDate(mission.testedDate)}`)).join('')}</ul>` : ''}
 ${community.length ? `<h2 id="community-guides">Community-sourced guides (${community.length})</h2><p>Built from public gameplay videos and player reports, with every source linked. Not tested by us.</p><ul>${community.map((mission) => item(mission, `Sources checked ${fmtDate(mission.checkedDate)}`)).join('')}</ul>` : ''}
 </div></section>`;
@@ -580,21 +683,19 @@ function renderPage(p) {
   const adPosition = [...p.html.matchAll(/<h2 /g)][2]?.index;
   const ads = p.isMission && p.ads === 'yes' && adPosition !== undefined;
   const hasVideo = p.html.includes('data-video=');
-  const communityNote = p.community ? `<aside class="note community-note"><strong>Not tested by us yet.</strong> These steps come from public player reports and videos, linked under Sources. We replace them with our own tested steps after we play this mission. ${REVIEW_LABELS[p.sourceReview]}</aside>` : '';
   const content = ads ? p.html.slice(0, adPosition) + adSlot('in-article') + p.html.slice(adPosition) : p.html;
   const launchHelp = p.slug === 'launch-help';
   const missionHub = p.slug === 'missions';
   const phaseLabel = video ? 'Original video' : p.tested ? `Tested on ${esc(p.testedPlatform)}` : p.community ? 'Community-sourced' : missionHub && missions.length ? 'Mission index' : LAUNCHED || missions.length ? 'Launch guide' : 'Pre-launch info';
   const toc = p.toc.length > 2 ? `<nav class="toc" aria-label="On this page"><strong>On this page</strong><ul>${p.toc.map((t) => `<li><a href="#${t.id}">${esc(t.text)}</a></li>`).join('')}${p.faq.length ? '<li><a href="#faq">FAQ</a></li>' : ''}</ul></nav>` : '';
   const freshness = p.community ? `Sources checked <time datetime="${p.checkedDate}">${fmtDate(p.checkedDate)}</time>` : p.isMission ? `Tested <time datetime="${p.testedDate}">${fmtDate(p.testedDate)}</time>${p.testedBuild ? ` · Build ${esc(p.testedBuild)}` : ''}` : `Updated <time datetime="${p.updated}">${fmtDate(p.updated)}</time>`;
-  const body = `${pageHero(crumbs, p.h1 || p.title, `<p class="meta"><span class="pill">${phaseLabel}</span> ${freshness} · <a href="/about/#how-we-label-facts">How we label facts</a></p>`)}
+  const body = `${pageHero(crumbs, p.h1 || p.title, `<p class="meta"><span class="pill">${phaseLabel}</span> ${freshness} · <a href="/about/#how-we-label-facts">How we use sources</a></p>`)}
 <div class="wrap article-grid${video ? ' watch-page' : ''}">
 <article>
 ${video ? `<figure class="watch-video"><video id="watch-video" controls playsinline preload="metadata" width="${video.width}" height="${video.height}" poster="/${video.poster}" aria-label="${esc(p.title)}" aria-describedby="video-description"><source src="/${video.file}" type="video/mp4"><p><a href="/${video.file}">Download the video</a> or <a href="#transcript">read the transcript</a>.</p></video><figcaption id="video-description">${esc(video.caption)} <a href="#transcript">Transcript and visual description</a>.</figcaption></figure>` : ''}
 ${p.hasPressCoverage ? `<p class="meta">${PRESS_CONTEXT} <a href="#sources">Sources</a>.</p>` : ''}
 <div class="answer"><span class="answer-label">Quick answer</span><p>${inline(p.answer)}</p></div>
 ${p.isMission ? scopePanel(p) : ''}
-${communityNote}
 ${launchHelp ? quickJumps(launchJumps, 'Jump to a launch problem') : ''}
 ${missionHub ? `${searchUi}${missionIndex()}` : ''}
 ${p.isMission ? `<div data-mission-steps>${content}</div>` : launchHelp ? content.replace('<p>[storage-check]</p>', storageCheck) : content.replace('<div class="table-wrap" data-unlock-table>', `${unlockPicker}<div class="table-wrap" data-unlock-table>`)}
@@ -603,7 +704,7 @@ ${p.sourcesHtml ? `<section class="sources"><h2 id="sources">Sources</h2>${p.sou
 ${reportLink(p)}
 ${missionNav}
 </article>
-${video ? '' : `<aside class="side">${toc}<div class="legend"><strong>Fact labels</strong><p><span class="tag tag-confirmed">Confirmed</span> Official publisher or platform source</p><p><span class="tag tag-unknown">Not yet known</span> Not announced</p></div></aside>`}
+${video || !toc ? '' : `<aside class="side">${toc}</aside>`}
 </div>
 <section class="wrap related"><h2>Keep reading</h2><div class="cards">${related.map(card).join('')}</div></section>`;
   const jsonld = [
@@ -611,10 +712,30 @@ ${video ? '' : `<aside class="side">${toc}<div class="legend"><strong>Fact label
     { '@context': 'https://schema.org', '@type': 'Article', headline: p.h1 || p.title, description: p.description, ...(p.published ? { datePublished: p.published } : {}), dateModified: p.updated, mainEntityOfPage: BASE + p.url, author: org, publisher: org, about: { '@type': 'VideoGame', name: 'Grand Theft Auto VI' }, ...(p.isMission && hubPage ? { isPartOf: { '@type': 'CollectionPage', name: hubPage.title, url: BASE + hubPage.url } } : {}) },
     { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ name: 'Home', url: '/' }, ...(Array.isArray(crumbs) ? crumbs.slice(0, -1) : []).map((c) => ({ name: c.label, url: c.url })), { name: Array.isArray(crumbs) ? crumbs.at(-1) : crumbs, url: p.url }].map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: BASE + c.url })) },
   ];
+  if (missionHub && storyCatalogue) {
+    jsonld.push({
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      '@id': BASE + p.url,
+      name: p.title,
+      url: BASE + p.url,
+      dateModified: p.updated,
+      citation: storyCatalogue.sources.map((source) => source.url),
+      mainEntity: {
+        '@type': 'ItemList',
+        name: 'GTA 6 missions by chapter',
+        numberOfItems: storyCatalogue.chapters.length,
+        itemListElement: storyCatalogue.chapters.map((chapter, index) => ({
+          '@type': 'ListItem', position: index + 1, name: `Chapter ${index + 1}`,
+          url: BASE + p.url + '#catalogue-' + chapter.id
+        }))
+      }
+    });
+  }
   if (video) jsonld.push({ '@context': 'https://schema.org', '@type': 'VideoObject', '@id': `${BASE}${p.url}#video`, name: p.title, description: p.description, thumbnailUrl: [`${BASE}/${video.poster}`], uploadDate: video.uploaded, duration: `PT${video.seconds}S`, contentUrl: `${BASE}/${video.file}`, url: BASE + p.url, mainEntityOfPage: { '@type': 'WebPage', '@id': BASE + p.url }, creator: { '@type': 'Organization', name: video.creator }, inLanguage: site.language, width: video.width, height: video.height });
   if (p.faq.length) jsonld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: p.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: `${p.hasPressCoverage ? PRESS_CONTEXT + ' ' : ''}${f.text}` } })) });
   const full = `${p.title} | ${site.name}`;
-  const scripts = `${missionHub || p.faq.length ? searchScript : ''}${launchHelp ? '<script defer src="/storage.js"></script>' : ''}${hasVideo ? '<script defer src="/video.js"></script>' : ''}${p.html.includes('data-unlock-table') ? '<script defer src="/unlock.js"></script>' : ''}${p.isMission ? '<script defer src="/mission-share.js"></script>' : ''}`;
+  const scripts = `${missionHub || p.faq.length ? searchScript : ''}${missionHub && storyCatalogue ? '<script defer src="/mission-browser.js"></script><script defer src="/story-progress.js"></script>' : ''}${launchHelp ? '<script defer src="/storage.js"></script>' : ''}${hasVideo ? '<script defer src="/video.js"></script>' : ''}${p.html.includes('data-unlock-table') ? '<script defer src="/unlock.js"></script>' : ''}${p.isMission ? '<script defer src="/mission-share.js"></script>' : ''}`;
   return layout({ title: full.length <= 65 ? full : p.title, description: p.description, url: p.url, body, jsonld, scripts, ads, ...(video ? { socialImage: `/${video.poster}`, socialWidth: video.width, socialHeight: video.height } : {}) });
 }
 
@@ -622,17 +743,17 @@ ${video ? '' : `<aside class="side">${toc}<div class="legend"><strong>Fact label
 const recentlyUpdated = () => pages.filter((p) => p.nav || p.isMission).sort((a, b) => b.updated.localeCompare(a.updated) || a.order - b.order);
 function renderHome() {
   const featured = nav.map(({ url }) => guides.find((guide) => guide.url === url));
-  const topFaq = featured.flatMap((p) => p.faq.slice(0, 1).map((f) => ({ ...f, url: p.url + '#' + f.id })));
+  const topFaq = featured.flatMap((p) => p.faq.slice(0, 1).map((f) => ({ ...f, html: f.html.replace(/href="#/g, `href="${p.url}#`), url: p.url + '#' + f.id })));
   const communityOnly = missions.length && missions.every((mission) => mission.community);
   const body = `<section class="hero">
 ${scene()}
 <div class="wrap hero-inner">
 <p class="eyebrow">Unofficial GTA 6 guide</p>
 <h1>GTA 6 <span>missions and walkthroughs</span></h1>
-<p class="lede">${communityOnly ? 'Find your mission or objective in guides built from public gameplay sources.' : missions.length ? 'Search for the objective on your screen or open a mission guide.' : 'Check when your copy unlocks, choose your minimap, or compare the first reviews.'}</p>
+<p class="lede">${communityOnly && storyCatalogue ? 'Find the mission on your screen, or open the five-chapter checklist to pick up where you left off.' : communityOnly ? 'Find your mission or objective in guides built from public gameplay sources.' : missions.length ? 'Search for the objective on your screen or open a mission guide.' : 'Check when your copy unlocks, choose your minimap, or compare the first reviews.'}</p>
 ${searchUi}
 <div class="hero-cta">
-<a class="btn" href="${missions.length ? '/missions/' : '/navigation-settings/'}">${missions.length ? 'Browse mission guides' : 'Choose your minimap'}</a>
+<a class="btn" href="${missions.length ? '/missions/' : '/navigation-settings/'}">${storyCatalogue && missions.length ? 'Open mission checklist' : missions.length ? 'Browse mission guides' : 'Choose your minimap'}</a>
 <a class="btn btn-ghost" href="/release-date/#ps5-unlock-time-by-store-region">Check my PS5 unlock time</a>
 <a class="btn btn-ghost" href="/reviews/#critics-verdict">Compare the reviews</a>
 </div>
@@ -759,10 +880,10 @@ ${pages.map((p) => `<url><loc>${BASE}${p.url}</loc><lastmod>${p.updated}</lastmo
 // Search and AI crawlers are explicitly welcome.
 const bots = ['Googlebot', 'Bingbot', 'GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended', 'CCBot'];
 write('robots.txt', `User-agent: *\nAllow: /\n\n${bots.map((b) => `User-agent: ${b}\nAllow: /\n`).join('\n')}\nSitemap: ${BASE}/sitemap.xml\n`);
-const plainAnswer = (p) => stripTags(inline(p.answer).replace(NO_CITES, '')).replace(/^(Confirmed|Reported|Not yet known) /, '');
+const plainAnswer = (p) => stripTags(inline(p.answer).replace(NO_CITES, ''));
 write('llms.txt', `# ${site.name}
 
-> ${site.description} Confirmed means an official publisher or platform source; Not yet known means not announced. Pages that include unverified pre-release coverage say so separately. Last updated ${latest}.
+> ${site.description} Source links accompany guides and gameplay observations. Last updated ${latest}.
 
 ## Guides
 

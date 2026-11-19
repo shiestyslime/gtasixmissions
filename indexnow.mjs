@@ -13,15 +13,17 @@ if (!site.indexNowKey) { console.log('IndexNow: no key in site.json, skipped'); 
 if (!/^[0-9a-f]{7,40}$/.test(BEFORE) || /^0+$/.test(BEFORE)) { console.log('IndexNow: no earlier commit to compare with, skipped'); process.exit(0); }
 const base = site.baseUrl.replace(/\/$/, '');
 const git = (...args) => execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+const catalogFiles = ['data/story-missions.json', 'data/mission-tips.json'];
 let changed = [];
-try { changed = git('diff', '--name-only', BEFORE, AFTER, '--', 'content').split('\n').filter((f) => f.endsWith('.md')); }
+try { changed = git('diff', '--name-only', BEFORE, AFTER, '--', 'content', ...catalogFiles).trim().split('\n').filter(Boolean); }
 catch { console.log('IndexNow: could not compare commits, skipped'); process.exit(0); }
 const live = new Set([...fs.readFileSync('dist/sitemap.xml', 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]));
 const at = (rev, file) => { try { return git('show', `${rev}:${file}`); } catch { return ''; } };
 const field = (text, key) => (text.match(new RegExp(`^${key}:\\s*(.+?)\\s*$`, 'm')) || [])[1] || '';
 const wasPublic = (file, text) => Boolean(text) && (!file.startsWith('content/missions/') || ['published', 'community'].includes(field(text, 'status')));
 const urls = new Set();
-for (const file of changed) {
+if (catalogFiles.some((file) => changed.includes(file)) && live.has(`${base}/missions/`)) urls.add(`${base}/missions/`);
+for (const file of changed.filter((name) => name.endsWith('.md'))) {
   const before = at(BEFORE, file);
   const after = at(AFTER, file);
   const mission = file.startsWith('content/missions/');

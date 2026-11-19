@@ -11,7 +11,7 @@ sourceBasis: retail-gameplay
 sourceReview: automated
 sourcePlatforms: PS5
 aliases: collect Brian's rent | lab fees code | Moonstone Boutique | rent door code | lab keypad | Brian's lockup code | stash the acid
-order: 4
+order: 5
 ---
 
 ## The shop is closed when I get there {#call-brian}
@@ -20,13 +20,17 @@ At the rent marker, stand outside the boutique and call Brian from Jason’s pho
 
 ## Open the lab door {#lab-door-code}
 
-The clerk gives you the first combination. At the keypad beside the back-room door, enter all four digits of **0420**, including the zero at the start. Collect the marked items inside. When the objective asks you to call Brian, use Jason’s phone again to get the drop-off location. {src:1,2,3}
+The clerk gives you the first combination. Enter **0420**, including the first zero, at the back-room door. GTA Series Videos shows [the keypad on the green shop wall at 2:30](https://www.youtube.com/watch?v=IcmQT-rZoIw&t=150s). Collect the marked items inside, then call Brian when prompted for the drop-off location. {src:1,2,3,4}
 
 ## Find Brian’s lockup and finish the delivery {#lockup-code}
 
-Follow the new green map marker. The keypad at this second building takes **7700**. Once the door opens, take the bag inside and use the stash interaction to deposit what you collected. Opening the door by itself leaves the delivery objective active. {src:1,3}
+Follow the new green map marker. Enter **7700** at [the outdoor keypad on the blue wall, shown at 4:30](https://www.youtube.com/watch?v=IcmQT-rZoIw&t=270s). Take the bag inside and use the stash interaction to complete the delivery. {src:1,3,5}
 
 {nav} Prefer a quick visual reminder? [Watch our 18-second Lab Fees door codes video](/lab-fees-video/) with original keypad diagrams and a text transcript.
+
+## Watch the mission (story spoilers)
+
+::: video IcmQT-rZoIw | Lab Fees gameplay (mission spoilers) | GTA Series Videos
 
 ## FAQ
 
@@ -43,3 +47,5 @@ Use **0420** while you are still at the shop. When the phone call sends you to B
 - [PowerPyx’s shop, keypad and lockup walkthrough](https://www.powerpyx.com/gta-6-lab-fees-collect-brians-rent-walkthrough/) | by: PowerPyx | group: powerpyx | at: Starting Location: Lab Fees (Collect Brian’s Rent) through Stash the acid in Brian’s lockup
 - [Jordan Middler’s playthrough and the two keypad codes](https://www.videogameschronicle.com/guide/gta-6-lab-fees-mission-walkthrough/) | by: VGC | group: vgc | at: GTA 6 Lab Fees Mission Walkthrough
 - [GTA BOOM’s conversation prompts and screenshots of both locations](https://www.gtaboom.com/gta-6-lab-fees-mission-walkthrough-a2c7) | by: GTA BOOM | group: gtaboom | at: Call Brian outside Moonstone Boutique through Stash the bag at Brian's lockup
+- [GTA Series Videos at the shop keypad](https://www.youtube.com/watch?v=IcmQT-rZoIw&t=150s) | by: GTA Series Videos | group: gta-series-videos | at: 2:30
+- [GTA Series Videos at the lockup keypad](https://www.youtube.com/watch?v=IcmQT-rZoIw&t=270s) | by: GTA Series Videos | group: gta-series-videos | at: 4:30

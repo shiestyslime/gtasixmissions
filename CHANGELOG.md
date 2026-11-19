@@ -88,3 +88,9 @@ Facts added:
 Not verified, left out: GameStar (97 on Metacritic) and ScreenHub (80 on Metacritic) pages refused the fetch; CGMagazine shows no visible score; outlets seen only on aggregator lists.
 
 Build and check: `node build.mjs` built 14 pages, `node check.mjs` reported 0 problems.
+
+## 2026-11-18 — Five-chapter mission checklist
+
+- Published a searchable, spoiler-controlled checklist of 152 campaign entries. It includes all 95 distinct named missions appearing in the Press Start, PC Gamer and DayOne recap lists, plus optional work and shorter objectives from PowerPyx. GTA Base supplies extra individual mission references. Counts from different playthroughs are attributed in the guide.
+- Added 35 total standalone opening mission guides, chapter companions, and sourced mission tips. Readers can track completion in their browser and find a current map prompt without opening later chapters. Added seven credited gameplay videos, including four links to specific visible moments.
+- Answered player questions about the impound car, a missing story marker, chapter saves, missed side jobs and postgame free roam. Removed the old fact-label legend and unanswered placeholder sections. Search notifications now include updates to the chapter catalog and its tips.

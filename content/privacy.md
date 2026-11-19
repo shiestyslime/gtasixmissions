@@ -4,7 +4,7 @@ slug: privacy
 order: 21
 description: How this guide handles local searches, storage input, site logs, embedded videos and external store links.
 answer: Searches and storage calculations stay on your device. This guide does not ask you to create an account or submit a game code.
-updated: 2026-11-16
+updated: 2026-11-18
 ---
 
 ## What we collect
@@ -12,6 +12,8 @@ updated: 2026-11-16
 We do not ask you to create an account or give personal details. The hosting provider may keep standard server logs, such as IP address and browser type, for security.
 
 Search downloads the public guide index and matches your query in the browser. The storage checker calculates the result in your browser. Neither tool sends the text or numbers you enter to the site.
+
+The [mission checklist](/missions/) stores checked boxes in this browser. Returning in the same browser restores your progress. Clearing this site’s browser data removes those checks.
 
 ## Advertising
 

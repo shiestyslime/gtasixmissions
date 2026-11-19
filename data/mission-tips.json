@@ -1,0 +1,583 @@
+{
+  "checkedDate": "2026-11-18",
+  "sourceReview": "automated",
+  "testedByUs": false,
+  "coverageNote": "Short source-backed objective and destination notes. These are not complete walkthroughs or steps tested by this site; named source sections provide the evidence.",
+  "tips": {
+    "company-cars": {
+      "items": [
+        {
+          "question": "Car pickup?",
+          "answer": "Ask the concierge; collect the cars at Status Auto Imports.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Company Cars row: destination or activity"
+            },
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+              "at": "Chapter 4, Company Cars: map objective: Speak to the Concierge"
+            }
+          ]
+        }
+      ]
+    },
+    "heavy-lifting": {
+      "items": [
+        {
+          "question": "Where next?",
+          "answer": "Investigate Kordell’s crew at Ajax Gym.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Heavy Lifting row: destination or activity"
+            }
+          ]
+        }
+      ]
+    },
+    "making-gainz": {
+      "items": [
+        {
+          "question": "Where next?",
+          "answer": "Train with Nate at Ajax Gym as Lucia.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Making Gainz row: destination or activity"
+            },
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+              "at": "Chapter 4, Making Gainz: Lucia-only mission"
+            }
+          ]
+        }
+      ]
+    },
+    "too-much-baggage": {
+      "items": [
+        {
+          "question": "Which character?",
+          "answer": "Use Jason for baggage handling at Vice City International Airport.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Too Much Baggage row: destination or activity"
+            },
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+              "at": "Chapter 4, Too Much Baggage: Jason-only mission; Scope Out the Airport"
+            }
+          ]
+        }
+      ]
+    },
+    "watch-it": {
+      "items": [
+        {
+          "question": "What first?",
+          "answer": "Get dressed for the meeting with Dre’Quan and Royce Jones.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Watch It row: destination or activity"
+            },
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+              "at": "Chapter 4, Watch It: map objective: Meet Dre’Quan; Jason-only mission"
+            }
+          ]
+        }
+      ]
+    },
+    "adventures-in-babysitting": {
+      "items": [
+        {
+          "question": "Where next?",
+          "answer": "Work security at The Vault nightclub as Jason.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Adventures in Babysitting row: destination or activity"
+            },
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+              "at": "Chapter 4, Adventures in Babysitting: map objective: Work Security for Andrés; Jason-only mission"
+            }
+          ]
+        }
+      ]
+    },
+    "fresh-evidence": {
+      "items": [
+        {
+          "question": "Where next?",
+          "answer": "Go with Dre’Quan to Dante Fresh’s mansion as Jason.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Fresh Evidence row: destination or activity"
+            },
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+              "at": "Chapter 4, Fresh Evidence: map objective: Meet Dre’Quan; Jason-only mission"
+            }
+          ]
+        }
+      ]
+    },
+    "close-surveillance": {
+      "items": [
+        {
+          "question": "Which area?",
+          "answer": "Track the bodybuilders through Ocean Beach using the drone.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Close Surveillance row: destination or activity"
+            },
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+              "at": "Chapter 4, Close Surveillance: map objective: Spy on the Bodybuilders"
+            }
+          ]
+        }
+      ]
+    },
+    "delivery-method": {
+      "items": [
+        {
+          "question": "Which building?",
+          "answer": "Enter Transport Security Services as Jason and hack the network.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Delivery Method row: destination or activity"
+            },
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+              "at": "Chapter 4, Delivery Method: Jason-only mission"
+            }
+          ]
+        }
+      ]
+    },
+    "fully-catered": {
+      "items": [
+        {
+          "question": "Which vehicle?",
+          "answer": "Steal an airport catering truck for Raul.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Fully Catered row: destination or activity"
+            },
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+              "at": "Chapter 4, Fully Catered: map objective: Steal a Catering Truck"
+            }
+          ]
+        }
+      ]
+    },
+    "headliners": {
+      "items": [
+        {
+          "question": "Which venue?",
+          "answer": "Set up the launch party at VYB.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Headliners row: destination or activity"
+            },
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+              "at": "Chapter 4, Headliners: map objective: Help With The Launch Party"
+            }
+          ]
+        }
+      ]
+    },
+    "sunset": {
+      "items": [
+        {
+          "question": "Which destination?",
+          "answer": "The letter directs you to Raul’s houseboat.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Sunset row: destination or activity"
+            }
+          ]
+        }
+      ]
+    },
+    "starting-from-zero": {
+      "items": [
+        {
+          "question": "Collect what?",
+          "answer": "Collect the drive from Andrea and statue from storage.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+              "at": "Chapter 4, Starting From Zero row: destination or activity"
+            }
+          ]
+        }
+      ]
+    },
+    "bird-in-the-hand": {
+      "items": [
+        {
+          "question": "Helicopter location?",
+          "answer": "The helicopter is at Mile Zero Air Station.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-5-nbsp",
+              "at": "Chapter 5, Bird in the Hand row: destination or activity"
+            }
+          ]
+        }
+      ]
+    },
+    "taking-liberties": {
+      "items": [
+        {
+          "question": "Where next?",
+          "answer": "Meet Giorgio in his spa.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-5-nbsp",
+              "at": "Chapter 5, Taking Liberties row: destination or activity"
+            }
+          ]
+        }
+      ]
+    },
+    "doggie-bag": {
+      "items": [
+        {
+          "question": "Where next?",
+          "answer": "Lucia’s pickup involves a cruise ship at the port.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-5-nbsp",
+              "at": "Chapter 5, Doggie Bag row: destination or activity"
+            }
+          ]
+        }
+      ]
+    },
+    "vc-baby": {
+      "items": [
+        {
+          "question": "Where next?",
+          "answer": "Talk to Mattia at Giorgio’s penthouse.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-5-nbsp",
+              "at": "Chapter 5, VC Baby row: destination or activity"
+            },
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-5",
+              "at": "Chapter 5, VC Baby: map objective: Talk to Mattia"
+            }
+          ]
+        }
+      ]
+    },
+    "protective-custody": {
+      "items": [
+        {
+          "question": "What first?",
+          "answer": "Meet Abe.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-5",
+              "at": "Chapter 5, Protective Custody: map objective: Meet with Abe"
+            }
+          ]
+        }
+      ]
+    },
+    "the-end-of-the-road": {
+      "items": [
+        {
+          "question": "Which destination?",
+          "answer": "Head to Giorgio’s penthouse.",
+          "sources": [
+            {
+              "publisher": "DayOne",
+              "url": "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-5-nbsp",
+              "at": "Chapter 5, The End of the Road row: destination or activity"
+            }
+          ]
+        }
+      ]
+    },
+    "coffee-break": {
+      "items": [
+        {
+          "question": "How do I buy the coffee?",
+          "answer": "Follow Lucia to the motel kitchen, then use the coffee machine to buy the $2 coffee.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-coffee-break-walkthrough/",
+              "at": "Go to the motel kitchen with Lucia; Buy Lucia a coffee"
+            }
+          ]
+        },
+        {
+          "question": "How do I switch between Jason and Lucia?",
+          "answer": "Coffee Break unlocks free character switching. Hold D-pad Right to open the partner controls.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-coffee-break-walkthrough/",
+              "at": "Hold D-Pad Right to interact with your partner"
+            }
+          ]
+        }
+      ]
+    },
+    "prepare-for-vice-city": {
+      "items": [
+        {
+          "question": "What makes the move become available?",
+          "answer": "Reach $15,000 and finish the available main missions listed under Map > Story. Then watch for the objective marker on your Starlet Motel room.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-prepare-for-vice-city-walkthrough/",
+              "at": "Earn more money by partnering up (at least $15,000)"
+            }
+          ]
+        }
+      ]
+    },
+    "checking-out": {
+      "items": [
+        {
+          "question": "Where do I start Checking Out?",
+          "answer": "After the partner call, return to your marked Starlet Motel room and interact with the bathroom door. Starting this mission ends your stay at the motel.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-checking-out-move-to-vice-city-walkthrough/",
+              "at": "Starting Location: Checking Out (Move to Vice City); Point of No Return"
+            }
+          ]
+        }
+      ]
+    },
+    "welcome-to-vice-city": {
+      "items": [
+        {
+          "question": "How does this mission start?",
+          "answer": "Finish Checking Out. Welcome to Vice City begins automatically as you enter Chapter 3.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-welcome-to-vice-city-walkthrough/",
+              "at": "Starting Location: Welcome to Vice City"
+            }
+          ]
+        }
+      ]
+    },
+    "thats-where-the-money-is": {
+      "items": [
+        {
+          "question": "Where do I wait at the café?",
+          "answer": "After VCIA Takedown, wait for Yasmani to contact you. At Café Orquidea in Ocean Beach, sit by the window to watch for the security van.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-thats-where-the-money-is-wait-at-the-cafe-walkthrough/",
+              "at": "Starting Location: That’s Where The Money Is… (Wait at the Cafe); quest description"
+            }
+          ]
+        },
+        {
+          "question": "How do I follow the van?",
+          "answer": "Keep some distance while following the security van. When it parks, follow the guard into the bank.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-thats-where-the-money-is-wait-at-the-cafe-walkthrough/",
+              "at": "Tail the security van; Tail the guard"
+            }
+          ]
+        }
+      ]
+    },
+    "join-a-street-race": {
+      "items": [
+        {
+          "question": "Can I rent a car for the first race?",
+          "answer": "Yes. The meetup offers three rental cars costing $600–$900. PowerPyx found the most expensive option had the strongest stats.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-join-a-street-race-walkthrough/",
+              "at": "Select a vehicle"
+            }
+          ]
+        }
+      ]
+    },
+    "kitty-litter-labs": {
+      "items": [
+        {
+          "question": "What opens the locked Balsero lab?",
+          "answer": "For the second Balsero location in PowerPyx’s list, use 1999 on the garage keypad. The same code appears on a nearby billboard.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-all-kitty-litter-lab-locations/",
+              "at": "Balsero Labs, Location #2"
+            }
+          ]
+        },
+        {
+          "question": "Can I leave the labs until after the story?",
+          "answer": "Yes. PowerPyx confirms the labs remain available in free roam after the campaign. You can also discover them without waiting for a contact to supply each location.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-all-kitty-litter-lab-locations/",
+              "at": "Introduction: obtaining locations and post-story availability"
+            }
+          ]
+        }
+      ]
+    },
+    "spin-on-this": {
+      "items": [
+        {
+          "question": "How do I open the hatch inside the motel?",
+          "answer": "Inspect the wooden floor hatch behind the downstairs green door. Get the key from the clerk upstairs, then return to the hatch.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-spin-on-this-shut-down-the-labs-walkthrough/",
+              "at": "Find the synthetics lab in the motel; Get back to Tyrone/Loot the clerk; Break into the lab"
+            }
+          ]
+        }
+      ]
+    },
+    "yasmanis-jewelry-jobs": {
+      "items": [
+        {
+          "question": "Which safe code belongs to each shop?",
+          "answer": "Casa de Empeno uses 1680; Richardson Jewelry uses 6815; Donovan Banks & Co. uses 0104. Check the shop name before trying a code.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-yasmanis-jewelry-jobs-walkthrough/",
+              "at": "Hit Casa De Empeno; Hit Richardson Jewelry; Hit Donovan Banks & Co."
+            }
+          ]
+        },
+        {
+          "question": "How do I get the Snap Gun before the other robberies?",
+          "answer": "Deliver the first requested item to Yasmani. He gives you the Snap Gun, which opens the other shops’ rear entrances without setting off their door alarms.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-yasmanis-jewelry-jobs-walkthrough/",
+              "at": "Starting Location: Yasmani’s Jewelry Jobs; Hit Richardson Jewelry; Hit Donovan Banks & Co."
+            }
+          ]
+        }
+      ]
+    },
+    "bumper-to-bumper": {
+      "items": [
+        {
+          "question": "Which upgrades does Yago want?",
+          "answer": "Choose Pro Builds > Full Kits > Custom Street Racing Build, then Performance > Boost > Nitrous Boost. Yago covers these upgrades.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-bumper-to-bumper-mentor-yago-walkthrough/",
+              "at": "Apply the pro build / Apply the nitrous boost"
+            }
+          ]
+        },
+        {
+          "question": "What do I do after the race?",
+          "answer": "Lose the police first. The next meetup marker then appears in northern Vice City; drive there to finish the job.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-bumper-to-bumper-mentor-yago-walkthrough/",
+              "at": "Lose the cops; Drive to the meetup"
+            }
+          ]
+        }
+      ]
+    },
+    "mall-rats": {
+      "items": [
+        {
+          "question": "How do I open the jewelry-store safe?",
+          "answer": "The safe is in the back. You can use an explosive, or wait for Billy to obtain the code from the staff.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-mall-rats-walkthrough/",
+              "at": "Enter the jewelry store / Rob the jewelry store"
+            }
+          ]
+        }
+      ]
+    },
+    "attend-eddie-acostas-party": {
+      "items": [
+        {
+          "question": "How can I leave the rooftop without paying?",
+          "answer": "Ride the bicycle up the solar panels at speed to jump onto the neighboring roof. Use the elevator there to get down.",
+          "sources": [
+            {
+              "publisher": "PowerPyx",
+              "url": "https://www.powerpyx.com/gta-6-attend-eddie-acostas-party-walkthrough/",
+              "at": "Ending 2: Don’t pay $50,000"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

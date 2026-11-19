@@ -73,10 +73,29 @@ expect('Lab Fees video assets are copied without changes', ['lab-fees-door-codes
 expect('Lab Fees watch page is discoverable in search and the video sitemap', JSON.parse(out('search.json')).some((record) => record.url === '/lab-fees-video/') && out('sitemap.xml').includes('<loc>https://gtasixmissions.com/lab-fees-video/</loc>') && out('sitemap.xml').includes('<video:content_loc>https://gtasixmissions.com/lab-fees-door-codes.mp4</video:content_loc>'));
 expect('watch pages never load mission-only step sharing', [watchHtml, labWatchHtml].every((html) => !/src="\/mission-share.js"|data-mission-steps/.test(html)));
 
+// Verify the real catalog against its current data, without hardcoding editorial counts.
+const productionCatalog = JSON.parse(fs.readFileSync(path.join(tmp, 'data/story-missions.json'), 'utf8'));
+const productionEntries = productionCatalog.chapters.flatMap((chapter) => chapter.missions);
+const productionHub = out('missions/index.html');
+const catalogueEsc = (value) => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+expect('every current catalog entry and title is server-rendered', productionEntries.every((entry) => productionHub.includes(`data-story-key="${entry.key}"`) && productionHub.includes(catalogueEsc(entry.title))) && (productionHub.match(/data-story-key=/g) || []).length === productionEntries.length);
+expect('catalog count agrees with the actual rows rather than a claimed story total', productionHub.includes(`data-catalogue-count="${productionEntries.length}"`) && productionHub.includes('catalog entries across') && productionHub.includes(catalogueEsc(productionCatalog.coverage.note)));
+expect('catalog source URLs remain directly accessible in the rendered HTML', productionEntries.every((entry) => entry.sourceUrls.every((url) => productionHub.includes(`href="${catalogueEsc(url)}"`))));
+expect('spoiler chapters start closed and their summaries warn before revealing titles', productionCatalog.chapters.every((chapter) => { const tag = productionHub.match(new RegExp(`<details class="catalogue-chapter" id="catalogue-${chapter.id}"[^>]*>`))?.[0] || ''; return tag && (!chapter.spoiler || (!/\sopen(?:\s|>)/.test(tag) && productionHub.includes('Show titles (spoilers)'))); }));
+expect('only explicitly optional catalog entries carry the optional marker', (productionHub.match(/class="catalogue-optional"/g) || []).length === productionEntries.filter((entry) => entry.optional === true).length);
+expect('checklist controls have stable keys and stay hidden until enhanced', productionEntries.every((entry) => productionHub.includes(`data-story-check="${entry.key}"`) && productionHub.includes(`aria-label="Mark ${catalogueEsc(entry.title)} complete"`)) && productionHub.includes('data-story-check-control hidden'));
+expect('catalog search and persistence load on the hub, not ordinary guides', productionHub.includes('src="/mission-browser.js"') && productionHub.includes('src="/story-progress.js"') && !out('launch-help/index.html').includes('src="/mission-browser.js"'));
+const chapterOneRecap = productionCatalog.chapters[0].missions.filter((entry) => entry.recapSources?.length);
+const actualRow = (key) => productionHub.match(new RegExp(`<li data-story-key="${key}"[\\s\\S]*?</li>`))?.[0] || '';
+expect('all 22 Chapter 1 recap missions resolve to their own distinct authored guides', chapterOneRecap.length === 22 && new Set(chapterOneRecap.map((entry) => entry.key)).size === 22 && chapterOneRecap.every((entry) => actualRow(entry.key).includes(`href="/missions/${entry.key}/"`) && fs.existsSync(path.join(tmp, 'dist/missions', entry.key, 'index.html'))));
+expect('later entries without an authored canonical target do not acquire a Chapter 1 guide through aliases', productionCatalog.chapters.slice(1).flatMap((chapter) => chapter.missions).filter((entry) => !fs.existsSync(path.join(tmp, 'dist/missions', entry.key, 'index.html')) && !entry.localSlug).every((entry) => !/data-guide-kind="local"/.test(actualRow(entry.key))));
+
 // Keep production missions, release switches and editorial dates out of simulated cases.
 // Production content and its real dates were checked above; publication-date fixtures are added below.
 clearMissions();
 setSite({});
+// The current campaign catalog is editorial data, not evidence for historical fixtures.
+for (const file of ['story-missions.json', 'mission-tips.json']) fs.rmSync(path.join(tmp, 'data', file), { force: true });
 const guideFiles = fs.readdirSync(path.join(tmp, 'content')).filter((f) => f.endsWith('.md'));
 for (const f of guideFiles) {
   const file = path.join(tmp, 'content', f);
@@ -214,7 +233,7 @@ builds('community guide builds in the early unlock window', early);
 h = hubHtml();
 expect('community-only hub lists the guide and its status without an empty tested section', h.includes('Community-sourced guides (1)') && h.includes('/missions/zz-fixture-dock-job/') && h.includes('Not tested by us.') && !/\d+ verified walkthrough|No mission guides are published|None of the guides below/.test(h));
 expect('community-only hub keeps its existing anchor targets', ['mission-guides', 'walkthroughs', 'community-guides'].every((id) => h.includes(`id="${id}"`)));
-expect('home with a community guide opens the mission list and describes public gameplay sources', out('index.html').includes('<a class="btn" href="/missions/">Browse mission guides</a>') && out('index.html').includes('guides built from public gameplay sources'));
+expect('home with community guides points to the mission list or chapter checklist', /<a class="btn" href="\/missions\/">(Browse mission guides|Open mission checklist)<\/a>/.test(out('index.html')) && /public gameplay sources|five-chapter checklist/.test(out('index.html')));
 put('c.md', community({ title: 'FIXTURE Harbor Job Walkthrough', slug: 'missions/zz-fixture-harbor-job', updated: '2026-11-18', checkedDate: '2026-11-18', order: '91' }));
 builds('two community guides build in the early unlock window', early);
 h = hubHtml();
@@ -251,6 +270,65 @@ for (const [label, value, date] of [['later than updated', '2026-11-18', '2026-1
 }
 fs.writeFileSync(guideFile, guideText);
 put('b.md', tested({ published: '2026-11-15' })); rejects('a mission guide cannot claim publication before launch day', '2026-11-20', '"published"');
+clearMissions();
+
+// Catalog routing and counts use deliberately small fixtures, independent of today's campaign data.
+const catalogFile = path.join(tmp, 'data/story-missions.json');
+const tipsFile = path.join(tmp, 'data/mission-tips.json');
+const sourceList = 'https://www.powerpyx.com/catalog/#chapter';
+const catalogRow = (key, title, extra = {}) => ({ key, title, aliases: [], optional: null, sourceUrls: [sourceList], ...extra });
+const catalogFixture = {
+  checkedDate: '2026-11-20', sources: [{ publisher: 'PowerPyx', url: sourceList }], coverage: { note: 'FIXTURE catalog includes story and optional entries, not a required mission count.' },
+  chapters: [
+    { id: 'opening', title: 'Opening chapter', spoiler: false, missions: [
+      catalogRow('zz-fixture-dock-job', 'FIXTURE Direct Guide', { aliases: ['FIXTURE Alternate Name'], localSlug: 'missions/zz-fixture-bank-run' }),
+      catalogRow('different-key', 'FIXTURE Alternate Name', { localSlug: 'missions/zz-fixture-bank-run' }),
+    ] },
+    { id: 'middle', title: 'FIXTURE Hidden Chapter', spoiler: true, missions: [
+      catalogRow('zz-fixture-external', 'FIXTURE External Mission', { aliases: ['FIXTURE Alternate Name', 'harbor job'], walkthrough: { publisher: 'PowerPyx', url: 'https://www.powerpyx.com/real-observed-walkthrough/' } }),
+      catalogRow('zz-fixture-unpublished', 'FIXTURE Unpublished Local', { localSlug: 'missions/zz-fixture-not-published', walkthrough: { publisher: 'VGC', url: 'https://www.videogameschronicle.com/guide/observed/' } }),
+      catalogRow('zz-fixture-optional', 'FIXTURE Optional Entry', { optional: true, walkthrough: { publisher: 'PowerPyx', url: 'https://www.powerpyx.com/optional-observed/' } }),
+    ] },
+    { id: 'last', title: 'FIXTURE Final Chapter', spoiler: true, missions: [catalogRow('zz-fixture-source-only', 'FIXTURE Source Only', { sourceUrls: [sourceList, 'https://www.gtabase.com/gta-6/missions/observed-mission'] })] },
+  ],
+};
+const putCatalog = (data = catalogFixture) => fs.writeFileSync(catalogFile, JSON.stringify(data));
+put('a.md', community()); put('b.md', tested({ aliases: 'FIXTURE Alternate Name' })); setSite(gateOn);
+const companionFile = path.join(tmp, 'content/chapter-3-missions.md');
+const savedCompanion = fs.existsSync(companionFile) ? fs.readFileSync(companionFile, 'utf8') : null;
+fs.writeFileSync(companionFile, '---\ntitle: FIXTURE Chapter Companion\nslug: chapter-3-missions\ndescription: Private test of supplemental objective links into an existing chapter companion.\nanswer: Fixture chapter objective help.\nupdated: 2026-11-20\n---\n\n## FIXTURE Objective {#zz-fixture-source-only}\n\nA fixture objective paragraph.\n');
+const tipFixture = { checkedDate: '2026-11-20', sourceReview: 'automated', testedByUs: false, tips: { 'zz-fixture-source-only': { items: [{ question: 'FIXTURE Which door?', answer: 'FIXTURE Use the marked door.', sources: [{ publisher: 'PowerPyx', url: sourceList, at: 'Third chapter paragraph' }] }] } } };
+putCatalog(); fs.writeFileSync(tipsFile, JSON.stringify(tipFixture));
+builds('catalog builds a mix of authored, publisher and source-only entries', '2026-11-20');
+let catalogHtml = hubHtml();
+const fixtureRowHtml = (key) => catalogHtml.match(new RegExp(`<li data-story-key="${key}"[\\s\\S]*?</li>`))?.[0] || '';
+expect('catalog coverage derives exact independent row totals', catalogHtml.includes('data-catalogue-count="6" data-local-count="2" data-publisher-count="3" data-source-count="1" data-objective-help-count="1"'));
+expect('canonical mission identity takes priority over aliases and a conflicting override', fixtureRowHtml('zz-fixture-dock-job').includes('href="/missions/zz-fixture-dock-job/"') && !fixtureRowHtml('zz-fixture-dock-job').includes('href="/missions/zz-fixture-bank-run/"'));
+expect('an explicit override links only to a real authored page', fixtureRowHtml('different-key').includes('href="/missions/zz-fixture-bank-run/"'));
+expect('shared generic objective aliases never attach an unrelated local guide', fixtureRowHtml('zz-fixture-external').includes('data-guide-kind="publisher"') && !fixtureRowHtml('zz-fixture-external').includes('href="/missions/'));
+expect('external fallback credits the original publisher and preserves the observed URL', fixtureRowHtml('zz-fixture-external').includes('href="https://www.powerpyx.com/real-observed-walkthrough/"') && fixtureRowHtml('zz-fixture-external').includes('PowerPyx walkthrough (external)'));
+expect('unpublished local override falls back without fabricating a local page', !catalogHtml.includes('href="/missions/zz-fixture-not-published/"') && fixtureRowHtml('zz-fixture-unpublished').includes('https://www.videogameschronicle.com/guide/observed/'));
+expect('a campaign reference gets one verified companion link without a fake walkthrough', fixtureRowHtml('zz-fixture-source-only').split('href="/chapter-3-missions/#zz-fixture-source-only"').length === 2 && fixtureRowHtml('zz-fixture-source-only').includes('Campaign reference') && !catalogHtml.includes('href="/missions/zz-fixture-source-only/"'));
+expect('an observed GTA Base mission URL receives a descriptive reference label', fixtureRowHtml('zz-fixture-source-only').includes('<a href="https://www.gtabase.com/gta-6/missions/observed-mission" rel="noopener">GTA Base mission entry</a>'));
+expect('unknown optional status does not become a required label', (catalogHtml.match(/class="catalogue-optional"/g) || []).length === 1 && !catalogHtml.includes('Required mission'));
+expect('native chapter disclosures protect later names without needing JavaScript', /id="catalogue-opening"[^>]* open>/.test(catalogHtml) && !/id="catalogue-middle"[^>]* open>/.test(catalogHtml) && !/id="catalogue-last"[^>]* open>/.test(catalogHtml) && catalogHtml.indexOf('Spoiler warning:') < catalogHtml.indexOf('<h3>FIXTURE Hidden Chapter'));
+expect('catalog tips retain their exact answer and evidence location with one provenance note', catalogHtml.includes('FIXTURE Use the marked door.') && catalogHtml.includes('Third chapter paragraph') && (catalogHtml.match(/Quick answers cite published gameplay sources/g) || []).length === 1);
+expect('catalog source checks move hub, schema and sitemap freshness together', sameDate(hubDate(), '2026-11-20'));
+for (const [label, mutate, needle] of [
+  ['future source date', (d) => d.checkedDate = '2099-12-31', 'checkedDate'],
+  ['duplicate entry key', (d) => d.chapters[1].missions[0].key = d.chapters[0].missions[0].key, 'globally unique'],
+  ['missing evidence link', (d) => d.chapters[0].missions[0].sourceUrls = [], 'every entry needs'],
+  ['unsafe walkthrough URL', (d) => d.chapters[1].missions[0].walkthrough.url = 'javascript:alert(1)', 'walkthrough needs'],
+  ['unguarded later chapter', (d) => d.chapters[1].spoiler = false, 'spoiler protection'],
+]) { const changed = structuredClone(catalogFixture); mutate(changed); putCatalog(changed); rejects(`catalog refuses ${label}`, '2026-11-20', needle); }
+putCatalog();
+for (const [label, mutate, needle] of [
+  ['a false personally-tested claim', (d) => d.testedByUs = true, 'testedByUs:false'],
+  ['an unknown mission identity', (d) => d.tips['zz-fixture-source-only'].missionKey = 'not-in-catalog', 'catalog mission key'],
+  ['an unsupported answer', (d) => d.tips['zz-fixture-source-only'].items[0].sources = [], 'linked publisher evidence'],
+]) { const changed = structuredClone(tipFixture); mutate(changed); fs.writeFileSync(tipsFile, JSON.stringify(changed)); rejects(`catalog tip refuses ${label}`, '2026-11-20', needle); }
+for (const file of [catalogFile, tipsFile]) fs.rmSync(file, { force: true });
+if (savedCompanion === null) fs.rmSync(companionFile); else fs.writeFileSync(companionFile, savedCompanion);
 clearMissions();
 
 // Citations next to each community step, and scope
@@ -327,7 +405,7 @@ if (r.ok) {
   // The checker is expected to object here, because fixtures are present. That proves the production guard works.
   const c = run('check.mjs', '2026-11-20'); expect('checker flags fixture content', !c.ok && c.out.includes('test fixture content'), c.out);
   const page = out('missions/zz-fixture-dock-job/index.html');
-  expect('community page shows the untested notice and review line', page.includes('Not tested by us yet.') && page.includes('Source check was automated') && page.includes('Community-sourced</span>') && !/Tested on /.test(page));
+  expect('community page shows the untested notice and review line', page.includes('Not tested by this site.') && !page.includes('Not tested by us yet.') && page.includes('Source check was automated') && page.includes('Community-sourced</span>') && !/Tested on /.test(page));
   expect('guide has the public corrections link with its warning', page.includes('issues/new?title=Correction') && page.includes('leave out game codes'));
   expect('community step shows citation links next to the claim', /Fixture crane step\.<sup class="cite">\[<a href="#source-1">1<\/a>, <a href="#source-2">2<\/a>\]<\/sup>/.test(page) && page.includes('<li id="source-2">') && page.includes('<ol><li id="source-1">'));
   expect('a pinned heading id is used', page.includes('<h2 id="crane-step">Reach the crane</h2>'));
@@ -429,7 +507,8 @@ setSite(gateOn);
   const lh = out('launch-help/index.html');
   expect('launch help explains PS5 offline play with the real setting path', lh.includes('id="offline-play-and-service-status"') && lh.includes('Settings → Users and Accounts → Other → Console Sharing and Offline Play') && lh.includes('offline play enabled'));
   expect('launch help links the three official status pages and shows no live status', ['https://status.playstation.com/', 'https://support.xbox.com/en-US/xbox-live-status', 'https://support.rockstargames.com/servicestatus'].every((u) => lh.includes(`href="${u}"`)) && !/all services (are )?(operational|up and running)|status-badge/i.test(lh));
-  expect('Xbox offline play is left as not yet known', /Can you play offline on Xbox\?<\/h3>\s*<p><span class="tag tag-unknown">/.test(lh));
+  expect('Xbox cloud and installed-copy guidance stays distinct', lh.includes('Xbox Cloud Gaming needs an internet connection throughout play') && lh.includes('using-xbox-one-offline'));
+  expect('guides omit legacy fact badges', !/Not yet known|class="tag tag-(unknown|confirmed)"|Fact labels/i.test(lh));
   expect('home and launch help jump to the offline and status section', out('index.html').includes('href="/launch-help/#offline-play-and-service-status"') && lh.includes('href="/launch-help/#offline-play-and-service-status"'));
   const idx = JSON.parse(out('search.json'));
   expect('search finds the offline and contact sections', ['#can-you-play-gta-6-offline-on-ps5', '#who-to-contact', '#is-it-down-check-the-official-status-pages'].every((h) => idx.some((e) => e.url === `/launch-help/${h}`)));
@@ -573,7 +652,7 @@ expect('step sharing is absent from the hub, general guides and watch page', ['m
 // 6. IndexNow submits only what a push changed, and reports failures as failures
 fs.copyFileSync(path.join(ROOT, 'indexnow.mjs'), path.join(tmp, 'indexnow.mjs'));
 const git = (...args) => spawnSync('git', ['-c', 'user.name=test', '-c', 'user.email=test@test.invalid', '-c', 'commit.gpgsign=false', ...args], { cwd: tmp, encoding: 'utf8' });
-const commit = (msg) => { git('add', '-A', 'content', 'site.json', 'build.mjs'); git('commit', '-q', '-m', msg); return git('rev-parse', 'HEAD').stdout.trim(); };
+const commit = (msg) => { git('add', '-A', 'content', 'data', 'site.json', 'build.mjs'); git('commit', '-q', '-m', msg); return git('rev-parse', 'HEAD').stdout.trim(); };
 setSite(gateOn); clearMissions(); put('a.md', community()); put('b.md', tested());
 git('init', '-q');
 const c1 = commit('one');
@@ -592,6 +671,11 @@ fs.writeFileSync(guideFile, fs.readFileSync(guideFile, 'utf8').replace('Fixture 
 const c4 = commit('four');
 dry = run('indexnow.mjs', '', { DRY_RUN: '1', BEFORE: c3, AFTER: c4 }).out;
 expect('a body-only edit submits that guide without the home page', /would submit 1 URL/.test(dry) && dry.includes('/launch-help/'), dry);
+// A catalog-only publish updates the existing mission hub without adding member URLs.
+fs.appendFileSync(path.join(tmp, 'data/story-missions.json'), '\n');
+const catalogCommit = commit('catalog only');
+const catalogDry = run('indexnow.mjs', '', { DRY_RUN: '1', BEFORE: c4, AFTER: catalogCommit }).out;
+expect('a catalog-only edit submits just the mission hub', /would submit 1 URL/.test(catalogDry) && catalogDry.trim().endsWith('https://gtasixmissions.com/missions/'), catalogDry);
 const post = (code) => new Promise((resolve) => {
   const server = http.createServer((req, res) => { req.resume(); res.statusCode = code; res.end(); }).listen(0, '127.0.0.1', () => {
     const env = { ...process.env, BEFORE: c3, AFTER: c4, INDEXNOW_ENDPOINT: `http://127.0.0.1:${server.address().port}/` }; delete env.DRY_RUN;

@@ -35,7 +35,7 @@ for (const f of files) {
   if ((h.match(/<h1/g) || []).length !== 1) fail('page needs exactly one h1', f);
   if (h.includes('Community-sourced</span>') && /Tested on |Tested <time/.test(visible)) fail('community guide carries a tested label', f);
   if (!h.includes('property="og:image"')) fail('missing social image tag', f);
-  if (h.includes('Community-sourced</span>') && !h.includes('Not tested by us yet.')) fail('community guide is missing its untested notice', f);
+  if (h.includes('Community-sourced</span>') && !h.includes('Not tested by this site.')) fail('community guide is missing its untested notice', f);
   if (/FIXTURE|zz-fixture|\/\/(www\.)?example\.(com|org|net)/.test(h)) fail('test fixture content in a built page', f);
 }
 for (const f of ['sitemap.xml', 'robots.txt', 'llms.txt', 'llms-full.txt', 'search.json', 'og.png', 'feed.xml']) if (!fs.existsSync(path.join('dist', f))) fail('missing', f);

@@ -20,14 +20,13 @@ updated: 2026-11-18
 
 {reported} Money matters more than in earlier GTA games. Some story chapters stay locked until you have a set amount of cash, and missions alone do not pay enough.
 
-## Known ways to earn money
+## Ways to earn money
 
 - {reported} **Story missions.** Steady pay, but not enough alone.
-- {reported} **Bank heists.** Likely the largest payouts.
+- {reported} **Bank heists.** The late-game vault jobs are among the highest payouts recorded by PowerPyx. {src:5}
 - {reported} **Robbing stores and businesses.** Quick, small payouts.
 - {reported} **Stealing and selling vehicles.**
 - {reported} **Selling stolen goods to a fence.**
-- {unknown} Businesses, property income and a stock market. Not announced.
 
 ## Where to put cash before banking unlocks {#early-cash-stash}
 

@@ -1,0 +1,5191 @@
+{
+  "schemaVersion": 1,
+  "checkedDate": "2026-11-18",
+  "sources": [
+    {
+      "id": "powerpyx",
+      "publisher": "PowerPyx",
+      "url": "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+      "scope": "Campaign index with optional missions and smaller objectives",
+      "responseSha256": "d2df4c9355e220238d81400959ab5a5318494b21d885a0a70c2be3e35421d13f"
+    },
+    {
+      "id": "pcgamer",
+      "publisher": "PC Gamer",
+      "url": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/",
+      "scope": "Story recap list; three mission names redacted by publisher",
+      "responseSha256": "a1274fbabd21ec89282e57b8c5920b4c04b483a1a1db6e47707db588eb2c9c00"
+    },
+    {
+      "id": "pressstart",
+      "publisher": "Press Start",
+      "url": "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+      "scope": "Firsthand completed story recap list",
+      "responseSha256": "e9339a06e0778ef7cae6e3f216d1c28d95e1359bafa02fb898ec35f142da944e"
+    },
+    {
+      "id": "dayone",
+      "publisher": "DayOne",
+      "url": "https://playday.one/2026/11/18/every-mission-in-gta6/",
+      "scope": "Firsthand chapter mission log; descriptions are not reproduced",
+      "responseSha256": "8cfbbcca202f488f601bb26f6834819358101ca670a8dce480683e7803e13b85"
+    },
+    {
+      "id": "gtabase",
+      "publisher": "GTA Base",
+      "url": "https://www.gtabase.com/gta-6/missions/",
+      "scope": "Individual reference pages for mission names and chapter placement"
+    }
+  ],
+  "coverage": {
+    "note": "This catalog covers all five chapters and keeps optional branches and smaller tasks separate. Press Start lists 93 completed-recap entries, PC Gamer lists 91 slots with 3 names redacted, and DayOne lists 94 entries. Some recap lists include missions that PowerPyx marks optional, so catalog totals are not required-story counts.",
+    "catalogEntries": 152,
+    "namedStoryEntries": 91,
+    "explicitlyOptionalEntries": 31,
+    "otherCampaignEntries": 30,
+    "individualWalkthroughs": 98,
+    "pcGamerStorySlots": 91,
+    "pcGamerRedactedSlots": 3,
+    "powerPyxEntries": 148,
+    "orderNote": "Display order follows the broader PowerPyx campaign index, with additional recap names placed beside neighboring missions. Each sourceOrder field retains its publisher’s own sequence; this is not a required play order.",
+    "optionalNote": "An explicit optional or side-mission classification sets optional to true even if the mission also appears in a completed recap. Null means required/optional status is not established here. recapSources records named membership independently.",
+    "spoilerNote": "Mission and chapter names can reveal story information. Chapter display titles are kept neutral.",
+    "namedRecapEntries": 95,
+    "pressStartRecapEntries": 93,
+    "dayOneRecapEntries": 94
+  },
+  "discrepancies": [
+    "The sources count different sets: PowerPyx has 148 campaign-index rows plus separate side quests; PC Gamer has 91 story slots, Press Start 93 recap entries and DayOne 94. This combined catalog has 152 distinct chapter entries.",
+    "Press Start includes Thrillbillies and Twist Wrist, Smash, Grab in its recap. PowerPyx explicitly marks both optional. Their optional flags are retained alongside recap membership.",
+    "Press Start lists Kitter Litter Labs and omits Caught Slipping; PC Gamer lists Caught Slipping but omits the labs. DayOne includes both and also Spin On This. PowerPyx places the two Tyrone lab missions in its side-quest section.",
+    "DayOne omits Power Play from its chapter 4 table; PowerPyx, PC Gamer and Press Start list it. The catalog retains it.",
+    "PC Gamer redacts three titles; Press Start and DayOne provide unredacted names. No identity was assigned to PC Gamer’s redacted rows by position.",
+    "The publishers order some missions differently, including Lab Fees/Just a Scratch, Buck Me/Clean Up After Donnie, and Clear Skies/Day Release. Source positions are preserved.",
+    "Car Service/Car Services, Zorrusso/Zorruso, Kitter/Kitty Litter Labs and Sinfreontera/Sinfrontera are source spelling differences. Search aliases preserve them without creating duplicate missions.",
+    "Pay Abe’s Fee appears separately in chapters 4 and 5 of PowerPyx’s index. Both entries use chapter-qualified keys.",
+    "A missing individual walkthrough stays a source-index link. The late-game That’s Where The Money Is guide was found directly and checked despite not being linked from the index."
+  ],
+  "chapters": [
+    {
+      "id": "chapter-1",
+      "title": "Chapter 1",
+      "gameTitle": "Just Like Paradise",
+      "spoiler": true,
+      "missions": [
+        {
+          "key": "prologue",
+          "title": "Prologue",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-prologue-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Prologue",
+              "position": 1
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 1
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 1
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 1
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-prologue-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "gone-fishing",
+          "title": "Gone Fishing",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-gone-fishing-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 1
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 2
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 2
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 2
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-gone-fishing-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "gear-up",
+          "title": "Gear Up",
+          "aliases": [
+            "Pick Up Another Gun"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-gear-up-pick-up-another-gun-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 2
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 3
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 3
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 3
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-gear-up-pick-up-another-gun-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "lab-fees",
+          "title": "Lab Fees",
+          "aliases": [
+            "Collect Brian’s Rent"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-lab-fees-collect-brians-rent-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 3
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 5
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 5
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 5
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-lab-fees-collect-brians-rent-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "just-a-scratch",
+          "title": "Just a Scratch",
+          "aliases": [
+            "Fix Your Car"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-just-a-scratch-fix-your-car-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 4
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 4
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 4
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 4
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-just-a-scratch-fix-your-car-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "unwanted-attention",
+          "title": "Unwanted Attention",
+          "aliases": [
+            "Go See Cal"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-unwanted-attention-go-see-cal-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 5
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 6
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 6
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 6
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-unwanted-attention-go-see-cal-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "pipework",
+          "title": "Pipework",
+          "aliases": [
+            "Collect Mandy’s Rent"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-pipework-collect-mandys-rent-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 6
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 7
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 7
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 7
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-pipework-collect-mandys-rent-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "get-shirleys-rum",
+          "title": "Get Shirley’s Rum",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-get-shirleys-rum-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 7
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-get-shirleys-rum-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "steal-the-scooter",
+          "title": "Steal the Scooter",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-steal-the-scooter-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 8
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-steal-the-scooter-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "hey-arnold",
+          "title": "Hey Arnold!",
+          "aliases": [
+            "Meet Brian"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-hey-arnold-meet-brian-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 9
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 8
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 8
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 8
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-hey-arnold-meet-brian-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "island-dreams",
+          "title": "Island Dreams",
+          "aliases": [
+            "Work for Kenton"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-island-dreams-work-for-kenton-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 10
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 9
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 9
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 9
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-island-dreams-work-for-kenton-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "feng-shui",
+          "title": "Feng Shui",
+          "aliases": [
+            "Meet Cal"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-feng-shui-meet-cal-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 11
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 10
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 10
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 10
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-feng-shui-meet-cal-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "pick-up-groceries-drop-off-groceries",
+          "title": "Pick up Groceries & Drop Off Groceries",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-pick-up-groceries-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 12
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-pick-up-groceries-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "buy-flowers",
+          "title": "Buy Flowers",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-buy-flowers-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 13
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-buy-flowers-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "buy-lucia-a-necklace",
+          "title": "Buy Lucia a Necklace",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-buy-lucia-a-necklace-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 14
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-buy-lucia-a-necklace-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "get-the-chop",
+          "title": "Get The Chop",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-get-the-chop-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 15
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-get-the-chop-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "get-lucias-clothes",
+          "title": "Get Lucia’s Clothes",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-get-lucias-clothes-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 16
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-get-lucias-clothes-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "coming-home",
+          "title": "Coming Home",
+          "aliases": [
+            "Lucia’s Release"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-coming-home-lucias-release-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 17
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 11
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 11
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 11
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-coming-home-lucias-release-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "clean-up-after-donnie",
+          "title": "Clean Up After Donnie",
+          "aliases": [
+            "Donnie’s Drop"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-clean-up-after-donnie-donnies-drop-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 18
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 13
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 13
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 13
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-clean-up-after-donnie-donnies-drop-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "buck-me",
+          "title": "Buck Me",
+          "aliases": [
+            "Set Up Bank Account"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-buck-me-set-up-bank-account-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 19
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 12
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 12
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 12
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-buck-me-set-up-bank-account-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "down-to-earth",
+          "title": "Down to Earth",
+          "aliases": [
+            "Meet Brian"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-down-to-earth-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 20
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 14
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 14
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 14
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-down-to-earth-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "deposit-cash-into-buckme",
+          "title": "Deposit Cash Into BuckMe",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-deposit-cash-into-buckme-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 21
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-deposit-cash-into-buckme-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "save-for-the-future",
+          "title": "Save for the Future",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-save-for-the-future-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 22
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-save-for-the-future-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "find-the-lost-drugs",
+          "title": "Find the Lost Drugs",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-find-the-lost-drugs-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 23
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-find-the-lost-drugs-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "day-release",
+          "title": "Day Release",
+          "aliases": [
+            "Meet Mattia & Kat"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-day-release-meet-mattia-kat-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 24
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 16
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 16
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 16
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-day-release-meet-mattia-kat-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "clock-out",
+          "title": "Clock Out",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-clock-out-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 25
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-clock-out-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "clear-skies",
+          "title": "Clear Skies",
+          "aliases": [
+            "Join Donnie On A Job"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-clear-skies-join-donnie-on-a-job-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 26
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 15
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 15
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 15
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-clear-skies-join-donnie-on-a-job-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "building-a-life",
+          "title": "Building a Life",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-building-a-life-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 27
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-building-a-life-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "swamped",
+          "title": "Swamped",
+          "aliases": [
+            "Meet Brian"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-swamped-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 28
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 17
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 17
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 17
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-swamped-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "don-gone",
+          "title": "Don Gone",
+          "aliases": [
+            "Head to Donnie’s Trailer"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-don-gone-head-to-donnies-trailer-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 29
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 18
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 18
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-don-gone-head-to-donnies-trailer-walkthrough/"
+          },
+          "recapSources": [
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "donnies-lost-drugs",
+          "title": "Donnie’s Lost Drugs",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-donnies-lost-drugs-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 30
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-donnies-lost-drugs-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "recalibration",
+          "title": "Recalibration",
+          "aliases": [
+            "Talk to Lucia"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-recalibration-talk-to-lucia-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 31
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 19
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 19
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 19
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-recalibration-talk-to-lucia-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "tourist-trap",
+          "title": "Tourist Trap",
+          "aliases": [
+            "Take Up Mattia’s Offer"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-tourist-trap-take-up-mattias-offer-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 32
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 20
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 20
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 20
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-tourist-trap-take-up-mattias-offer-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "home-sweet-home",
+          "title": "Home Sweet Home",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-home-sweet-home-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 33
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 21
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 21
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 21
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-home-sweet-home-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "discharge-time",
+          "title": "Discharge Time",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-discharge-time-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-1",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-1-just-like-paradise",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-1-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 1",
+              "position": 34
+            },
+            "pcgamer": {
+              "section": "Chapter 1: Just Like Paradise",
+              "position": 22
+            },
+            "pressstart": {
+              "section": "Chapter 1",
+              "position": 22
+            },
+            "dayone": {
+              "section": "Chapter 1",
+              "position": 22
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-discharge-time-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chapter-2",
+      "title": "Chapter 2",
+      "gameTitle": "Paradise Lost",
+      "spoiler": true,
+      "missions": [
+        {
+          "key": "whats-in-the-bag",
+          "title": "What’s in the Bag?",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-whats-in-the-bag-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-2-paradise-lost",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 1
+            },
+            "pcgamer": {
+              "section": "Chapter 2: Paradise Lost",
+              "position": 1
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 1
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 1
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-whats-in-the-bag-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "take-care-of-jason",
+          "title": "Take Care of Jason",
+          "aliases": [
+            "Play Nurse"
+          ],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-take-care-of-jason-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 2
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-take-care-of-jason-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "overnight-charges",
+          "title": "Overnight Charges",
+          "aliases": [
+            "See Linda, The Manager"
+          ],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-overnight-charges-see-linda-the-manager-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 3
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-overnight-charges-see-linda-the-manager-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "just-moved-in",
+          "title": "Just Moved In",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-just-moved-in-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-2-paradise-lost",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 4
+            },
+            "pcgamer": {
+              "section": "Chapter 2: Paradise Lost",
+              "position": 3
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 3
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 3
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-just-moved-in-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "girls-trip",
+          "title": "Girl’s Trip",
+          "aliases": [
+            "Find Painkillers"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-girls-trip-find-painkillers-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-2-paradise-lost",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 5
+            },
+            "pcgamer": {
+              "section": "Chapter 2: Paradise Lost",
+              "position": 4
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 4
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 4
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-girls-trip-find-painkillers-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "pick-up-a-gun",
+          "title": "Pick Up A Gun",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-pick-up-a-gun-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 6
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-pick-up-a-gun-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "moses",
+          "title": "Moses",
+          "aliases": [
+            "Take A Vehicle to Moses"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-moses-take-a-vehicle-to-moses-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-2-paradise-lost",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 7
+            },
+            "pcgamer": {
+              "section": "Chapter 2: Paradise Lost",
+              "position": 5
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 5
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 5
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-moses-take-a-vehicle-to-moses-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "new-look",
+          "title": "New Look",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-new-look-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 8
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-new-look-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "how-do-i-look",
+          "title": "How Do I Look?",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-how-do-i-look-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 9
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-how-do-i-look-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "painkiller-supplier",
+          "title": "Painkiller Supplier",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-painkiller-supplier-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 10
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-painkiller-supplier-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "ambulance-chaser",
+          "title": "Ambulance Chaser",
+          "aliases": [
+            "Move the Ambulance"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-ambulance-chaser-move-the-ambulance-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-2-paradise-lost",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 11
+            },
+            "pcgamer": {
+              "section": "Chapter 2: Paradise Lost",
+              "position": 2
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 2
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 2
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-ambulance-chaser-move-the-ambulance-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "check-out-mckittrick-farm",
+          "title": "Check Out McKittrick Farm",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-check-out-mckittrick-farm-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 12
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-check-out-mckittrick-farm-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "behind-on-payments",
+          "title": "Behind on Payments",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-behind-on-payments-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 13
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-behind-on-payments-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "slam-dunk",
+          "title": "Slam Dunk",
+          "aliases": [
+            "Find Painkillers"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-slam-dunk-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-2-paradise-lost",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 14
+            },
+            "pcgamer": {
+              "section": "Chapter 2: Paradise Lost",
+              "position": 7
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 7
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 7
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-slam-dunk-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "collect-chemicals-for-kyle",
+          "title": "Collect Chemicals for Kyle",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-collect-chemicals-for-kyle-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 15
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-collect-chemicals-for-kyle-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "daily-driver",
+          "title": "Daily Driver",
+          "aliases": [
+            "Steal the Crawler for Moses"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-daily-driver-steal-the-crawler-for-moses-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-2-paradise-lost",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 16
+            },
+            "pcgamer": {
+              "section": "Chapter 2: Paradise Lost",
+              "position": 6
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 6
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 6
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-daily-driver-steal-the-crawler-for-moses-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "breakfast-run",
+          "title": "Breakfast Run",
+          "aliases": [
+            "Check on Jason"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-breakfast-run-check-on-jason-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-2-paradise-lost",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 17
+            },
+            "pcgamer": {
+              "section": "Chapter 2: Paradise Lost",
+              "position": 8
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 8
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 8
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-breakfast-run-check-on-jason-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "coffee-break",
+          "title": "Coffee Break",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-coffee-break-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-2-paradise-lost",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 18
+            },
+            "pcgamer": {
+              "section": "Chapter 2: Paradise Lost",
+              "position": 9
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 9
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 9
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-coffee-break-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "thrillbillies",
+          "title": "Thrillbillies",
+          "aliases": [
+            "Check Out the Mud Club"
+          ],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-thrillbillies-check-out-the-mud-club-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 19
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 11
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 11
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-thrillbillies-check-out-the-mud-club-walkthrough/"
+          },
+          "recapSources": [
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "twist-wrist-smash-grab",
+          "title": "Twist Wrist, Smash, Grab",
+          "aliases": [
+            "Join Billy on a Job"
+          ],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-twist-wrist-smash-grab-join-billy-on-a-job-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 20
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 12
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 12
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-twist-wrist-smash-grab-join-billy-on-a-job-walkthrough/"
+          },
+          "recapSources": [
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "hit-avery-pawn",
+          "title": "Hit Avery Pawn",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-hit-avery-pawn-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 21
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-hit-avery-pawn-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "hit-kingpin-bowling",
+          "title": "Hit Kingpin Bowling",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-hit-kingpin-bowling-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 22
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-hit-kingpin-bowling-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "impounded-vehicle",
+          "title": "Impounded Vehicle",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-impounded-vehicle-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 23
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-impounded-vehicle-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "prepare-for-vice-city",
+          "title": "Prepare for Vice City",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-prepare-for-vice-city-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 24
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-prepare-for-vice-city-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "veteran-hunted",
+          "title": "Veteran Hunted",
+          "aliases": [
+            "Meet Bret"
+          ],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-veteran-hunted-meet-bret-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 25
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-veteran-hunted-meet-bret-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "afternoon-delight",
+          "title": "Afternoon Delight",
+          "aliases": [
+            "Rob Vicki’s Boss"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-afternoon-delight-rob-vickis-boss-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-2-paradise-lost",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 26
+            },
+            "pcgamer": {
+              "section": "Chapter 2: Paradise Lost",
+              "position": 10
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 10
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 10
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-afternoon-delight-rob-vickis-boss-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "checking-out",
+          "title": "Checking Out",
+          "aliases": [
+            "Move to Vice City"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-checking-out-move-to-vice-city-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-2",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-2-paradise-lost",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-2-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 2",
+              "position": 27
+            },
+            "pcgamer": {
+              "section": "Chapter 2: Paradise Lost",
+              "position": 11
+            },
+            "pressstart": {
+              "section": "Chapter 2",
+              "position": 13
+            },
+            "dayone": {
+              "section": "Chapter 2",
+              "position": 13
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-checking-out-move-to-vice-city-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chapter-3",
+      "title": "Chapter 3",
+      "gameTitle": "Tits Ass Drug Money",
+      "spoiler": true,
+      "missions": [
+        {
+          "key": "welcome-to-vice-city",
+          "title": "Welcome to Vice City",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-welcome-to-vice-city-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 1
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 1
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 1
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 1
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-welcome-to-vice-city-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "dealers-choice",
+          "title": "Dealer’s Choice",
+          "aliases": [
+            "Go See Dre’Quan"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-dealers-choice-go-see-drequan-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 2
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 2
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 2
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 2
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-dealers-choice-go-see-drequan-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "dubious-provenance",
+          "title": "Dubious Provenance",
+          "aliases": [
+            "Visit the Antique Store"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-dubious-provenance-visit-the-antique-store-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 3
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 4
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 4
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 4
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-dubious-provenance-visit-the-antique-store-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "mami-knows-best",
+          "title": "Mami Knows Best",
+          "aliases": [
+            "Catch Up With Mia"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-mami-knows-best-catch-up-with-mia-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 4
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 5
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 5
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 5
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-mami-knows-best-catch-up-with-mia-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "get-your-wheels",
+          "title": "Get Your Wheels",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.gtabase.com/gta-6/strangers/get-your-wheels"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 5
+            }
+          },
+          "optionalSource": "powerpyx",
+          "recapSources": []
+        },
+        {
+          "key": "join-a-street-race",
+          "title": "Join a Street Race",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-join-a-street-race-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 6
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-join-a-street-race-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "tyrone",
+          "title": "Tyrone",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp",
+            "https://www.gtabase.com/gta-6/missions/tyrone"
+          ],
+          "sourceOrder": {
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 7
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 7
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 7
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "here-kitty-kitty",
+          "title": "Here, Kitty Kitty",
+          "aliases": [
+            "Speak with Tyrone"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-here-kitty-kitty-speak-with-tyrone-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 7
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 8
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 8
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 8
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-here-kitty-kitty-speak-with-tyrone-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "kitty-litter-labs",
+          "title": "Kitty Litter Labs",
+          "aliases": [
+            "Take Out Kitty Litter",
+            "Kitter Litter Labs"
+          ],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-all-kitty-litter-lab-locations/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Strangers & Freaks > Chapter 3 > Tyrone",
+              "position": 1
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 9
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 9
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-all-kitty-litter-lab-locations/"
+          },
+          "recapSources": [
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "spin-on-this",
+          "title": "Spin On This",
+          "aliases": [
+            "Shut Down the Labs"
+          ],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-spin-on-this-shut-down-the-labs-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Strangers & Freaks > Chapter 3 > Tyrone",
+              "position": 2
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 10
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-spin-on-this-shut-down-the-labs-walkthrough/"
+          },
+          "recapSources": [
+            "dayone"
+          ]
+        },
+        {
+          "key": "send-money-to-lorena",
+          "title": "Send Money to Lorena",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.gtabase.com/gta-6/missions/send-money-to-lorena"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 8
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "encrypted-hard-drive",
+          "title": "Encrypted Hard Drive",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.gtabase.com/gta-6/missions/encrypted-hard-drive"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 9
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "boobie-time",
+          "title": "Boobie Time",
+          "aliases": [
+            "Talk to Boobie"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-boobie-time-talk-to-boobie-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 10
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 11
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 12
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 13
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-boobie-time-talk-to-boobie-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "buddy",
+          "title": "Buddy?",
+          "aliases": [
+            "Check on Kyle"
+          ],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-buddy-check-on-kyle-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 11
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-buddy-check-on-kyle-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "meet-the-heders",
+          "title": "Meet the Heders",
+          "aliases": [
+            "Meet Brian & Lori"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-meet-the-heders-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 12
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 3
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 3
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 3
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-meet-the-heders-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "yasmanis-jewelry-jobs",
+          "title": "Yasmani’s Jewelry Jobs",
+          "aliases": [
+            "Hit Richardson Jewelry, Hit Donovan Banks & Co, Hit Casa de Empeno, Sell Jewelry to Yasmani"
+          ],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-yasmanis-jewelry-jobs-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 13
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-yasmanis-jewelry-jobs-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "bumper-to-bumper",
+          "title": "Bumper to Bumper",
+          "aliases": [
+            "Mentor Yago"
+          ],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-bumper-to-bumper-mentor-yago-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 14
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-bumper-to-bumper-mentor-yago-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "car-service",
+          "title": "Car Service",
+          "aliases": [
+            "Steal The Car for Raul",
+            "Car Services"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-car-service-steal-the-car-for-raul-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 15
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 9
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 10
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 11
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-car-service-steal-the-car-for-raul-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "send-more-money-to-lorena",
+          "title": "Send More Money to Lorena",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.gtabase.com/gta-6/missions/send-more-money-to-lorena"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 16
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "top-billing",
+          "title": "Top Billing",
+          "aliases": [
+            "Watch the Real Dimez"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-top-billing-watch-the-real-dimez-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 17
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 10
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 11
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 12
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-top-billing-watch-the-real-dimez-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "first-impressions",
+          "title": "First Impressions",
+          "aliases": [
+            "Meeting with Raul"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-first-impressions-meeting-with-raul-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 18
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 12
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 13
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 14
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-first-impressions-meeting-with-raul-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "crosstown-traffic",
+          "title": "Crosstown Traffic",
+          "aliases": [
+            "Meet Raul",
+            "Meet Karim"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-crosstown-traffic-meet-raul-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 19
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 14
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 14
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 16
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-crosstown-traffic-meet-raul-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "credit-check",
+          "title": "Credit Check",
+          "aliases": [
+            "Meet Raul’s Crew"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-credit-check-meet-rauls-crew-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 20
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 15
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 15
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 17
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-credit-check-meet-rauls-crew-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "clonin-keys-makin-gs",
+          "title": "Clonin’ Keys, Makin’ GS",
+          "aliases": [
+            "Steal the Zorrusso for Randy",
+            "Steal the Zorruso for Randy"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-clonin-keys-makin-gs-steal-the-zorrusso-for-randy-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 21
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 16
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 16
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 18
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-clonin-keys-makin-gs-steal-the-zorrusso-for-randy-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "ride-or-die",
+          "title": "Ride Or Die",
+          "aliases": [
+            "Meet Dre’Quan"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-ride-or-die-meet-drequan-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 22
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 19
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 19
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 21
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-ride-or-die-meet-drequan-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "rauls-next-job",
+          "title": "Raul’s Next Job",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.gtabase.com/gta-6/missions/rauls-next-job"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 23
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "race-against-yago",
+          "title": "Race Against Yago",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-race-against-yago-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 24
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-race-against-yago-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "sinfrontera-national-bank",
+          "title": "Sinfrontera National Bank",
+          "aliases": [
+            "Scope Out the Bank",
+            "Sinfreontera National Bank"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-sinfrontera-national-bank-scope-out-the-bank-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 25
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 17
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 17
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 19
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-sinfrontera-national-bank-scope-out-the-bank-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "security-expert",
+          "title": "Security Expert",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-security-expert-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 26
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 18
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 18
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 20
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-security-expert-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "caught-slipping",
+          "title": "Caught Slipping",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-caught-slipping-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 27
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 13
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 15
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-caught-slipping-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "dayone"
+          ]
+        },
+        {
+          "key": "heist-planning",
+          "title": "Heist Planning",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.gtabase.com/gta-6/missions/heist-planning"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 28
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "company-property",
+          "title": "Company Property",
+          "aliases": [
+            "Meet Brian"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-company-property-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 29
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 20
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 20
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 22
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-company-property-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "safe-word",
+          "title": "Safe Word",
+          "aliases": [
+            "Steal the Practice Safe"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-safe-word-steal-the-practice-safe-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 30
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 22
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 22
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 24
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-safe-word-steal-the-practice-safe-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "the-missing-link",
+          "title": "The Missing Link",
+          "aliases": [
+            "Meet Andrea"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-the-missing-link-meet-andrea-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 31
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 21
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 21
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 23
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-the-missing-link-meet-andrea-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "mall-rats",
+          "title": "Mall Rats",
+          "aliases": [
+            "Join Billy on a Job"
+          ],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-mall-rats-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 32
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-mall-rats-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "brother-to-brother",
+          "title": "Brother To Brother",
+          "aliases": [
+            "Back up Yago"
+          ],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-brother-to-brother-back-up-yago-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 33
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-brother-to-brother-back-up-yago-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "cooties",
+          "title": "Cooties",
+          "aliases": [
+            "Shoot the Music Video"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-cooties-shoot-the-music-video-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 34
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 23
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 23
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 25
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-cooties-shoot-the-music-video-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "hidden-charges",
+          "title": "Hidden Charges",
+          "aliases": [
+            "Meet at the Planning Room",
+            "Prepping the Explosives"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-hidden-charges-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 35
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 25
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 25
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 27
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-hidden-charges-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "bricked-up",
+          "title": "Bricked Up",
+          "aliases": [
+            "Return to the Apartment"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-bricked-up-return-to-the-apartment-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 36
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 24
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 24
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 26
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-bricked-up-return-to-the-apartment-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "south-leonida-real-estate",
+          "title": "South Leonida Real Estate",
+          "aliases": [
+            "Meet Mia"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-south-leonida-real-estate-meet-mia-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 37
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 6
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 6
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 6
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-south-leonida-real-estate-meet-mia-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "the-cartel-heist",
+          "title": "The Cartel Heist",
+          "aliases": [
+            "Start the Heist",
+            "Wait for Raul to get in Touch"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-the-cartel-heist-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-3",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-3-tits-ass-drug-money",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-3-nbsp"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 3",
+              "position": 38
+            },
+            "pcgamer": {
+              "section": "Chapter 3: Tits Ass Drug Money",
+              "position": 26
+            },
+            "pressstart": {
+              "section": "Chapter 3",
+              "position": 26
+            },
+            "dayone": {
+              "section": "Chapter 3",
+              "position": 28
+            }
+          },
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-the-cartel-heist-walkthrough/"
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chapter-4",
+      "title": "Chapter 4",
+      "gameTitle": "Vice City, Baby",
+      "spoiler": true,
+      "missions": [
+        {
+          "key": "ocean-beach",
+          "title": "Ocean Beach",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/ocean-beach"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 1
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 1
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 1
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 1
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "another-life",
+          "title": "Another Life",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/another-life"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 2
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 2
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 2
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 2
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "pool-day",
+          "title": "Pool Day",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.gtabase.com/gta-6/missions/pool-day"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 3
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "company-cars",
+          "title": "Company Cars",
+          "aliases": [
+            "Speak to the Concierge"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/company-cars"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 4
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 3
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 3
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 3
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "lawyer-up",
+          "title": "Lawyer Up",
+          "aliases": [
+            "Meet Abe Gonzalez"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/lawyer-up"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 5
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 4
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 4
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 4
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "its-a-date",
+          "title": "It’s A Date!",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.gtabase.com/gta-6/missions/its-a-date"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 6
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "party-hard",
+          "title": "Party Hard",
+          "aliases": [
+            "Work Personal Security"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/party-hard"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 7
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 5
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 5
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 5
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "heavy-lifting",
+          "title": "Heavy Lifting",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/heavy-lifting"
+          ],
+          "sourceOrder": {
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 6
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 6
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 6
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "chapter-4-pay-abes-fee",
+          "title": "Pay Abe’s Fee",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.gtabase.com/gta-6/missions/pay-abes-fee"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 8
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "photo-shoot",
+          "title": "Photo/Shoot",
+          "aliases": [
+            "Shoot a Promo"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/photo-shoot"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 9
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 7
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 7
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 7
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "bad-driver",
+          "title": "Bad Driver!",
+          "aliases": [
+            "Find Felipe"
+          ],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.gtabase.com/gta-6/strangers/bad-driver"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 10
+            }
+          },
+          "optionalSource": "powerpyx",
+          "recapSources": []
+        },
+        {
+          "key": "attend-eddie-acostas-party",
+          "title": "Attend Eddie Acosta’s Party",
+          "aliases": [],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-attend-eddie-acostas-party-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 11
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-attend-eddie-acostas-party-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "making-gainz",
+          "title": "Making Gainz",
+          "aliases": [
+            "Meet Raul",
+            "Raul’s Plan"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/making-gainz"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 12
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 8
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 8
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 8
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "blood-sweat-and-gear",
+          "title": "Blood Sweat and Gear",
+          "aliases": [
+            "Work Out"
+          ],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.gtabase.com/gta-6/missions/blood-sweat-and-gear"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 13
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "too-much-baggage",
+          "title": "Too Much Baggage",
+          "aliases": [
+            "Scope Out the Airport"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/too-much-baggage"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 14
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 13
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 13
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 13
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "watch-it",
+          "title": "Watch It",
+          "aliases": [
+            "Meet Dre’Quan"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/watch-it"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 15
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 9
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 9
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 9
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "amateur-hour",
+          "title": "Amateur Hour",
+          "aliases": [
+            "Workout"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/amateur-hour"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 16
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 11
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 11
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 11
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "call-nate",
+          "title": "Call Nate",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.gtabase.com/gta-6/missions/call-nate"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 17
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "cash-injections",
+          "title": "Cash Injections",
+          "aliases": [
+            "Hang Out With Nate"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/cash-injections"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 18
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 10
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 10
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 10
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "dirty-work",
+          "title": "Dirty Work",
+          "aliases": [
+            "Deal with Raina"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/dirty-work"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 19
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 12
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 12
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 12
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "nate-will-be-in-touch",
+          "title": "Nate Will Be in Touch",
+          "aliases": [
+            "Help Kordell’s Crew"
+          ],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.gtabase.com/gta-6/missions/nate-will-be-in-touch"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 20
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "adventures-in-babysitting",
+          "title": "Adventures in Babysitting",
+          "aliases": [
+            "Work Security for Andrés"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/adventures-in-babysitting"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 21
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 14
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 14
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 14
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "rafas-kidnapping",
+          "title": "Rafa’s Kidnapping",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 22
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "fresh-evidence",
+          "title": "Fresh Evidence",
+          "aliases": [
+            "Meet Dre’Quan"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/fresh-evidence"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 23
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 15
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 15
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 15
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "childs-play",
+          "title": "Child’s Play",
+          "aliases": [
+            "Rescue Rafa from Kidnappers"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/childs-play"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 24
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 17
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 17
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 16
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "this-is-a-free-call-from",
+          "title": "This is a Free Call From…",
+          "aliases": [
+            "Pick up Shayna"
+          ],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.gtabase.com/gta-6/strangers/this-is-a-free-call-from"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 25
+            }
+          },
+          "optionalSource": "powerpyx",
+          "recapSources": []
+        },
+        {
+          "key": "power-play",
+          "title": "Power Play",
+          "aliases": [
+            "Help Kordell’s Crew"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://www.gtabase.com/gta-6/missions/power-play"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 26
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 16
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 16
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart"
+          ]
+        },
+        {
+          "key": "close-surveillance",
+          "title": "Close Surveillance",
+          "aliases": [
+            "Spy on the Bodybuilders"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/close-surveillance"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 27
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 19
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 19
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 18
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "delivery-method",
+          "title": "Delivery Method",
+          "aliases": [
+            "Help Andrea"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/delivery-method"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 28
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 20
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 20
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 19
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "team-building",
+          "title": "Team Building",
+          "aliases": [
+            "Meet Kordell"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/team-building"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 29
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 21
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 21
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 20
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "fully-catered",
+          "title": "Fully Catered",
+          "aliases": [
+            "Steal a Catering Truck"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/fully-catered"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 30
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 22
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 22
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 21
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "heist-plans-in-place",
+          "title": "Heist Plans in Place",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.gtabase.com/gta-6/missions/heist-plans-in-place"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 31
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "headliners",
+          "title": "Headliners",
+          "aliases": [
+            "Help With The Launch Party"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/headliners"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 32
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 18
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 18
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 17
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "vcia-takedown",
+          "title": "VCIA Takedown",
+          "aliases": [
+            "Start the Airport Heist"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/vcia-takedown"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 33
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 23
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 23
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 22
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "tie-up-loose-ends",
+          "title": "Tie Up Loose Ends",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.gtabase.com/gta-6/missions/tie-up-loose-ends"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 34
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "thats-where-the-money-is",
+          "title": "That’s Where The Money Is…",
+          "aliases": [
+            "Wait at the Cafe"
+          ],
+          "optional": true,
+          "kind": "optional",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-thats-where-the-money-is-wait-at-the-cafe-walkthrough/",
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 35
+            }
+          },
+          "optionalSource": "powerpyx",
+          "walkthrough": {
+            "publisher": "PowerPyx",
+            "url": "https://www.powerpyx.com/gta-6-thats-where-the-money-is-wait-at-the-cafe-walkthrough/"
+          },
+          "recapSources": []
+        },
+        {
+          "key": "call-valentina-back",
+          "title": "Call Valentina Back",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.gtabase.com/gta-6/missions/call-valentina-back"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 36
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "sunset",
+          "title": "Sunset",
+          "aliases": [
+            "Stop by the Front Desk"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-4-vice-city-baby",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/sunset"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 37
+            },
+            "pcgamer": {
+              "section": "Chapter 4: Vice City, Baby",
+              "position": 24
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 24
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 23
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "starting-from-zero",
+          "title": "Starting From Zero",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-4",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-4-nbsp",
+            "https://www.gtabase.com/gta-6/missions/chapter-4-finale"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 4",
+              "position": 38
+            },
+            "pressstart": {
+              "section": "Chapter 4",
+              "position": 25
+            },
+            "dayone": {
+              "section": "Chapter 4",
+              "position": 24
+            }
+          },
+          "recapSources": [
+            "pressstart",
+            "dayone"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chapter-5",
+      "title": "Chapter 5",
+      "gameTitle": "Top of the World, Ma",
+      "spoiler": true,
+      "missions": [
+        {
+          "key": "bird-in-the-hand",
+          "title": "Bird in the Hand",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-5",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-5-top-of-the-world-ma",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-5-nbsp",
+            "https://www.gtabase.com/gta-6/missions/bird-in-the-hand"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 5",
+              "position": 1
+            },
+            "pcgamer": {
+              "section": "Chapter 5: Top of the World, Ma",
+              "position": 1
+            },
+            "pressstart": {
+              "section": "Chapter 5",
+              "position": 1
+            },
+            "dayone": {
+              "section": "Chapter 5",
+              "position": 1
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "taking-liberties",
+          "title": "Taking Liberties",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-5",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-5-top-of-the-world-ma",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-5-nbsp",
+            "https://www.gtabase.com/gta-6/missions/taking-liberties"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 5",
+              "position": 2
+            },
+            "pcgamer": {
+              "section": "Chapter 5: Top of the World, Ma",
+              "position": 2
+            },
+            "pressstart": {
+              "section": "Chapter 5",
+              "position": 2
+            },
+            "dayone": {
+              "section": "Chapter 5",
+              "position": 2
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "doggie-bag",
+          "title": "Doggie Bag",
+          "aliases": [
+            "Meet Vinny"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-5",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-5-top-of-the-world-ma",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-5-nbsp",
+            "https://www.gtabase.com/gta-6/missions/doggie-bag"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 5",
+              "position": 3
+            },
+            "pcgamer": {
+              "section": "Chapter 5: Top of the World, Ma",
+              "position": 4
+            },
+            "pressstart": {
+              "section": "Chapter 5",
+              "position": 4
+            },
+            "dayone": {
+              "section": "Chapter 5",
+              "position": 4
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "vc-baby",
+          "title": "VC Baby",
+          "aliases": [
+            "Talk to Mattia"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-5",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-5-top-of-the-world-ma",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-5-nbsp",
+            "https://www.gtabase.com/gta-6/missions/vc-baby"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 5",
+              "position": 4
+            },
+            "pcgamer": {
+              "section": "Chapter 5: Top of the World, Ma",
+              "position": 3
+            },
+            "pressstart": {
+              "section": "Chapter 5",
+              "position": 3
+            },
+            "dayone": {
+              "section": "Chapter 5",
+              "position": 3
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "operation-savage-glory",
+          "title": "Operation Savage Glory",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-5",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-5-top-of-the-world-ma",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-5-nbsp",
+            "https://www.gtabase.com/gta-6/missions/operation-savage-glory"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 5",
+              "position": 5
+            },
+            "pcgamer": {
+              "section": "Chapter 5: Top of the World, Ma",
+              "position": 5
+            },
+            "pressstart": {
+              "section": "Chapter 5",
+              "position": 5
+            },
+            "dayone": {
+              "section": "Chapter 5",
+              "position": 5
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "honest-abe",
+          "title": "Honest Abe",
+          "aliases": [
+            "Negotiate a Deal with Abe"
+          ],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-5",
+            "https://www.gtabase.com/gta-6/missions/honest-abe"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 5",
+              "position": 6
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "unfinished-business",
+          "title": "Unfinished Business",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-5",
+            "https://www.gtabase.com/gta-6/missions/unfinished-business"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 5",
+              "position": 7
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "chapter-5-pay-abes-fee",
+          "title": "Pay Abe’s Fee",
+          "aliases": [],
+          "optional": null,
+          "kind": "other-campaign-entry",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-5",
+            "https://www.gtabase.com/gta-6/missions/pay-abes-fee-chapter-5"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 5",
+              "position": 8
+            }
+          },
+          "recapSources": []
+        },
+        {
+          "key": "protective-custody",
+          "title": "Protective Custody",
+          "aliases": [
+            "Meet with Abe"
+          ],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-5",
+            "https://www.pcgamer.com/games/grand-theft-auto/gta-6-mission-list/#section-chapter-5-top-of-the-world-ma",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-5-nbsp",
+            "https://www.gtabase.com/gta-6/missions/protective-custody"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 5",
+              "position": 9
+            },
+            "pcgamer": {
+              "section": "Chapter 5: Top of the World, Ma",
+              "position": 6
+            },
+            "pressstart": {
+              "section": "Chapter 5",
+              "position": 6
+            },
+            "dayone": {
+              "section": "Chapter 5",
+              "position": 6
+            }
+          },
+          "recapSources": [
+            "pcgamer",
+            "pressstart",
+            "dayone"
+          ]
+        },
+        {
+          "key": "the-end-of-the-road",
+          "title": "The End of the Road",
+          "aliases": [],
+          "optional": null,
+          "kind": "story",
+          "sourceUrls": [
+            "https://www.powerpyx.com/gta-6-full-walkthrough-all-missions/#chapter-5",
+            "https://press-start.com.au/news/2026/11/18/heres-how-many-story-missions-are-in-grand-theft-auto-6/",
+            "https://playday.one/2026/11/18/every-mission-in-gta6/#h-chapter-5-nbsp",
+            "https://www.gtabase.com/gta-6/missions/chapter-5-finale"
+          ],
+          "sourceOrder": {
+            "powerpyx": {
+              "section": "Chapter 5",
+              "position": 10
+            },
+            "pressstart": {
+              "section": "Chapter 5",
+              "position": 7
+            },
+            "dayone": {
+              "section": "Chapter 5",
+              "position": 7
+            }
+          },
+          "recapSources": [
+            "pressstart",
+            "dayone"
+          ]
+        }
+      ]
+    }
+  ]
+}

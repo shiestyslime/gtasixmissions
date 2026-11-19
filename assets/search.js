@@ -119,7 +119,16 @@
           }
           results.append(item);
         }
-        // No match: offer the two pages that help most when a mission guide is missing.
+        // A complete catalog can answer a mission-name query without feeding later-story names into suggestions.
+        if (root.dataset.catalogueAvailable === 'true') {
+          const catalogue = document.createElement('li');
+          const catalogueLink = document.createElement('a');
+          catalogueLink.href = `/missions/?mission=${encodeURIComponent(input.value.trim())}#chapter-missions`;
+          catalogueLink.textContent = 'Find this name in the full chapter checklist';
+          catalogue.append(catalogueLink);
+          results.append(catalogue);
+        }
+        // No authored match: keep the relevant guide and progression routes as alternatives.
         if (!matches.length) {
           for (const [href, text] of [['/missions/#mission-guides', 'Browse every published mission guide'], ['/progression/', 'Find out what unlocks the next mission']]) {
             const item = document.createElement('li');

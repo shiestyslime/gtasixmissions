@@ -49,7 +49,7 @@ updated: 2026-11-18
 
 ## Can you switch between Jason and Lucia?
 
-{reported} Yes. Previews show both characters in missions together, and some missions let you choose a role, such as driving or shooting, while your partner does the other job.
+Complete **Coffee Break** in Chapter 2 to unlock the partner menu. [See the PS5 and Xbox character-switch controls](/progression/#switch-characters).
 
 {reported} Rockstar told The Guardian that you can switch between Jason and Lucia most of the time. Some story moments lock you to one of them.
 
@@ -58,7 +58,6 @@ updated: 2026-11-18
 - {reported} When the two are apart, they can call and text each other.
 - {reported} They can go on dates. A date can even be a crime, such as robbing a liquor store together.
 - {reported} Rockstar's Rob Nelson says you can look after the relationship or let it get worse.
-- {unknown} What the relationship changes in the story or in gameplay.
 
 ## FAQ
 
@@ -72,7 +71,7 @@ Yes. Lucia Caminos is a playable lead character.
 
 ### Can you switch characters in GTA 6?
 
-Yes, according to Rockstar's interview with The Guardian. You can switch between Jason and Lucia most of the time, but some story moments lock one of them.
+Yes. **Coffee Break** introduces the partner menu in Chapter 2. [Look up the switch controls](/progression/#switch-characters). Some story moments lock you to one character.
 
 ### How many protagonists does GTA 6 have?
 

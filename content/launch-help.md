@@ -83,11 +83,11 @@ If the game is installed but will not start on a second console or account, Play
 2. On that PS5, go to **Settings → Users and Accounts → Other → Console Sharing and Offline Play** and select **Enable** if it is off.
 3. Only one PS5 can have it on for your account at a time. To move it to another PS5, disable it on the previous console first, then enable it on the new one. On any other PS5, sign in with the account that owns the game.
 
-You still need an internet connection to redeem a boxed code, download or preload the game, and get updates. The listing says online features need a PlayStation account. {unknown} Rockstar has not said which GTA VI features need a connection.
+You still need an internet connection to redeem a boxed code, download or preload the game, and get updates. The listing says online features need a PlayStation account.
 
 ### Can you play offline on Xbox?
 
-{unknown} We have not found a Rockstar or Xbox statement on offline play for GTA VI on Xbox Series X|S. Xbox Cloud Gaming streams the game, so it always needs a connection.
+Xbox Cloud Gaming needs an internet connection throughout play. For an installed digital copy, check the [Xbox offline setup instructions](https://support.xbox.com/en-US/help/hardware-network/connect-network/using-xbox-one-offline) before disconnecting. These cover the console’s home Xbox and license settings.
 
 ### Is it down? Check the official status pages
 

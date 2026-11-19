@@ -49,10 +49,6 @@ The inspiration column is our reading of Rockstar's descriptions. Rockstar does 
 
 {confirmed} A wild area near the state's northern border. Rockstar shows hunting, fishing and off-road trails.
 
-## How big is the GTA 6 map?
-
-{unknown} Rockstar has not given a map size. Any square-mile number you see before launch is an estimate from trailers.
-
 ## How do I fast travel? {#fast-travel}
 
 **Early in the story.** After Gone Fishing, PowerPyx found Paradise Taxi under **Contacts → All Contacts** on the in-game phone. Put a marker on the map and call the taxi. Look for a white car icon if you cannot see the pickup. {src:3}
@@ -65,13 +61,13 @@ The inspiration column is our reading of Rockstar's descriptions. Rockstar does 
 
 At a station, check the map on the platform for the train network. Wait for a train and walk aboard when it arrives. Digital Foundry’s John Linneman found that the game took the fare automatically. [Jump to his station visit at 19:26](https://www.youtube.com/watch?v=qsBU0bcpONA&t=1166s). {src:6}
 
-## Interactive map and collectibles
+## How can I tell when a bus will arrive? {#take-a-bus}
 
-Look up [opening mission landmarks](/missions/) or [read the indoor minimap](/navigation-settings/#indoor-map). The following locations still need checking for our map:
+Check the information at the bus stop. GameSpot’s reviewer found that the stop displays the time until the next bus. If the wait is long, compare the [taxi and skip options](#fast-travel). {src:7}
 
-- Shops, garages and safehouses
-- Weapon and vehicle locations
-- Collectibles and hidden items
+## Mission landmarks
+
+Look up [opening mission landmarks](/missions/) or [read the indoor minimap](/navigation-settings/#indoor-map). For a fresh map, start with a destination you can identify by name. Early on, the label **Go See Cal** leads to the [Unwanted Attention walkthrough](/missions/unwanted-attention/).
 
 ## FAQ
 
@@ -85,11 +81,7 @@ Yes. Vice City is the main city in GTA 6. It is a modern version, not the 1980s 
 
 ### How many regions are in GTA 6?
 
-Rockstar has named six regions: Vice City, Leonida Keys, Grassrivers, Port Gellhorn, Ambrosia and Mount Kalaga National Park. More areas may exist in the full game.
-
-### Is the GTA 6 map bigger than GTA 5?
-
-Rockstar has not stated a size. Comparisons before launch are estimates.
+Rockstar has named six regions: Vice City, Leonida Keys, Grassrivers, Port Gellhorn, Ambrosia and Mount Kalaga National Park.
 
 ## Sources
 
@@ -99,3 +91,4 @@ Rockstar has not stated a size. Comparisons before launch are estimates.
 - [VGC’s in-game RydeMe walkthrough](https://www.videogameschronicle.com/guide/gta-6-fast-travel-explained-how-to-fast-travel-in-gta-6/)
 - [DayOne’s review and paid taxi skip discussion at 11:49](https://www.youtube.com/watch?v=c9meSdlHhYM&t=709s)
 - [Digital Foundry’s station and train-fare example at 19:26](https://www.youtube.com/watch?v=qsBU0bcpONA&t=1166s)
+- [GameSpot’s hands-on review of buses, transit and the map](https://www.gamespot.com/reviews/grand-theft-auto-6-review/)

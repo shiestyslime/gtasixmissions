@@ -44,7 +44,7 @@ updated: 2026-11-18
 
 - {confirmed} **Native download:** PlayStation 5, PlayStation 5 Pro, Xbox Series X and Xbox Series S.
 - {confirmed} **Cloud streaming:** Xbox One and Xbox Series X|S in supported markets. Buy the game separately and check your account's cloud play options.
-- {unknown} **PC:** Rockstar has announced no PC release date.
+- **PC:** Rockstar has announced no PC release date.
 
 PS4 has no announced version. On Xbox One, use the cloud option where available.
 

@@ -31,6 +31,8 @@ The trailer cash is optional. If you skip the trailer, you can keep going to the
 
 ::: video 3PiR0G3rVw8 | IGN’s 15 minutes of PS5 Pro gameplay after the Prologue (story spoilers) | IGN
 
+::: video ejIdp8axfhY | Gone Fishing gameplay (mission spoilers) | GTA Series Videos
+
 ## FAQ
 
 ### Must I clear every enemy before leaving?
