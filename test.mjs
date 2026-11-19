@@ -9,7 +9,7 @@ import { spawn, spawnSync } from 'node:child_process';
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname);
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gsm-test-'));
-for (const item of ['build.mjs', 'check.mjs', 'site.json', 'assets', 'content', 'data']) fs.cpSync(path.join(ROOT, item), path.join(tmp, item), { recursive: true });
+for (const item of ['build.mjs', 'clips.mjs', 'check.mjs', 'site.json', 'assets', 'content', 'data']) fs.cpSync(path.join(ROOT, item), path.join(tmp, item), { recursive: true });
 fs.mkdirSync(path.join(tmp, 'content/missions'), { recursive: true });
 const productionSite = JSON.parse(fs.readFileSync(path.join(tmp, 'site.json'), 'utf8'));
 // Historical cases start from explicit fixture state, regardless of what is live today.
@@ -72,6 +72,43 @@ expect('Lab Fees watch page preserves community-source context and links to the 
 expect('Lab Fees video assets are copied without changes', ['lab-fees-door-codes.mp4', 'lab-fees-door-codes-poster.jpg'].every((file) => fs.readFileSync(path.join(tmp, 'dist', file)).equals(fs.readFileSync(path.join(tmp, 'assets', file)))));
 expect('Lab Fees watch page is discoverable in search and the video sitemap', JSON.parse(out('search.json')).some((record) => record.url === '/lab-fees-video/') && out('sitemap.xml').includes('<loc>https://gtasixmissions.com/lab-fees-video/</loc>') && out('sitemap.xml').includes('<video:content_loc>https://gtasixmissions.com/lab-fees-door-codes.mp4</video:content_loc>'));
 expect('watch pages never load mission-only step sharing', [watchHtml, labWatchHtml].every((html) => !/src="\/mission-share.js"|data-mission-steps/.test(html)));
+
+// The creator library, individual watch pages and search results must point at the same videos.
+const clipLibrary = out('clips/index.html');
+const librarySchema = [...clipLibrary.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)]
+  .map((match) => JSON.parse(match[1])).find((item) => item['@type'] === 'CollectionPage').mainEntity;
+const liveClips = JSON.parse(fs.readFileSync(path.join(tmp, 'data/clips.json'), 'utf8'))
+  .filter((clip) => fs.existsSync(path.join(tmp, 'dist/clips', clip.slug, 'index.html')));
+const libraryLinks = librarySchema.itemListElement.map((item) => item.url);
+const clipIndex = JSON.parse(out('search.json'));
+const liveSitemap = out('sitemap.xml');
+expect('library lists both original animations and creator uploads', libraryLinks.length === librarySchema.numberOfItems
+  && ['/taxi-video/', '/lab-fees-video/', '/minimap-video/'].every((url) => libraryLinks.includes(productionSite.baseUrl + url))
+  && liveClips.every((clip) => libraryLinks.includes(productionSite.baseUrl + '/clips/' + clip.slug + '/')));
+expect('homepage features the selected clip and keeps mission search', out('index.html').includes('data-play-clip="' + liveClips[0].id + '"') && out('index.html').includes('data-site-search'));
+expect('videos, clips and shorts resolve to the collection', ['videos','clips','shorts'].every((term) => clipIndex.find((item) => item.url === '/clips/').aliases.includes(term)));
+expect('each creator video has the right player, runtime, source, canonical URL and searchable page', liveClips.every((clip) => {
+  const route = '/clips/' + clip.slug + '/';
+  const html = out('clips/' + clip.slug + '/index.html');
+  const video = [...html.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)]
+    .map((match) => JSON.parse(match[1])).find((item) => item['@type'] === 'VideoObject');
+  return video?.creator.name === clip.creator && video.duration === 'PT' + clip.seconds + 'S'
+    && video.embedUrl.endsWith('/' + clip.id) && video.thumbnailUrl.includes(clip.thumb)
+    && video.url === productionSite.baseUrl + route && clipIndex.some((item) => item.url === route)
+    && liveSitemap.includes('<video:player_loc>' + video.embedUrl + '</video:player_loc>')
+    && html.includes('href="https://www.youtube.com/watch?v=' + clip.id + '"')
+    && (clip.moments || []).every((moment) => html.includes('data-clip-seek="' + moment.at + '"')
+      && video.hasPart.some((entry) => entry.startOffset === moment.at && entry.url === video.url + '?t=' + moment.at));
+}));
+expect('scene questions appear on the watch page and search jumps to the matching second', liveClips.every((clip) => {
+  const page = out('clips/' + clip.slug + '/index.html');
+  return (clip.moments || []).filter((moment) => moment.question).every((moment) =>
+    page.includes('<h3>' + moment.question + '</h3>')
+    && clipIndex.some((entry) => entry.q === moment.question && entry.url === '/clips/' + clip.slug + '/?t=' + moment.at));
+}));
+const taxiPage = out('taxi-video/index.html');
+expect('the original fare short links to its transcript, sources and transit guide', ['taxi-skip.mp4','id="transcript"','/map-locations/#fast-travel','id="sources"'].every((value) => taxiPage.includes(value))
+  && out('map-locations/index.html').includes('href="/taxi-video/"'));
 
 // Verify the real catalog against its current data, without hardcoding editorial counts.
 const productionCatalog = JSON.parse(fs.readFileSync(path.join(tmp, 'data/story-missions.json'), 'utf8'));
@@ -544,16 +581,35 @@ expect('explicit spoiler headlines are retained inside a closed disclosure', spo
 expect('every news item keeps its publisher attribution and original link exactly once', newsCases.every((n) => newsHtml.includes(`<span>${n.source} · <time`) && newsHtml.split(`href="${n.link}"`).length === 2));
 fs.writeFileSync(newsFile, savedNews);
 
-// 5. Ads stay off unless IDs and both confirmations are present
+// 5. Publisher verification works before ads; serving still needs a slot and both confirmations.
 clearMissions(); put('b.md', tested({ ads: 'yes' }));
 const adIds = { adsenseClient: 'ca-pub-0000000000000000', adsenseSlot: '0000000000' };
+const expectedAdsTxt = 'google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0\n';
+setSite({ ...gateOn, adsenseClient: adIds.adsenseClient, adsenseSlot: '' });
+expect('publisher-only verification builds without an ad slot', run('build.mjs', '2026-11-20').ok);
+expect('publisher-only verification writes the exact ads.txt seller record', out('ads.txt') === expectedAdsTxt);
+expect('publisher-only verification makes no ad requests', !out('index.html').includes('adsbygoogle') && !out('missions/zz-fixture-bank-run/index.html').includes('adsbygoogle'));
 setSite({ ...gateOn, ...adIds }); run('build.mjs', '2026-11-20');
-expect('IDs alone do not turn ads on', !out('missions/zz-fixture-bank-run/index.html').includes('adsbygoogle') && !fs.existsSync(path.join(tmp, 'dist/ads.txt')));
+expect('IDs alone do not turn ads on and keep verification available', !out('missions/zz-fixture-bank-run/index.html').includes('adsbygoogle') && out('ads.txt') === expectedAdsTxt);
 expect('the homepage can verify the publisher for review while ad requests stay off', out('index.html').includes(`<meta name="google-adsense-account" content="${adIds.adsenseClient}">`) && !out('index.html').includes('adsbygoogle.js'));
 setSite({ ...gateOn, ...adIds, adsEnabled: true }); run('build.mjs', '2026-11-20');
 expect('IDs plus one confirmation still leave ads off', !out('missions/zz-fixture-bank-run/index.html').includes('adsbygoogle'));
+setSite({ ...gateOn, ...adIds, adsConsentConfirmed: true }); run('build.mjs', '2026-11-20');
+expect('consent alone still leaves ads off', !out('missions/zz-fixture-bank-run/index.html').includes('adsbygoogle'));
 setSite({ ...gateOn, ...adIds, adsEnabled: true, adsConsentConfirmed: true }); run('build.mjs', '2026-11-20');
 expect('IDs plus both confirmations turn ads on for an opted-in guide only', out('missions/zz-fixture-bank-run/index.html').includes('adsbygoogle') && !out('index.html').includes('adsbygoogle') && fs.existsSync(path.join(tmp, 'dist/ads.txt')));
+for (const adsenseSlot of ['', undefined, 'not-a-slot', '123\n', 123]) {
+  setSite({ ...gateOn, adsenseClient: adIds.adsenseClient, adsenseSlot, adsEnabled: true, adsConsentConfirmed: true }); run('build.mjs', '2026-11-20');
+  expect(`missing or invalid slot ${JSON.stringify(adsenseSlot)} stays unmonetized with verification available`, !out('missions/zz-fixture-bank-run/index.html').includes('adsbygoogle') && out('ads.txt') === expectedAdsTxt);
+}
+for (const adsenseClient of ['', undefined]) {
+  setSite({ ...gateOn, adsenseClient, adsenseSlot: adIds.adsenseSlot, adsEnabled: true, adsConsentConfirmed: true }); run('build.mjs', '2026-11-20');
+  expect(`omitted publisher ${JSON.stringify(adsenseClient)} removes verification and ad output`, !fs.existsSync(path.join(tmp, 'dist/ads.txt')) && !out('index.html').includes('google-adsense-account') && !out('missions/zz-fixture-bank-run/index.html').includes('adsbygoogle'));
+}
+for (const adsenseClient of ['pub-0000000000000000', 'ca-pub-123', 'ca-pub-0000000000000000\n', ' ca-pub-0000000000000000', 'ca-pub-0000000000000000, RESELLER', null, false, 123, ['ca-pub-0000000000000000']]) {
+  setSite({ ...gateOn, adsenseClient });
+  rejects(`invalid publisher ${JSON.stringify(adsenseClient)} is rejected`, '2026-11-20', 'adsenseClient must be empty or an AdSense publisher ID');
+}
 
 // 5b. Optional support stays absent until a public creator profile is configured.
 clearMissions(); put('a.md', community()); put('b.md', tested());
@@ -676,6 +732,77 @@ fs.appendFileSync(path.join(tmp, 'data/story-missions.json'), '\n');
 const catalogCommit = commit('catalog only');
 const catalogDry = run('indexnow.mjs', '', { DRY_RUN: '1', BEFORE: c4, AFTER: catalogCommit }).out;
 expect('a catalog-only edit submits just the mission hub', /would submit 1 URL/.test(catalogDry) && catalogDry.trim().endsWith('https://gtasixmissions.com/missions/'), catalogDry);
+// Clip changes use actual public routes and rendered differences, not every catalog member.
+const clipFile = path.join(tmp, 'data/clips.json');
+const beforeClipTests = fs.readFileSync(clipFile, 'utf8');
+const sitemapBeforeClipTests = fs.readFileSync(path.join(tmp, 'dist/sitemap.xml'), 'utf8');
+const clipFixture = (id, slug, added = '2000-01-01') => ({ id, slug, title: `FIXTURE ${slug}`, creator: 'Fixture creator', topic: 'Details', seconds: 60, uploaded: `${added}T00:00:00Z`, added, thumb: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`, thumbWidth: 640, thumbHeight: 360, description: 'An original fixture description long enough to validate this private video record.', guide: '/launch-help/', guideLabel: 'Launch help' });
+const clipA = clipFixture('aaaaaaaaaaa', 'zz-fixture-clip-a');
+const clipB = clipFixture('bbbbbbbbbbb', 'zz-fixture-clip-b');
+const futureClip = clipFixture('fffffffffff', 'zz-fixture-future-clip', '2099-01-01');
+const saveClips = (clips) => fs.writeFileSync(clipFile, JSON.stringify(clips, null, 2));
+const publicClips = (clips) => fs.writeFileSync(path.join(tmp, 'dist/sitemap.xml'), `<urlset>${['/', '/clips/', ...clips.map((c) => `/clips/${c.slug}/`)].map((route) => `<url><loc>https://gtasixmissions.com${route}</loc></url>`).join('')}</urlset>`);
+const submittedRoutes = (before, after) => run('indexnow.mjs', '', { DRY_RUN: '1', BEFORE: before, AFTER: after }).out;
+const exactlyRoutes = (output, routes) => JSON.stringify(output.split('\n').filter((line) => line.startsWith('https://gtasixmissions.com')).sort()) === JSON.stringify(routes.map((route) => 'https://gtasixmissions.com' + route).sort());
+saveClips([clipA, futureClip]); publicClips([clipA]);
+let clipBefore = commit('clip baseline');
+clipA.moments = [{ at: 10, title: 'Fixture moment' }]; saveClips([clipA, futureClip]);
+let clipAfter = commit('clip moment edit');
+let clipDry = submittedRoutes(clipBefore, clipAfter);
+expect('a clip moment edit submits only its public watch page', exactlyRoutes(clipDry, ['/clips/zz-fixture-clip-a/']), clipDry);
+clipBefore = clipAfter; clipA.thumbWidth = 1280; clipA.thumbHeight = 720; saveClips([clipA, futureClip]);
+clipAfter = commit('clip thumbnail dimensions edit'); clipDry = submittedRoutes(clipBefore, clipAfter);
+expect('featured thumbnail dimensions update its watch page, hub and home', exactlyRoutes(clipDry, ['/clips/zz-fixture-clip-a/', '/clips/', '/']), clipDry);
+clipBefore = clipAfter; clipA.description += ' An updated explanation.'; saveClips([clipA, futureClip]);
+clipAfter = commit('featured clip description edit'); clipDry = submittedRoutes(clipBefore, clipAfter);
+expect('a featured clip edit submits its watch page and affected hub/home', exactlyRoutes(clipDry, ['/clips/zz-fixture-clip-a/', '/clips/', '/']), clipDry);
+clipBefore = clipAfter; futureClip.description += ' Unpublished edit.'; saveClips([clipA, futureClip]);
+clipAfter = commit('future clip edit'); clipDry = submittedRoutes(clipBefore, clipAfter);
+expect('editing an unpublished future clip submits nothing', /nothing submitted/.test(clipDry), clipDry);
+clipBefore = clipAfter;
+fs.writeFileSync(clipFile, JSON.stringify([clipA, futureClip].map((clip) => Object.fromEntries(Object.entries(clip).reverse()))));
+clipAfter = commit('clip json formatting'); clipDry = submittedRoutes(clipBefore, clipAfter);
+expect('clip JSON formatting and object-key order do not resubmit unchanged pages', /nothing submitted/.test(clipDry), clipDry);
+clipBefore = clipAfter; saveClips([clipA, clipB, futureClip]); publicClips([clipA, clipB]);
+clipAfter = commit('public clip added'); clipDry = submittedRoutes(clipBefore, clipAfter);
+expect('a public clip addition includes its route and changed next-video links', exactlyRoutes(clipDry, ['/clips/zz-fixture-clip-a/', '/clips/zz-fixture-clip-b/', '/clips/', '/']), clipDry);
+clipBefore = clipAfter; clipB.slug = 'zz-fixture-renamed-clip'; saveClips([clipA, clipB, futureClip]); publicClips([clipA, clipB]);
+clipAfter = commit('public clip renamed'); clipDry = submittedRoutes(clipBefore, clipAfter);
+expect('a public clip rename submits the old and new routes plus changed listings', exactlyRoutes(clipDry, ['/clips/zz-fixture-clip-a/', '/clips/zz-fixture-clip-b/', '/clips/zz-fixture-renamed-clip/', '/clips/', '/']), clipDry);
+clipBefore = clipAfter; saveClips([clipA, futureClip]); publicClips([clipA]);
+clipAfter = commit('public clip removed'); clipDry = submittedRoutes(clipBefore, clipAfter);
+expect('removing a public clip submits its old route and affected pages', exactlyRoutes(clipDry, ['/clips/zz-fixture-clip-a/', '/clips/zz-fixture-renamed-clip/', '/clips/', '/']), clipDry);
+clipBefore = clipAfter; saveClips([clipA]);
+clipAfter = commit('future clip removed'); clipDry = submittedRoutes(clipBefore, clipAfter);
+expect('removing a never-published future clip submits nothing', /nothing submitted/.test(clipDry), clipDry);
+clipBefore = clipAfter; saveClips([]); publicClips([]);
+clipAfter = commit('last public clip removed'); clipDry = submittedRoutes(clipBefore, clipAfter);
+expect('removing the last public clip updates its old route and the empty listings', exactlyRoutes(clipDry, ['/clips/zz-fixture-clip-a/', '/clips/', '/']), clipDry);
+// Native watch pages appear in the same library; body-only edits do not change their cards.
+const nativeFile = path.join(tmp, 'content/zz-fixture-native-video.md');
+const nativeMeta = { title: 'FIXTURE native watch', nav: 'Fixture original video', slug: 'zz-fixture-native-video', updated: '2000-01-01', videoFile: 'fixture.mp4', videoPoster: 'fixture.jpg', videoSeconds: '18', videoCreator: 'Fixture creator' };
+const writeNative = (body = 'Fixture transcript.') => fs.writeFileSync(nativeFile, `---\n${Object.entries(nativeMeta).map(([key, value]) => `${key}: ${value}`).join('\n')}\n---\n${body}\n`);
+const nativeSitemap = (routes) => fs.writeFileSync(path.join(tmp, 'dist/sitemap.xml'), `<urlset>${['/', '/clips/', ...routes].map((route) => `<url><loc>https://gtasixmissions.com${route}</loc></url>`).join('')}</urlset>`);
+let nativeBefore = clipAfter;
+writeNative(); nativeSitemap(['/zz-fixture-native-video/']);
+let nativeAfter = commit('original video added'); let nativeDry = submittedRoutes(nativeBefore, nativeAfter);
+expect('adding a public original video updates its watch page, library and home', exactlyRoutes(nativeDry, ['/zz-fixture-native-video/', '/clips/', '/']), nativeDry);
+for (const [key, value] of [['nav', 'Renamed original video card'], ['videoPoster', 'different-poster.jpg'], ['videoSeconds', '19'], ['videoCreator', 'Different fixture creator']]) {
+  nativeBefore = nativeAfter; nativeMeta[key] = value; writeNative();
+  nativeAfter = commit(`original video ${key} changed`); nativeDry = submittedRoutes(nativeBefore, nativeAfter);
+  expect(`changing original video ${key} updates the watch page and library only`, exactlyRoutes(nativeDry, ['/zz-fixture-native-video/', '/clips/']), nativeDry);
+}
+nativeBefore = nativeAfter; writeNative('Changed fixture transcript only.');
+nativeAfter = commit('original video body changed'); nativeDry = submittedRoutes(nativeBefore, nativeAfter);
+expect('a native video body-only edit leaves the library out', exactlyRoutes(nativeDry, ['/zz-fixture-native-video/']), nativeDry);
+nativeBefore = nativeAfter; nativeMeta.slug = 'zz-fixture-native-renamed'; writeNative(); nativeSitemap(['/zz-fixture-native-renamed/']);
+nativeAfter = commit('original video route renamed'); nativeDry = submittedRoutes(nativeBefore, nativeAfter);
+expect('renaming a native watch route updates both routes and the library', exactlyRoutes(nativeDry, ['/zz-fixture-native-video/', '/zz-fixture-native-renamed/', '/clips/']), nativeDry);
+nativeBefore = nativeAfter; fs.rmSync(nativeFile); nativeSitemap([]);
+nativeAfter = commit('original video removed'); nativeDry = submittedRoutes(nativeBefore, nativeAfter);
+expect('removing a public original video updates its old route and the library', exactlyRoutes(nativeDry, ['/zz-fixture-native-renamed/', '/clips/']), nativeDry);
+fs.writeFileSync(clipFile, beforeClipTests);
+fs.writeFileSync(path.join(tmp, 'dist/sitemap.xml'), sitemapBeforeClipTests);
 const post = (code) => new Promise((resolve) => {
   const server = http.createServer((req, res) => { req.resume(); res.statusCode = code; res.end(); }).listen(0, '127.0.0.1', () => {
     const env = { ...process.env, BEFORE: c3, AFTER: c4, INDEXNOW_ENDPOINT: `http://127.0.0.1:${server.address().port}/` }; delete env.DRY_RUN;

@@ -7,7 +7,8 @@ let problems = 0;
 const articleDates = new Map();
 const fail = (...a) => { problems++; console.log('PROBLEM', ...a); };
 function checkTarget(url, source, currentFile) {
-  const [route, fragment] = url.split('#');
+  const [address, fragment] = url.split('#');
+  const route = address.split('?')[0];
   const target = route ? path.join('dist', route, route.endsWith('/') ? 'index.html' : '') : currentFile;
   if (!target || !fs.existsSync(target)) return fail('broken link', source, url);
   if (fragment && !fs.readFileSync(target, 'utf8').includes(`id="${fragment}"`)) fail('broken anchor', source, url);

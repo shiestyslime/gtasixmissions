@@ -57,6 +57,8 @@ The inspiration column is our reading of Rockstar's descriptions. Rockstar does 
 
 **What does skipping cost?** Both guides found a **$100 in-game surcharge** for skipping the trip, on top of the fare. If cash is tight, take the normal ride. [Hear DayOne explain the ride and skip options at 11:49](https://www.youtube.com/watch?v=c9meSdlHhYM&t=709s). {src:3,4,5}
 
+[Watch the 18-second taxi fare comparison](/taxi-video/) to see what changes on the receipt when you skip.
+
 ## How do I take a train? {#take-a-train}
 
 At a station, check the map on the platform for the train network. Wait for a train and walk aboard when it arrives. Digital Foundry’s John Linneman found that the game took the fare automatically. [Jump to his station visit at 19:26](https://www.youtube.com/watch?v=qsBU0bcpONA&t=1166s). {src:6}

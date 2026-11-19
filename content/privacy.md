@@ -25,7 +25,7 @@ This site loads one font from Google Fonts. Your browser contacts Google's serve
 
 ## Videos
 
-Some guides include a video from YouTube. Nothing loads from YouTube until you press play. After you press play, YouTube's player loads in privacy-enhanced mode and YouTube's own privacy policy applies.
+The homepage and video library load thumbnails from YouTube. Opening a creator’s watch page loads YouTube’s privacy-enhanced player. On mission guides and the homepage, the player loads when you press play. YouTube handles playback under its own privacy policy.
 
 ## Affiliate links
 

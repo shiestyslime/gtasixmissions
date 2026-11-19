@@ -34,6 +34,8 @@ If a store link may earn us a commission, we disclose it next to that link. We c
 
 ## Sponsor a guide {#sponsorships}
 
-Brands interested in a labeled placement on a GTA VI guide can [send a sponsorship inquiry on GitHub](https://github.com/shiestyslime/gtasixmissions/issues/new?title=Sponsorship%20inquiry&body=Brand%20or%20project%3A%20%0ACompany%20website%3A%20%0AGuide%20of%20interest%3A%20%0ACampaign%20dates%3A%20). Include your brand’s website, the guide you have in mind and your campaign dates. The inquiry is public and requires a GitHub account. Keep private contact and payment details out of it.
+A launch sponsor can request a labeled placement beside an original mission walkthrough or a Wasted Loop short. For example, the [Lab Fees guide](/missions/lab-fees/) reaches readers looking up a keypad code, while the [taxi fare video](/taxi-video/) helps players decide whether to skip a ride.
+
+To check availability, [send a sponsorship inquiry on GitHub](https://github.com/shiestyslime/gtasixmissions/issues/new?title=Sponsorship%20inquiry&body=Brand%20or%20project%3A%20%0ACompany%20website%3A%20%0AGuide%20of%20interest%3A%20%0ACampaign%20dates%3A%20). Include your brand’s website, the guide you have in mind and your campaign dates. The inquiry is public and requires a GitHub account. Keep private contact and payment details out of it.
 
 Sponsorship buys an identified advertising placement. Editors choose the recommendations and write the verdict.

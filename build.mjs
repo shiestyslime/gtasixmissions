@@ -3,6 +3,7 @@
 // Env: BUILD_DATE=2026-11-20 (pretend it is that day), NO_FETCH=1 (skip the news fetch).
 import fs from 'node:fs';
 import path from 'node:path';
+import {readClips, clipUrl, watchUrl, clipFeature, clipCollection, clipRail, clipWatch, clipSchema, clipSitemap} from './clips.mjs';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
@@ -14,8 +15,15 @@ const NOW = process.env.BUILD_DATE ? new Date(/T/.test(process.env.BUILD_DATE) ?
 if (Number.isNaN(NOW.getTime())) throw new Error('BUILD_DATE is not a valid date');
 // This switches editorial copy after the rolling launch, not a user's store countdown.
 const LAUNCHED = NOW >= new Date(site.launchDate);
-// Ads need IDs AND two explicit confirmations. Entering IDs alone never turns ads on.
-const adReady = Boolean(site.adsenseClient && site.adsenseSlot && site.adsEnabled === true && site.adsConsentConfirmed === true);
+// Only paste the owner's public publisher ID from AdSense. Format validation cannot verify ownership or approval.
+const adsenseClient = (() => {
+  const value = site.adsenseClient;
+  if (value === undefined || value === '') return '';
+  if (typeof value !== 'string' || value !== value.trim() || !/^ca-pub-\d{16}$/.test(value)) throw new Error('site.json adsenseClient must be empty or an AdSense publisher ID in ca-pub-1234567890123456 format');
+  return value;
+})();
+// Verification does not request ads. Serving needs a publisher, numeric slot and both explicit confirmations.
+const adReady = Boolean(adsenseClient && typeof site.adsenseSlot === 'string' && site.adsenseSlot === site.adsenseSlot.trim() && /^\d+$/.test(site.adsenseSlot) && site.adsEnabled === true && site.adsConsentConfirmed === true);
 // Paste only the owner's verified public creator profile. This checks the URL shape, not account ownership.
 const supportUrl = (() => {
   const value = site.supportUrl;
@@ -347,7 +355,19 @@ function readPages(dir, isMission = false) {
 let publishedMissions = [];
 const missions = readPages('missions', true).sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug));
 publishedMissions = missions;
-const pages = [...readPages(''), ...missions].sort((a, b) => a.order - b.order);
+const clips = readClips(path.join(ROOT, 'data/clips.json'), BUILD_DAY);
+const guidePages = [...readPages(''), ...missions];
+const clipPages = clips.map((clip) => ({
+  clip, title: clip.title, description: clip.description, answer: clip.description, plain: clip.description,
+  url: clipUrl(clip), slug: clipUrl(clip).slice(1,-1), aliases: clip.creator + ' | ' + clip.topic,
+  order: 99, updated: clip.added, published: clip.added, sourceLinks: [watchUrl(clip)], html: '', faq: []
+}));
+const originalClips = guidePages.filter((page) => page.watchVideo).map((page) => ({
+  url: page.url, title: page.nav, creator: page.watchVideo.creator, topic: '18-second guides',
+  thumb: '/' + page.watchVideo.poster, seconds: page.watchVideo.seconds
+}));
+const library = [...clips, ...originalClips];
+const pages = [...guidePages, ...clipPages].sort((a, b) => a.order - b.order);
 if (new Set(pages.map((page) => page.slug)).size !== pages.length) throw new Error('Duplicate page slug');
 const storyCatalogue = loadStoryCatalogue();
 const storyTips = loadStoryTips();
@@ -387,7 +407,7 @@ async function loadNews() {
   return items;
 }
 const news = await loadNews();
-const nav = ['missions', 'launch-help', 'editions-price', 'progression', 'release-date'].map((slug) => {
+const nav = ['missions', 'clips', 'launch-help', 'editions-price', 'progression', 'release-date'].map((slug) => {
   const page = pages.find((p) => p.slug === slug);
   return { label: page.nav, url: page.url };
 });
@@ -446,11 +466,12 @@ function scene() {
 // ---------- templates ----------
 const ld = (obj) => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, '\\u003c')}</script>`;
 function adSlot(name) {
-  if (adReady) return `<div class="ad" aria-label="Advertisement"><ins class="adsbygoogle" style="display:block" data-ad-client="${esc(site.adsenseClient)}" data-ad-slot="${esc(site.adsenseSlot)}" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(window.adsbygoogle=window.adsbygoogle||[]).push({});</script></div>`;
+  if (adReady) return `<div class="ad" aria-label="Advertisement"><ins class="adsbygoogle" style="display:block" data-ad-client="${esc(adsenseClient)}" data-ad-slot="${esc(site.adsenseSlot)}" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(window.adsbygoogle=window.adsbygoogle||[]).push({});</script></div>`;
   return site.adPlaceholders ? `<div class="ad ad-placeholder" aria-hidden="true">Ad slot: ${esc(name)}</div>` : '';
 }
 function layout({ title, description, url, body, jsonld = [], ogType = 'article', scripts = '', index = true, ads = false, socialImage = '/og.png', socialWidth = 1200, socialHeight = 630 }) {
   const canonical = BASE + url;
+  const imageUrl = socialImage.startsWith('https://') ? socialImage : BASE + socialImage;
   return `<!doctype html>
 <html lang="${site.language}">
 <head>
@@ -464,14 +485,14 @@ function layout({ title, description, url, body, jsonld = [], ogType = 'article'
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${canonical}">
-<meta property="og:image" content="${BASE}${socialImage}">
+<meta property="og:image" content="${esc(imageUrl)}">
 <meta property="og:image:width" content="${socialWidth}">
 <meta property="og:image:height" content="${socialHeight}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="${BASE}${socialImage}">
+<meta name="twitter:image" content="${esc(imageUrl)}">
 <meta name="robots" content="${index ? 'index, follow, max-snippet:-1, max-image-preview:large' : 'noindex, follow'}">
 <meta name="theme-color" content="#170b30">
-${url === '/' && /^ca-pub-\d{16}$/.test(site.adsenseClient) ? `<meta name="google-adsense-account" content="${esc(site.adsenseClient)}">` : ''}
+${url === '/' && adsenseClient ? `<meta name="google-adsense-account" content="${esc(adsenseClient)}">` : ''}
 ${url === '/' && site.googleSiteVerification ? `<meta name="google-site-verification" content="${esc(site.googleSiteVerification)}">` : ''}
 ${url === '/' && site.bingSiteVerification ? `<meta name="msvalidate.01" content="${esc(site.bingSiteVerification)}">` : ''}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -480,7 +501,7 @@ ${url === '/' && site.bingSiteVerification ? `<meta name="msvalidate.01" content
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
 <link rel="stylesheet" href="/style.css">
-${ads && adReady ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${esc(site.adsenseClient)}" crossorigin="anonymous"></script>` : ''}
+${ads && adReady ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${esc(adsenseClient)}" crossorigin="anonymous"></script>` : ''}
 ${jsonld.map(ld).join('\n')}
 </head>
 <body>
@@ -488,7 +509,7 @@ ${jsonld.map(ld).join('\n')}
 <header class="site-header">
   <div class="wrap bar">
     <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>${esc(site.name)}</a>
-    <nav aria-label="Main"><ul>${nav.map((n) => `<li><a href="${n.url}"${n.url === url ? ' aria-current="page"' : ''}>${esc(n.label)}</a></li>`).join('')}</ul></nav>
+    <nav aria-label="Main"><ul>${nav.map((n) => `<li><a href="${n.url}"${n.url === url || (n.url === '/clips/' && url.startsWith(n.url)) ? ' aria-current="page"' : ''}>${esc(n.label)}</a></li>`).join('')}</ul></nav>
   </div>
 </header>
 <main id="main">
@@ -508,7 +529,7 @@ ${scripts}
 }
 const org = { '@type': 'Organization', name: site.name, url: BASE + '/' };
 const fmtDate = (d) => new Date(d.length === 10 ? d + 'T12:00:00Z' : d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
-const card = (p) => `<a class="card" href="${p.url}"><span class="card-icon">${icon(p.slug)}</span><h3>${esc(p.nav || p.title)}</h3><p>${esc(p.description)}</p><span class="card-go" aria-hidden="true">Read guide →</span></a>`;
+const card = (p) => `<a class="card" href="${p.url}"><span class="card-icon">${icon(p.slug)}</span><h3>${esc(p.nav || p.title)}</h3><p>${esc(p.description)}</p><span class="card-go" aria-hidden="true">${p.watchVideo ? 'Watch video' : p.slug === 'clips' ? 'Browse videos' : 'Read guide'} →</span></a>`;
 const newsList = (items) => `<ul class="news">${items.map((n) => `<li><a href="${esc(n.link)}" rel="nofollow noopener">${esc(n.title)}</a><span>${esc(n.source)} · <time datetime="${n.date}">${fmtDate(n.date)}</time></span></li>`).join('')}</ul>`;
 // crumb is the current page's label, or [parent links..., current label]. The JSON-LD trail uses the same list.
 const pageHero = (crumb, h1, meta) => { const trail = Array.isArray(crumb) ? crumb : [crumb]; return `<div class="page-hero"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span aria-hidden="true">/</span> ${trail.map((c) => (typeof c === 'string' ? esc(c) : `<a href="${c.url}">${esc(c.label)}</a> <span aria-hidden="true">/</span>`)).join(' ')}</nav><h1>${esc(h1)}</h1>${meta}</div></div>`; };
@@ -669,7 +690,23 @@ function reportLink(p) {
   const href = `${site.correctionsUrl}?title=${encodeURIComponent(`Correction: ${p.url}`)}`;
   return `<p class="report"><a href="${esc(href)}" rel="nofollow noopener">Report a problem with this guide</a>. This opens a public form on GitHub and needs a free GitHub account. Anyone can read what you post, so leave out game codes, account names and personal details.</p>`;
 }
+const clipScript = '<script defer src="/clips.js"></script>';
 function renderPage(p) {
+  if (p.clip) {
+    const clip = p.clip;
+    const guidePath = clip.guide.split('#')[0];
+    const guideExists = guidePages.some((page) => page.url === guidePath);
+    const body = clipWatch(clip, clips, guideExists);
+    return layout({ title: clip.title + ' | ' + clip.creator + ' | ' + site.name, description: clip.description, url: p.url,
+      body, scripts: clipScript, ogType: 'video.other', socialImage: clip.thumb, socialWidth: clip.thumbWidth || 1280, socialHeight: clip.thumbHeight || 720,
+      jsonld: [clipSchema(clip,BASE),{'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[
+        {'@type':'ListItem',position:1,name:'Videos',item:BASE+'/clips/'},{'@type':'ListItem',position:2,name:clip.title,item:BASE+p.url}]}] });
+  }
+  if (p.slug === 'clips' && library.length) {
+    const body = `<div class="clip-hub-title"><div class="wrap"><h1>GTA 6 videos</h1></div></div>${clips.length ? clipFeature(clips[0], true) : ''}${clipCollection(library)}`;
+    const listing={'@context':'https://schema.org','@type':'CollectionPage',name:p.title,url:BASE+p.url,mainEntity:{'@type':'ItemList',numberOfItems:library.length,itemListElement:library.map((c,i)=>({'@type':'ListItem',position:i+1,name:c.title,url:BASE+(c.url || clipUrl(c))}))}};
+    return layout({title:p.title,description:p.description,url:p.url,body,scripts:clipScript,jsonld:[listing]});
+  }
   const video = p.watchVideo;
   const related = p.isMission ? ['missions', 'progression', 'launch-help'].map((slug) => pages.find((page) => page.slug === slug)).filter(Boolean)
     : nav.map(({ url }) => guides.find((guide) => guide.url === url)).filter((item) => item.slug !== p.slug).slice(0, 3);
@@ -678,6 +715,8 @@ function renderPage(p) {
   const at = missions.indexOf(p);
   const neighbours = at < 0 ? '' : [[missions[at - 1], 'Previous guide in the list'], [missions[at + 1], 'Next guide in the list']].filter(([m]) => m).map(([m, label]) => `<li><span>${label}</span> <a href="${m.url}">${esc(m.h1 || m.title)}</a></li>`).join('');
   const missionNav = p.isMission ? `<nav class="mission-nav" aria-label="More mission guides"><ul>${neighbours}<li><a href="/missions/#mission-guides">All mission guides</a></li>${supportUrl ? `<li><a href="${esc(supportUrl)}" rel="nofollow noopener">Support this guide</a></li>` : ''}</ul></nav>` : '';
+  const matchingClips = clips.filter((clip) => clip.guide.split('#')[0] === p.url).slice(0, 4);
+  const watchLinks = matchingClips.length ? `<section class="guide-watch-links"><h2>Watch the gameplay</h2><ul>${matchingClips.map((clip) => `<li><a href="${clipUrl(clip)}">${esc(clip.title)}</a> · ${esc(clip.creator)}</li>`).join('')}</ul></section>` : '';
   const faqHtml = p.faq.length ? `<section class="faq"><h2 id="faq">Frequently asked questions</h2>${p.faq.map((f) => `<details id="${f.id}"><summary>${esc(f.q)}</summary>${f.html}</details>`).join('')}</section>` : '';
   // Keep the answer and first two sections ahead of any optional ad.
   const adPosition = [...p.html.matchAll(/<h2 /g)][2]?.index;
@@ -700,6 +739,7 @@ ${launchHelp ? quickJumps(launchJumps, 'Jump to a launch problem') : ''}
 ${missionHub ? `${searchUi}${missionIndex()}` : ''}
 ${p.isMission ? `<div data-mission-steps>${content}</div>` : launchHelp ? content.replace('<p>[storage-check]</p>', storageCheck) : content.replace('<div class="table-wrap" data-unlock-table>', `${unlockPicker}<div class="table-wrap" data-unlock-table>`)}
 ${faqHtml}
+${watchLinks}
 ${p.sourcesHtml ? `<section class="sources"><h2 id="sources">Sources</h2>${p.sourcesHtml}</section>` : ''}
 ${reportLink(p)}
 ${missionNav}
@@ -745,11 +785,11 @@ function renderHome() {
   const featured = nav.map(({ url }) => guides.find((guide) => guide.url === url));
   const topFaq = featured.flatMap((p) => p.faq.slice(0, 1).map((f) => ({ ...f, html: f.html.replace(/href="#/g, `href="${p.url}#`), url: p.url + '#' + f.id })));
   const communityOnly = missions.length && missions.every((mission) => mission.community);
-  const body = `<section class="hero">
+  const body = `${clips.length ? '<h1 class="visually-hidden">GTA 6 mission guides and videos</h1>' + clipFeature(clips[0]) : ''}<section class="hero${clips.length ? ' hero-search' : ''}">
 ${scene()}
 <div class="wrap hero-inner">
 <p class="eyebrow">Unofficial GTA 6 guide</p>
-<h1>GTA 6 <span>missions and walkthroughs</span></h1>
+<${clips.length ? 'h2' : 'h1'}>GTA 6 <span>missions and walkthroughs</span></${clips.length ? 'h2' : 'h1'}>
 <p class="lede">${communityOnly && storyCatalogue ? 'Find the mission on your screen, or open the five-chapter checklist to pick up where you left off.' : communityOnly ? 'Find your mission or objective in guides built from public gameplay sources.' : missions.length ? 'Search for the objective on your screen or open a mission guide.' : 'Check when your copy unlocks, choose your minimap, or compare the first reviews.'}</p>
 ${searchUi}
 <div class="hero-cta">
@@ -759,6 +799,7 @@ ${searchUi}
 </div>
 </div>
 </section>
+${clips.length > 1 ? clipRail(library) : ''}
 <section class="facts"><div class="wrap facts-row">${site.keyFacts.map((f) => `<a href="${f.url}"><span>${esc(f.label)}</span><b>${esc(f.value)}</b></a>`).join('')}</div></section>
 <div class="wrap">
 ${missions.length ? `<section><h2 id="opening-missions">Opening missions</h2>${quickJumps(missions.slice(0, 3).map((mission) => ({ label: mission.h1 || mission.title, url: mission.url })), 'Opening missions')}</section>` : ''}
@@ -772,7 +813,7 @@ ${missions.length ? `<section><h2 id="opening-missions">Opening missions</h2>${q
     { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: BASE + '/', description: site.description, publisher: org },
     { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: topFaq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.text } })) },
   ];
-  return layout({ title: `${site.name}: ${site.tagline}`, description: site.description, url: '/', body, jsonld, ogType: 'website', scripts: searchScript });
+  return layout({ title: `${site.name}: ${site.tagline}`, description: site.description, url: '/', body, jsonld, ogType: 'website', scripts: searchScript + (clips.length ? clipScript : '') });
 }
 
 function renderNews() {
@@ -788,6 +829,9 @@ ${spoilers.length ? `<section class="faq"><details><summary>Headlines marked as 
 }
 
 const searchAliases = {
+  '/clips/': ['videos', 'video', 'clips', 'shorts', 'GTA 6 videos', 'gameplay clips', 'watch videos'],
+  '/minimap-video/': ['short guides', 'minimap short', 'minimap clip'],
+  '/lab-fees-video/': ['short guides', 'door codes short', 'keypad clip'],
   '/missions/#checkpoint-or-replay': ['retry checkpoint', 'manual save', 'replay mission', 'restart checkpoint', 'replay a completed mission'],
   '/progression/#no-mission-showing': ['no missions appearing', 'no new missions', 'explore the area', 'no mission marker'],
   '/save-game/#save-greyed-out': ['save greyed out', 'save grayed out', 'cant save during mission'],
@@ -863,9 +907,12 @@ for (const p of pages) write(`${p.slug}/index.html`, renderPage(p));
 if (news.length) write('news/index.html', renderNews());
 write('404.html', layout({ title: `Page not found | ${site.name}`, description: 'This page does not exist. Use the links below to find a GTA 6 guide.', url: '/404.html', body: `${pageHero('Not found', 'Page not found', '')}<div class="wrap"><p>Try one of these guides.</p><div class="cards">${guides.map(card).join('')}</div></div>`, index: false }));
 for (const f of fs.readdirSync(path.join(ROOT, 'assets'))) fs.copyFileSync(path.join(ROOT, 'assets', f), path.join(OUT, f));
-const searchable = [...guides, ...missions.filter((page) => !page.nav)];
+const searchable = [...guides, ...missions.filter((page) => !page.nav), ...clipPages];
 write('search.json', JSON.stringify([
   ...searchable.map((p) => ({ q: p.h1 || p.title, a: stripTags(inline(p.answer).replace(NO_CITES, '')), url: p.url, aliases: [...(searchAliases[p.url] || []), ...pageAliases(p)], ...pressFields(p), ...missionFields(p), ...sourcesFor(p, inline(p.answer)) })),
+  ...clips.flatMap((clip) => (clip.moments || []).filter((moment) => moment.question).map((moment) => ({
+    q: moment.question, a: moment.answer, url: clipUrl(clip) + '?t=' + moment.at, sources: [watchUrl(clip) + '&t=' + moment.at + 's']
+  }))),
   ...searchable.flatMap((p) => sectionResults(p).filter((section) => p.isMission || p.slug === 'launch-help' || searchAliases[section.url])),
   ...searchable.flatMap((p) => p.faq.map((f) => { const block = p.isMission ? firstBlock(f.html) : f.html; return { q: f.q, a: stripTags(block.replace(NO_CITES, '')).slice(0, 220), url: `${p.url}#${f.id}`, ...pressFields(p), ...parentFields(p), ...missionFields(p), ...sourcesFor(p, block) }; }).filter((record) => !unsupported(record))),
 ]));
@@ -874,7 +921,7 @@ const latest = pages.map((p) => p.updated).sort().pop();
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 <url><loc>${BASE}/</loc><lastmod>${latest}</lastmod></url>
-${pages.map((p) => `<url><loc>${BASE}${p.url}</loc><lastmod>${p.updated}</lastmod>${p.watchVideo ? `<video:video><video:thumbnail_loc>${BASE}/${p.watchVideo.poster}</video:thumbnail_loc><video:title>${esc(p.title)}</video:title><video:description>${esc(p.description)}</video:description><video:content_loc>${BASE}/${p.watchVideo.file}</video:content_loc><video:duration>${p.watchVideo.seconds}</video:duration><video:publication_date>${p.watchVideo.uploaded}</video:publication_date></video:video>` : ''}</url>`).join('\n')}
+${pages.map((p) => `<url><loc>${BASE}${p.url}</loc><lastmod>${p.updated}</lastmod>${p.clip ? clipSitemap(p.clip) : p.watchVideo ? `<video:video><video:thumbnail_loc>${BASE}/${p.watchVideo.poster}</video:thumbnail_loc><video:title>${esc(p.title)}</video:title><video:description>${esc(p.description)}</video:description><video:content_loc>${BASE}/${p.watchVideo.file}</video:content_loc><video:duration>${p.watchVideo.seconds}</video:duration><video:publication_date>${p.watchVideo.uploaded}</video:publication_date></video:video>` : ''}</url>`).join('\n')}
 </urlset>
 `);
 // Search and AI crawlers are explicitly welcome.
@@ -895,7 +942,7 @@ ${searchable.map((p) => `- [${p.title}](${BASE}${p.url}): ${p.hasPressCoverage ?
 - [About, sources and disclosure](${BASE}/about/)
 `);
 write('llms-full.txt', searchable.map((p) => `# ${p.title}\nURL: ${BASE}${p.url}\n${p.published ? `First published: ${p.published}\n` : ''}Last updated: ${p.updated}\n${p.isMission ? `Status: ${statusLabel(p)}\n${p.community && p.sourcePlatforms ? `Platforms in sources: ${p.sourcePlatforms}\n` : ''}${p.tested && p.testedBuild ? `Game version tested: ${p.testedBuild}\n` : ''}` : ''}\n${p.hasPressCoverage ? `Source context: ${PRESS_CONTEXT}\n` : ''}Quick answer: ${stripTags(inline(p.answer))}\n\n${p.plain}\n\n${p.faq.map((f) => `Q: ${f.q}\nA: ${f.text}`).join('\n\n')}${p.sourceLinks.length ? `\n\nSources:\n${(p.isMission ? p.sourceRecords.map((r) => `[${r.n}] ${r.url}${sourceMeta(r) ? ` (${sourceMeta(r)})` : ''}`) : p.sourceLinks.map((link) => `- ${link}`)).join('\n')}` : ''}`).join('\n\n---\n\n') + '\n');
-const feedPages = recentlyUpdated().slice(0, 30);
+const feedPages = [...recentlyUpdated(), ...clipPages].sort((a,b)=>b.updated.localeCompare(a.updated) || Number(Boolean(b.clip))-Number(Boolean(a.clip)) || a.order-b.order).slice(0, 30);
 write('feed.xml', `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 <title>${esc(site.name)} guide updates</title>
@@ -909,7 +956,8 @@ ${feedPages.map((p) => `<entry><title>${esc(p.h1 || p.title)}</title><link href=
 </feed>
 `);
 if (site.indexNowKey) write(`${site.indexNowKey}.txt`, site.indexNowKey + '\n');
-if (adReady) write('ads.txt', `google.com, ${site.adsenseClient.replace('ca-', '')}, DIRECT, f08c47fec0942fa0\n`);
+// AdSense supports ads.txt for site verification before approval or ad-unit creation. This file serves no ads.
+if (adsenseClient) write('ads.txt', `google.com, ${adsenseClient.slice(3)}, DIRECT, f08c47fec0942fa0\n`);
 
 console.log(`Built ${pages.length + 1 + (news.length ? 1 : 0)} pages to dist/ (${LAUNCHED ? 'post-launch' : 'pre-launch'} mode, ${news.length} headlines)`);
 if (BASE.includes('example.com')) console.warn('NOTE: baseUrl in site.json is still https://example.com. Set your real domain before deploying.');
